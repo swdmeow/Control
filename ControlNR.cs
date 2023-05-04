@@ -20,7 +20,6 @@ namespace Ñontrol
         public static ControlNR Singleton;
         public override string Name => "ControlNR";
         public override string Author => "swd";
-        //public override PluginPriority Priority => PluginPriority.Higher;
         public override System.Version Version => new System.Version(1, 5, 0);
 
         private Control.Events.PlayerHandler PlayerHandler;
