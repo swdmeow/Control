@@ -61,6 +61,10 @@ namespace Ñontrol
             
             base.OnEnabled();
         }
+        public override void OnReloaded()
+        {
+            base.OnReloaded();
+        }
         public override void OnDisabled()
         {
             
