@@ -235,8 +235,6 @@ namespace Control.Patches
 
                                 Enum.TryParse(args[2].Substring(0, 2).Replace(".", ""), true, out ItemType item);
 
-                                Log.Info(item);
-
                                 player.AddItem(item, 1);
 
                                 sender.RaReply($"ControlNR#Успешно..", Success, true, string.Empty);
