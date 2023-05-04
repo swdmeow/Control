@@ -346,7 +346,6 @@ namespace Control.CustomRoles
                 {
                     foreach(Ragdoll ragdoll in Ragdolls)
                     {
-                        Log.Info(ragdoll.CreationTime.Second >= new DateTime().Second);
                         if(!ragdoll.Owner.IsAlive)
                         {
                             ragdoll.Owner.Role.Set(ragdoll.Role);
