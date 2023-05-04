@@ -198,8 +198,6 @@
                 }
             }
 
-            Log.Info($"{nameof(OnEndingRound)}: Should event be blocked: {(human && scps)} -- Should round end: {(human && scps)}");
-
             if (human && scps)
             {
                 ev.IsRoundEnded = false;
