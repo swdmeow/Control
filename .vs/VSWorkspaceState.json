@@ -1,0 +1,15 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\Commands",
+    "\\CustomItems",
+    "\\CustomRoles",
+    "\\Events",
+    "\\Extensions",
+    "\\Extensions\\Player",
+    "\\Patches",
+    "\\XP-master"
+  ],
+  "SelectedNode": "\\Commands\\force.cs",
+  "PreviewInSolutionExplorer": false
+}
