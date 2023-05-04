@@ -45,12 +45,6 @@
         }
         private void OnAnnouncingNtfEntrance(AnnouncingNtfEntranceEventArgs ev)
         {
-            Log.Info(ev.UnitNumber);
-            Log.Info(ev.ToString());
-
-            //ev.UnitName = "<size=125%><color=blue>Разведгруппа</color></size>";
-
-
             if (ServerHandler.CassieDestroyedLVL == 0) return;
 
             if (ServerHandler.CassieDestroyedLVL >= 1)

@@ -61,7 +61,6 @@
         private void OnStartingRound()
         {
             var it = CustomItem.Get(3).Spawn(Room.List.ElementAt(new System.Random().Next(0, Room.List.Count())).transform.position + Vector3.up);
-            Log.Info(it.Position);
             /*
             Room room = Room.Get(RoomType.LczAirlock);
 
