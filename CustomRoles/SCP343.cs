@@ -269,13 +269,17 @@ namespace Control.CustomRoles
             Exiled.Events.Handlers.Player.Hurting -= OnHurting;
             Exiled.Events.Handlers.Player.PickingUpItem -= OnPickUpItem;
             Exiled.Events.Handlers.Player.DroppingItem -= OnDroppingItem;
+            Exiled.Events.Handlers.Player.Shooting -= OnShooting;
             Exiled.Events.Handlers.Player.UsingItem -= OnUsingItem;
             Exiled.Events.Handlers.Player.Escaping -= OnEscaping;
-            Exiled.Events.Handlers.Server.WaitingForPlayers -= OnWaitingForPlayers;
+
 
             Exiled.Events.Handlers.Player.Handcuffing -= OnHandCuff;
             Exiled.Events.Handlers.Player.EnteringPocketDimension -= OnEnteringPocketDimension;
             Exiled.Events.Handlers.Server.RoundStarted -= OnRoundStarted;
+            Exiled.Events.Handlers.Server.WaitingForPlayers -= OnWaitingForPlayers;
+
+            Exiled.Events.Handlers.Player.InteractingDoor -= OnInteractingDoor;
 
 
             base.UnsubscribeEvents();
