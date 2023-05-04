@@ -122,9 +122,7 @@ namespace Control.CustomItems
                 {
                     ev.Player.ShowHint("Перезарядка..", 3);
 
-                    Log.Info("Start reload");
                     await Task.Delay(3000);
-                    Log.Info("Reload end");
 
                     if (!CustomItem.Get(4).Check(ev.Player.CurrentItem))
                     {
@@ -137,10 +135,7 @@ namespace Control.CustomItems
 
                     ev.Player.ShowHint("Перезарядка..", 3);
 
-                    Log.Info("Reached end");
-
                     GrenadeLauncher.Ammo++;
-                    Log.Info(GrenadeLauncher.Ammo);
                     ev.Player.RemoveItem(item);
                 }
             }
