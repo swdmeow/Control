@@ -37,7 +37,14 @@ namespace Control.CustomItems
 
             base.SubscribeEvents();
         }
+        protected override void UnsubscribeEvents()
+        {
+            Exiled.Events.Handlers.Player.UsingItem -= OnUsingItem;
+            Exiled.Events.Handlers.Player.Dying -= OnDying;
+            Exiled.Events.Handlers.Server.RoundStarted -= OnRoundStarted;
 
+            base.UnsubscribeEvents();
+        }
         private void OnUsingItem(UsingItemEventArgs ev)
         {
             if (CustomItem.Get(5).Check(ev.Item))
