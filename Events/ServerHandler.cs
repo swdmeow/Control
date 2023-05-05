@@ -149,6 +149,8 @@
             try
             {
                 Res.DiedWithSCP500R.Clear();
+                Res.RoleDiedWithSCP500R.Clear();
+
                 ControlNR.Singleton.db.Execute("DROP COLLECTION VIPPlayers");
             }
             catch (Exception ex)
