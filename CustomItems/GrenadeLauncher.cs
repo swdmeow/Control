@@ -1,3 +1,4 @@
+using Control.Extensions;
 using Exiled.API.Enums;
 using Exiled.API.Features;
 using Exiled.API.Features.Attributes;
@@ -9,6 +10,7 @@ using Exiled.CustomItems.API.Features;
 using Exiled.Events.EventArgs.Player;
 using Hints;
 using MEC;
+using PostProcessing;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -115,25 +117,26 @@ namespace Control.CustomItems
             }
 
             Firearm GrenadeLauncher = ev.Firearm;
+            int AmmoCount = 0;
 
             foreach (Item item in ev.Player.Items.ToList())
             {
                 if (item.Type == ItemType.GrenadeHE)
                 {
-                    ev.Player.ShowHint("Перезарядка..", 3);
-
-                    await Task.Delay(3000);
-
-                    if (!CustomItem.Get(4).Check(ev.Player.CurrentItem))
-                    {
-                        ev.Player.ReferenceHub.hints.Show(new TextHint("Вы убрали пистолет из своей руки..", new HintParameter[] { new StringHintParameter("") }, HintEffectPresets.FadeInAndOut(0f, 12f, 22f), 3f));
-
-                        return;
-                    }
+                    ev.Player.ShowHint($"Перезарядка..\n{(AmmoCount == 0 ? "+1" : $"+{AmmoCount}")}", 3);
 
                     if (GrenadeLauncher.Ammo >= 3) return;
 
-                    ev.Player.ShowHint("Перезарядка..", 3);
+                    await Task.Delay(3000);
+
+                    AmmoCount += 1;
+
+                    if (!CustomItem.Get(4).Check(ev.Player.CurrentItem))
+                    {
+                        ev.Player.ShowHint("Вы убрали пистолет из своей руки..", 3);
+
+                        return;
+                    }
 
                     GrenadeLauncher.Ammo++;
                     ev.Player.RemoveItem(item);

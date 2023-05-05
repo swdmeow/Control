@@ -60,7 +60,7 @@ namespace Control.Extensions
                     {
                         hintNew += $"{var}\n";
                     }
-                    kvp.Key.ShowHint(hintNew, 0.6f) ;
+                    kvp.Key.ShowHint(hintNew, 0.6f);
                 }
                 yield return Timing.WaitForSeconds(0.5f);
             }

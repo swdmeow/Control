@@ -10,6 +10,7 @@
     using Control.CustomItems;
     using System.Linq;
     using PlayerRoles;
+    using Control.Extensions;
 
     [CommandHandler(typeof(ClientCommandHandler))]
     public class Res : ICommand
@@ -33,9 +34,7 @@
                 // 
                 player.Position = oldPlayer.Position;
 
-
                 player.ShowHint("", 0.1f);
-
                 DiedWithSCP500R.Clear();
 
                 response = "Успешно?..";
