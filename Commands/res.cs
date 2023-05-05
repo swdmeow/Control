@@ -11,6 +11,7 @@
     using System.Linq;
     using PlayerRoles;
     using Control.Extensions;
+    using CustomPlayerEffects;
 
     [CommandHandler(typeof(ClientCommandHandler))]
     public class Res : ICommand
@@ -33,6 +34,11 @@
                 player.Role.Set(role, RoleSpawnFlags.None);
                 // 
                 player.Position = oldPlayer.Position;
+
+                foreach(StatusEffectBase effect in oldPlayer.ActiveEffects)
+                {
+                    player.EnableEffect(effect, effect.Duration);
+                }
 
                 player.ShowHint("", 0.1f);
                 DiedWithSCP500R.Clear();
