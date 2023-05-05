@@ -22,6 +22,7 @@
     using Control.Commands;
     using Exiled.API.Features.Roles;
     using System.Threading.Tasks;
+    using Mono.Security.X509.Extensions;
 
     internal sealed class PlayerHandler
     {
@@ -34,14 +35,14 @@
             Exiled.Events.Handlers.Player.ReloadingWeapon += OnReloadWeapon;
             Exiled.Events.Handlers.Player.Left += OnLeft;
             Exiled.Events.Handlers.Player.Verified += OnVerified;
-
+            Exiled.Events.Handlers.Player.UsingRadioBattery += OnUsingRadioBatteryEventArgs;
 
             Exiled.Events.Handlers.Player.InteractingDoor += OnInteractingDoor;
             Exiled.Events.Handlers.Player.UnlockingGenerator += OnUnlockingGenerator;
             Exiled.Events.Handlers.Player.ActivatingWarheadPanel += OnActivatingWarheadPanel;
             Exiled.Events.Handlers.Player.InteractingLocker += OnInteractingLocker;
             Exiled.Events.Handlers.Player.TriggeringTesla += OnTriggeringTesla;
-            //Exiled.Events.Handlers.Player.PickingUpItem += OnPickingUpItem;
+            //Exiled.Events.Handlers.Player.PickingUpItem += OnPickingUpItem; //
 
         }
         public void OnDisabled()
@@ -52,6 +53,7 @@
             Exiled.Events.Handlers.Player.ReloadingWeapon -= OnReloadWeapon;
             Exiled.Events.Handlers.Player.Left -= OnLeft;
             Exiled.Events.Handlers.Player.Verified -= OnVerified;
+            Exiled.Events.Handlers.Player.UsingRadioBattery -= OnUsingRadioBatteryEventArgs;
 
 
             Exiled.Events.Handlers.Player.InteractingDoor -= OnInteractingDoor;
@@ -63,25 +65,27 @@
 
         private void OnVerified(VerifiedEventArgs ev)
         {
-            if (ev.Player.GroupName == "d1")
+            Timing.CallDelayed(0.1f, () =>
             {
-
-                // Add player to DB;
-                ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Insert(new PlayerLog()
+                if (ev.Player.GroupName == "d1")
                 {
-                    ID = ev.Player.UserId,
-                    cooldownRole = false,
-                    cooldownItem = false,
-                    cooldownCall = false,
-                    cooldownVote = false,
-                    ForcedToSCP = false,
-                    GivedTimes = 0,
-                    ForcedTimes = 0,
-                    CallTimes = 0,
-                });
-            }
+                    Log.Info("Got it");
+                    // Add player to DB;
+                    ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Insert(new PlayerLog()
+                    {
+                        ID = ev.Player.UserId,
+                        cooldownRole = false,
+                        cooldownItem = false,
+                        cooldownCall = false,
+                        cooldownVote = false,
+                        ForcedToSCP = false,
+                        GivedTimes = 0,
+                        ForcedTimes = 0,
+                        CallTimes = 0,
+                    });
+                }
+            });
         }
-
         /*private void OnPickingUpItem(PickingUpItemEventArgs ev)
         {
             if(ServerHandler.InteractingItemsElevator.Contains(ev.Pickup))
@@ -97,6 +101,10 @@
         {
             ev.IsAllowed = false;
             ev.IsInIdleRange = false;
+        }
+        private void OnUsingRadioBatteryEventArgs(UsingRadioBatteryEventArgs ev)
+        {
+            ev.Drain = 0f;
         }
         private void OnInteractingDoor(InteractingDoorEventArgs ev)
         {
@@ -120,15 +128,31 @@
         }
         private void OnChangingRole(ChangingRoleEventArgs ev)
         {
-            if (ev.Player == null) return;
+            Log.Info(ev.Player.ToString());
+
+            //if (ev.Player == null) return;
 
             if (CustomRole.Get(2).Check(ev.Player)) return;
 
-            ev.Player.SetAmmo(AmmoType.Nato9, 100);
-            ev.Player.SetAmmo(AmmoType.Ammo44Cal, 100);
-            ev.Player.SetAmmo(AmmoType.Nato762, 100);
-            ev.Player.SetAmmo(AmmoType.Ammo12Gauge, 14);
-            ev.Player.SetAmmo(AmmoType.Ammo44Cal, 100);
+            Timing.CallDelayed(0.1f, () =>
+            {
+                ev.Player.SetAmmo(AmmoType.Nato9, 101);
+                ev.Player.SetAmmo(AmmoType.Ammo44Cal, 101);
+                ev.Player.SetAmmo(AmmoType.Nato762, 101);
+                ev.Player.SetAmmo(AmmoType.Ammo12Gauge, 14);
+                ev.Player.SetAmmo(AmmoType.Nato556, 101);
+            });
+
+            if(ev.NewRole == RoleTypeId.NtfPrivate && ev.Items.Contains(ItemType.KeycardNTFOfficer))
+            {
+                ev.Items.Remove(ItemType.KeycardNTFOfficer);
+                ev.Items.Add(ItemType.KeycardNTFLieutenant);
+
+            }
+            if (ev.NewRole == RoleTypeId.ClassD)
+            {
+                ev.Items.Add(ItemType.KeycardJanitor);
+            }
         }
         private void OnLeft(LeftEventArgs ev)
         {
@@ -158,6 +182,7 @@
         {
             if (ev.Player == null) return;
 
+
             ev.Player.SetAmmo(AmmoType.Nato9, 0);
             ev.Player.SetAmmo(AmmoType.Ammo44Cal, 0);
             ev.Player.SetAmmo(AmmoType.Nato762, 0);
@@ -169,11 +194,11 @@
         {
             if (CustomRole.Get(2).Check(ev.Player)) return;
 
-            ev.Player.SetAmmo(AmmoType.Nato9, 200);
-            ev.Player.SetAmmo(AmmoType.Ammo44Cal, 200);
-            ev.Player.SetAmmo(AmmoType.Nato762, 200);
+            ev.Player.SetAmmo(AmmoType.Nato9, 101);
+            ev.Player.SetAmmo(AmmoType.Ammo44Cal, 101);
+            ev.Player.SetAmmo(AmmoType.Nato762, 101);
             ev.Player.SetAmmo(AmmoType.Ammo12Gauge, 14);
-            ev.Player.SetAmmo(AmmoType.Nato556, 200);
+            ev.Player.SetAmmo(AmmoType.Nato556, 101);
         }
         /*
         private async void runElevator()
