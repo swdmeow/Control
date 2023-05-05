@@ -28,7 +28,7 @@
         public static bool elevIsLock = false;
         public void OnEnabled()
         {
-            Exiled.Events.Handlers.Player.Spawned += OnSpawned;
+            Exiled.Events.Handlers.Player.ChangingRole += OnChangingRole;
             Exiled.Events.Handlers.Player.DroppingAmmo += OnDroppingAmmo;
             Exiled.Events.Handlers.Player.Dying += OnDying;
             Exiled.Events.Handlers.Player.ReloadingWeapon += OnReloadWeapon;
@@ -46,7 +46,7 @@
         }
         public void OnDisabled()
         {
-            Exiled.Events.Handlers.Player.Spawned -= OnSpawned;
+            Exiled.Events.Handlers.Player.ChangingRole -= OnChangingRole;
             Exiled.Events.Handlers.Player.DroppingAmmo -= OnDroppingAmmo;
             Exiled.Events.Handlers.Player.Dying -= OnDying;
             Exiled.Events.Handlers.Player.ReloadingWeapon -= OnReloadWeapon;
@@ -118,7 +118,7 @@
             if (!ev.IsAllowed && ev.Player.HasKeycardPermission(Interactables.Interobjects.DoorUtils.KeycardPermissions.AlphaWarhead))
                 ev.IsAllowed = true;
         }
-        private void OnSpawned(SpawnedEventArgs ev)
+        private void OnChangingRole(ChangingRoleEventArgs ev)
         {
             if (ev.Player == null) return;
 
@@ -135,9 +135,10 @@
             if(Res.DiedWithSCP500R.Contains(ev.Player))
             {
                 Res.DiedWithSCP500R.Remove(ev.Player);
+                Res.RoleDiedWithSCP500R.Clear();
             }
 
-            if(Scp173Role.TurnedPlayers.Contains(ev.Player))
+            if (Scp173Role.TurnedPlayers.Contains(ev.Player))
             {
                 Scp173Role.TurnedPlayers.Remove(ev.Player);
             }
@@ -156,6 +157,7 @@
         private void OnDying(DyingEventArgs ev)
         {
             if (ev.Player == null) return;
+
             ev.Player.SetAmmo(AmmoType.Nato9, 0);
             ev.Player.SetAmmo(AmmoType.Ammo44Cal, 0);
             ev.Player.SetAmmo(AmmoType.Nato762, 0);
