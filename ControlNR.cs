@@ -4,17 +4,13 @@ namespace Ñontrol
     using Exiled.CustomItems.API.Features;
     using Exiled.CustomRoles.API.Features;
     using Control.Events;
-    using Exiled.API.Enums;
     using LiteDB;
     using System.IO;
     using HarmonyLib;
     using System;
-    using Exiled.Events.EventArgs.Scp079;
-    using XPSystem.API.Serialization;
     using MEC;
     using Control.Extensions;
     using Control.CustomRoles;
-
     public class ControlNR : Plugin<Config>
     {
         public static ControlNR Singleton;
@@ -67,9 +63,6 @@ namespace Ñontrol
         }
         public override void OnDisabled()
         {
-            
-            Singleton = null;
-
             PlayerHandler = null;
             ServerHandler = null;
             MapHandler = null;
@@ -88,6 +81,8 @@ namespace Ñontrol
 
             CustomItem.UnregisterItems();
             CustomRole.UnregisterRoles();
+
+            Singleton = null;
 
             base.OnDisabled();
         }
