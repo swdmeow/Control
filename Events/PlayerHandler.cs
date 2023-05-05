@@ -69,7 +69,6 @@
             {
                 if (ev.Player.GroupName == "d1")
                 {
-                    Log.Info("Got it");
                     // Add player to DB;
                     ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Insert(new PlayerLog()
                     {
@@ -128,8 +127,6 @@
         }
         private void OnChangingRole(ChangingRoleEventArgs ev)
         {
-            Log.Info(ev.Player.ToString());
-
             //if (ev.Player == null) return;
 
             if (CustomRole.Get(2).Check(ev.Player)) return;
