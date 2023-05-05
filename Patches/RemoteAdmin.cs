@@ -20,6 +20,7 @@ using System.Text.RegularExpressions;
 using CommandSystem.Commands.RemoteAdmin;
 using UnityStandardAssets.Effects;
 using Exiled.Events.EventArgs.Player;
+using Utf8Json.Formatters;
 
 namespace Control.Patches
 {
@@ -62,6 +63,25 @@ namespace Control.Patches
                         Allowed = false;
                         var log = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(player.UserId);
 
+                        if (log == null)
+                        {
+                            ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Insert(new PlayerLog()
+                            {
+                                ID = player.UserId,
+                                cooldownRole = false,
+                                cooldownItem = false,
+                                cooldownCall = false,
+                                cooldownVote = false,
+                                ForcedToSCP = false,
+                                GivedTimes = 0,
+                                ForcedTimes = 0,
+                                CallTimes = 0,
+                            });
+
+                            Success = false;
+                            sender.RaReply($"ControlNR#Вы занесены в базу данных, повторите попытку..", Success, true, string.Empty);
+                            return Allowed;
+                        }
 
                         if (Round.IsStarted == false)
                         {
@@ -69,14 +89,10 @@ namespace Control.Patches
                             sender.RaReply($"ControlNR#Раунд не начался..", Success, true, string.Empty);
                             return Allowed;
                         }
-                        if (Round.IsEnded == true)
-                        {
-                            Success = false;
-                            sender.RaReply($"ControlNR#Раунд закончился..", Success, true, string.Empty);
-                            return Allowed;
-                        }
 
                         Success = true;
+
+                        Log.Info(args[0]);
 
                         if (args[0] == "forceclass")
                         {
@@ -172,8 +188,16 @@ namespace Control.Patches
                             {
                                 args = q.Trim().Split(QueryProcessor.SpaceArray, 512);
 
+                                if (player.Role.Team == Team.SCPs)
+                                {
+                                    Allowed = false;
+                                    sender.RaReply($"ControlNR#Зачем..", Success, true, string.Empty);
+                                    return Allowed;
+                                }
+
                                 if (player.Items.Count >= 8)
                                 {
+                                    Allowed = false;
                                     sender.RaReply($"ControlNR#У вас больше 8 предметов.. отмена..", Success, true, string.Empty);
                                     return Allowed;
                                 }
