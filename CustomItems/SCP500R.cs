@@ -17,6 +17,7 @@ using UnityEngine;
 using Control.Commands;
 using System.Linq;
 using Control.Extensions;
+using CustomPlayerEffects;
 
 namespace Control.CustomItems
 {
@@ -64,6 +65,11 @@ namespace Control.CustomItems
 
                     Res.DiedWithSCP500R.Add(ev.Player);
                     Res.RoleDiedWithSCP500R.Add(ev.Player.Role.Type);
+
+                    foreach(StatusEffectBase eff in ev.Player.ActiveEffects)
+                    {
+                        Res.StatusEffectBase.Add(eff);
+                    }
 
                     item.Destroy();
 
