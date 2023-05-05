@@ -20,6 +20,7 @@
 
         public static List<Player> DiedWithSCP500R = new List<Player>();
         public static List<RoleTypeId> RoleDiedWithSCP500R = new List<RoleTypeId>();
+        public static List<StatusEffectBase> StatusEffectBase = new List<StatusEffectBase>();
         public string[] Aliases { get; } = new string[] { "respawn" };
         public string Description { get; } = "Команда для возвраждения, если вы имели на тот момент SCP-500-R..";
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
@@ -35,14 +36,15 @@
                 // 
                 player.Position = oldPlayer.Position;
 
-                foreach(StatusEffectBase effect in oldPlayer.ActiveEffects)
+                foreach(StatusEffectBase effect in StatusEffectBase)
                 {
                     player.EnableEffect(effect, effect.Duration);
                 }
 
                 player.ShowHint("", 0.1f);
                 DiedWithSCP500R.Clear();
-
+                RoleDiedWithSCP500R.Clear();
+                StatusEffectBase.Clear();
                 response = "Успешно?..";
                 return true;
             }

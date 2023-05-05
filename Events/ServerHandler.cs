@@ -34,6 +34,7 @@
     using MapEditorReborn.API.Features.Serializable;
     using HarmonyLib;
     using CommandSystem.Commands.RemoteAdmin.ServerEvent;
+    using CustomPlayerEffects;
 
     internal sealed class ServerHandler
     {
@@ -159,6 +160,7 @@
             {
                 Res.DiedWithSCP500R.Clear();
                 Res.RoleDiedWithSCP500R.Clear();
+                Res.StatusEffectBase.Clear();
                 CassieDestroyedLVL = 0;
 
                 ControlNR.Singleton.db.Execute("DROP COLLECTION VIPPlayers");
@@ -188,7 +190,6 @@
             else if (mtf && !classd && !scps && chaos) ev.IsRoundEnded = false;
             else if (!mtf && !classd && !scps && !chaos) ev.IsRoundEnded = true;
 
-            Log.Info(ev.IsRoundEnded);
             if (ev.IsRoundEnded == true)
             {
                 PlayerExtensions._hintQueue.Clear();
