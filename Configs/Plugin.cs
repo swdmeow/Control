@@ -1,5 +1,6 @@
 namespace Сontrol
 {
+    using Control;
     using Exiled.API.Interfaces;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -11,6 +12,5 @@ namespace Сontrol
 
         [Description("Включен ли дебаг-мод?")]
         public bool Debug { get; set; } = false;
-        // 
     }
 }
