@@ -92,8 +92,6 @@ namespace Control.Patches
 
                         Success = true;
 
-                        Log.Info(args[0]);
-
                         if (args[0] == "forceclass")
                         {
                             try
