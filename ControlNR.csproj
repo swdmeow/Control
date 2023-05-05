@@ -137,7 +137,7 @@
     <Compile Include="Commands\CustomItemController.cs" />
     <Compile Include="Commands\CustomRoleController.cs" />
     <Compile Include="ControlNR.cs" />
-    <Compile Include="Config.cs" />
+    <Compile Include="Configs\Plugin.cs" />
     <Compile Include="CustomItems\SCP500R.cs" />
     <Compile Include="CustomItems\SCP035Mask.cs" />
     <Compile Include="CustomRoles\SCP035.cs" />
