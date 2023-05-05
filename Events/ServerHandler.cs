@@ -32,6 +32,8 @@
     using InventorySystem.Items.Pickups;
     using static Mono.Security.X509.X520;
     using MapEditorReborn.API.Features.Serializable;
+    using HarmonyLib;
+    using CommandSystem.Commands.RemoteAdmin.ServerEvent;
 
     internal sealed class ServerHandler
     {
@@ -60,7 +62,14 @@
         }
         private void OnStartingRound()
         {
-            var it = CustomItem.Get(3).Spawn(Room.List.ElementAt(new System.Random().Next(0, Room.List.Count())).transform.position + Vector3.up);
+            //var SCPs = Player.List.Where(x => x.IsScp).ToArray();
+
+            //string subtitles = $"Сканирование систем.. Сканирование систем заверешено.. обнаружено нарушение условий содержаний SCP-объектов {SCPs.Join(x => x.Role.Name, ", ")}";
+            //string msg = $"Scanning System . . . pitch_0.9 .g1 pitch_0.85 .g1 pitch_0.8 .g1 pitch_0.775 .g1 pitch_0.74 .g1 . pitch_2 .g6 . . . pitch_0.9 .g2 pitch_1 .g2 pitch_1.05 .g2 pitch_1.1 .g2 pitch_1.135 .g2 pitch_1.16 .g2 . . . pitch_1.05 . system scan completed . .g1 . detected CONTAINMENT breach of {SCPs.Join(x => x.Role.Name.Replace("-", " "), " . ")}";
+
+           //Cassie.Message($"{subtitles} <color=#ffffff00>h {msg}", false, false, true);
+
+            CustomItem.Get(3).Spawn(Room.List.ElementAt(new System.Random().Next(0, Room.List.Count())).transform.position + Vector3.up);
             /*
             Room room = Room.Get(RoomType.LczAirlock);
 
@@ -150,6 +159,7 @@
             {
                 Res.DiedWithSCP500R.Clear();
                 Res.RoleDiedWithSCP500R.Clear();
+                CassieDestroyedLVL = 0;
 
                 ControlNR.Singleton.db.Execute("DROP COLLECTION VIPPlayers");
             }
@@ -166,48 +176,19 @@
         }
         private void OnEndingRound(EndingRoundEventArgs ev)
         {
-            bool human = false;
-            bool scps = false;
+            bool mtf = Player.List.Count(p => p.Role.Team == Team.FoundationForces && !CustomRole.Get(1).Check(p)) > 0;
+            bool classd = Player.List.Count(p => p.Role == RoleTypeId.ClassD && !CustomRole.Get(2).Check(p) && !CustomRole.Get(1).Check(p)) > 0;
+            bool chaos = Player.List.Count(p => p.Role.Team == Team.ChaosInsurgency && !CustomRole.Get(1).Check(p)) > 0;
+            bool scps = Player.List.Count(p => p.Role.Team == Team.SCPs && CustomRole.Get(1).Check(p)) > 0;
 
-            foreach (Player player in Player.List)
-            {
-                if (player == null)
-                {
-                    Log.Debug($"{nameof(OnEndingRound)}: Skipping a null player.");
-                    continue;
-                }
+            if (mtf && !classd && !scps && !chaos) ev.IsRoundEnded = true;
+            else if (!mtf && !classd && scps) ev.IsRoundEnded = true;
+            else if (mtf && (classd || chaos) && !scps) ev.IsRoundEnded = false;
+            else if (!mtf && classd && !scps) ev.IsRoundEnded = true;
+            else if (mtf && !classd && !scps && chaos) ev.IsRoundEnded = false;
+            else if (!mtf && !classd && !scps && !chaos) ev.IsRoundEnded = true;
 
-                if(CustomRole.Get(2).Check(player))
-                {
-                    continue;
-                }
-
-                if (CustomRole.Get(1).Check(player) || player.Role.Side == Side.Scp)
-                {
-                    Log.Debug($"{nameof(OnEndingRound)}: Found an SCP player.");
-                    scps = true;
-                }
-                else if (player.Role.Side == Side.Mtf || player.Role == RoleTypeId.ClassD || player.Role.Side == Side.ChaosInsurgency)
-                {
-                    Log.Debug($"{nameof(OnEndingRound)}: Found a Human player.");
-                    human = true;
-                }
-
-                if (scps && human)
-                {
-                    Log.Debug($"{nameof(OnEndingRound)}: Both humans and scps detected.");
-                    break;
-                }
-            }
-
-            if (human && scps)
-            {
-                ev.IsRoundEnded = false;
-            } else
-            {
-                ev.IsRoundEnded = true;
-            }
-
+            Log.Info(ev.IsRoundEnded);
             if (ev.IsRoundEnded == true)
             {
                 PlayerExtensions._hintQueue.Clear();
