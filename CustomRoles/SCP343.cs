@@ -14,6 +14,7 @@ using Exiled.CustomItems.API.Features;
 using Interactables.Interobjects.DoorUtils;
 using System;
 using PlayerExtensions = Control.Extensions.PlayerExtensions;
+using Exiled.Events.EventArgs.Scp914;
 
 namespace Control.CustomRoles
 {
@@ -92,7 +93,7 @@ namespace Control.CustomRoles
         {
             if (!CustomRole.Get(2).Check(ev.Player)) return;
 
-            var randPlayer = Exiled.API.Features.Player.List.ElementAt(new System.Random().Next(0, Exiled.API.Features.Player.List.Count()));
+            var randPlayer = Exiled.API.Features.Player.List.Where(x => x != ev.Player).Where(x => x.IsAlive).ElementAt(new System.Random().Next(0, Exiled.API.Features.Player.List.Count()));
             ev.Player.Position = randPlayer.Position;
 
             PlayerExtensions.ShowCustomHint(ev.Player, $"Вы были телепортированы к игроку {randPlayer.Nickname}..", 1);
@@ -138,9 +139,10 @@ namespace Control.CustomRoles
         }
         private void OnHandCuff(HandcuffingEventArgs ev)
         {
-            if (!CustomRole.Get(2).Check(ev.Target)) return;
-
-            ev.IsAllowed = false;
+            if (CustomRole.Get(2).Check(ev.Target) || CustomRole.Get(2).Check(ev.Player))
+            {
+                ev.IsAllowed = false;
+            }
         }
         private void OnEnteringPocketDimension(EnteringPocketDimensionEventArgs ev)
         {
@@ -243,6 +245,20 @@ namespace Control.CustomRoles
                 }
             }
         }
+        private void UpgradingInventoryItem(UpgradingInventoryItemEventArgs ev)
+        {
+            if (CustomRole.Get(2).Check(ev.Player))
+            {
+                ev.IsAllowed = false;
+            }
+        }
+        private void UpgradingPlayer(UpgradingPlayerEventArgs ev)
+        {
+            if (CustomRole.Get(2).Check(ev.Player))
+            {
+                ev.IsAllowed = false;
+            }
+        }
         protected override void SubscribeEvents()
         {
             Exiled.Events.Handlers.Player.FlippingCoin += OnFlippingCoin;
@@ -252,6 +268,9 @@ namespace Control.CustomRoles
             Exiled.Events.Handlers.Player.Shooting += OnShooting;
             Exiled.Events.Handlers.Player.UsingItem += OnUsingItem;
             Exiled.Events.Handlers.Player.Escaping += OnEscaping;
+
+            Exiled.Events.Handlers.Scp914.UpgradingInventoryItem += UpgradingInventoryItem;
+            Exiled.Events.Handlers.Scp914.UpgradingPlayer += UpgradingPlayer;
 
 
             Exiled.Events.Handlers.Player.Handcuffing += OnHandCuff;
@@ -272,7 +291,8 @@ namespace Control.CustomRoles
             Exiled.Events.Handlers.Player.Shooting -= OnShooting;
             Exiled.Events.Handlers.Player.UsingItem -= OnUsingItem;
             Exiled.Events.Handlers.Player.Escaping -= OnEscaping;
-
+            Exiled.Events.Handlers.Scp914.UpgradingInventoryItem -= UpgradingInventoryItem;
+            Exiled.Events.Handlers.Scp914.UpgradingPlayer -= UpgradingPlayer;
 
             Exiled.Events.Handlers.Player.Handcuffing -= OnHandCuff;
             Exiled.Events.Handlers.Player.EnteringPocketDimension -= OnEnteringPocketDimension;
@@ -348,11 +368,12 @@ namespace Control.CustomRoles
                     {
                         if(!ragdoll.Owner.IsAlive)
                         {
-                            ragdoll.Owner.Role.Set(ragdoll.Role);
+                            ragdoll.Owner.Role.Set(ragdoll.Role, Exiled.API.Enums.SpawnReason.Revived, RoleSpawnFlags.None);
                             ragdoll.Owner.Position = ragdoll.Position + Vector3.up;
                             CooldownSCP500 = 500;
                             PlayerExtensions.ShowCustomHint(ev.Player, $"Вы восскресили игрока {ragdoll.Owner.Nickname}..", 1);
                             PlayerExtensions.ShowCustomHint(ragdoll.Owner, $"Вас восскресил игрок {ev.Player.Nickname}..", 1);
+
 
                             return;
                         }
@@ -370,8 +391,8 @@ namespace Control.CustomRoles
             {
                 Log.Debug("Ticked cooldown..");
                 if (CooldownPainkillers > 0) CooldownPainkillers--;
-                if (CooldownRevolver > 0) CooldownPainkillers--;
-                if (CooldownMedkit > 0) CooldownPainkillers--;
+                if (CooldownRevolver > 0) CooldownRevolver--;
+                if (CooldownMedkit > 0) CooldownMedkit--;
                 if (CooldownSCP500 > 0) CooldownSCP500--;
 
                 yield return Timing.WaitForSeconds(1f);
