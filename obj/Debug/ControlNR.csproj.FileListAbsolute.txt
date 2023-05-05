@@ -121,10 +121,8 @@ D:\github\ControlNR\ControlNR\Release\Mono.Data.Sqlite.dll
 D:\github\ControlNR\ControlNR\Release\Mono.Posix.dll
 D:\github\ControlNR\ControlNR\Release\Mono.Security.dll
 D:\github\ControlNR\ControlNR\Release\Mono.WebBrowser.dll
-D:\github\ControlNR\ControlNR\Release\Newtonsoft.Json.dll
 D:\github\ControlNR\ControlNR\Release\PluginAPI.dll
 D:\github\ControlNR\ControlNR\Release\SCPSLAudioApi.dll
-D:\github\ControlNR\ControlNR\Release\System.Threading.Tasks.Extensions.dll
 D:\github\ControlNR\ControlNR\Release\UnityEngine.PhysicsModule.dll
 D:\github\ControlNR\ControlNR\Release\Unity.Timeline.dll
 D:\github\ControlNR\ControlNR\Release\UnityEngine.ParticleSystemModule.dll
