@@ -59,13 +59,6 @@ namespace Control.CustomItems
         {
             // Do nothing, to not cause pickup message and other things..
         }
-        protected override void OnChanging(ChangingItemEventArgs ev)
-        {
-            if (CustomItem.Get(3).Check(ev.NewItem))
-            {
-                ev.IsAllowed = false;
-            }
-        }
         protected override void OnPickingUp(PickingUpItemEventArgs ev)
         {
             if (CustomItem.Get(3).Check(ev.Pickup))
