@@ -21,6 +21,7 @@ using CommandSystem.Commands.RemoteAdmin;
 using UnityStandardAssets.Effects;
 using Exiled.Events.EventArgs.Player;
 using Utf8Json.Formatters;
+using Respawning;
 
 namespace Control.Patches
 {
@@ -54,11 +55,11 @@ namespace Control.Patches
 
                 Player player = Player.Get(sender);
 
-                string[] args = q.Trim().Split(QueryProcessor.SpaceArray, 512, StringSplitOptions.RemoveEmptyEntries);
+                string[] args = q.Trim().Split(QueryProcessor.SpaceArray, 512);
 
                 if (player != null)
                 {
-                    if (player?.GroupName == "d1")
+                    if (player?.GroupName == "d1" || player?.GroupName == "d2")
                     {
                         Allowed = false;
                         var log = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(player.UserId);
@@ -92,22 +93,72 @@ namespace Control.Patches
 
                         Success = true;
 
-                        if (args[0] == "forceclass")
+                        if (args[0] == "size")
                         {
-                            try
-                            {
-                                if (log.ForcedTimes >= 1)
-                                {
-                                    Success = false;
-                                    sender.RaReply($"ControlNR#Вы уже использовали все свои попытки..", Success, true, string.Empty);
-                                    return Allowed;
-                                }
+                            Allowed = false;
+                            Success = false;
 
-                                if (args[2].ToLower().StartsWith("scp"))
+                            if (!float.TryParse(args[1], out float x) || !float.TryParse(args[2], out float y) || !float.TryParse(args[3], out float z))
+                            {
+                                sender.RaReply($"ControlNR#X, Y или Z - не цифра..", Success, true, string.Empty);
+                                return Allowed;
+                            }
+
+                            if (x < 0.9f || y < 0.9f || z < 0.9f)
+                            {
+                                sender.RaReply($"ControlNR#Вы не можете изменить себе размер меньше 0.9..", Success, true, string.Empty);
+                                return Allowed;
+                            }
+                            if (x > 1.1f || y > 1.1f || z > 1.1f)
+                            {
+                                sender.RaReply($"ControlNR#Вы не можете изменить себе размер больше 1.1..", Success, true, string.Empty);
+                                return Allowed;
+                            }
+                            Success = true;
+
+                            player.Scale = new UnityEngine.Vector3(x, y, z);
+                            sender.RaReply($"ControlNR#Успешно..", Success, true, string.Empty);
+
+                            return Allowed;
+                        }
+
+                        if (player?.GroupName == "d1")
+                        {
+                            if (args[0] == "forceclass")
+                            {
+                                try
                                 {
-                                    if (Player.List.Where(x => x.IsScp)?.Count() == 0)
+                                    if (log.ForcedTimes >= 1)
                                     {
-                                        if (Player.List.Where(x => x.IsHuman).Count() >= 6)
+                                        Success = false;
+                                        sender.RaReply($"ControlNR#Вы уже использовали все свои попытки..", Success, true, string.Empty);
+                                        return Allowed;
+                                    }
+
+                                    if (args[2].ToLower().StartsWith("scp"))
+                                    {
+                                        if (Player.List.Where(x => x.IsScp)?.Count() == 0)
+                                        {
+                                            if (Player.List.Where(x => x.IsHuman).Count() >= 6)
+                                            {
+                                                Success = true;
+
+                                                log.cooldownRole = true;
+                                                log.ForcedTimes += 1;
+                                                log.ForcedToSCP = true;
+
+                                                ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
+
+                                                sender.RaReply($"ControlNR#Успешно..", Success, true, string.Empty);
+                                                return Allowed;
+                                            }
+
+                                            Success = false;
+                                            sender.RaReply($"ControlNR#Кол-во игроков для спавна SCP меньше необходимого..", Success, true, string.Empty);
+                                            return Allowed;
+                                        }
+
+                                        if (Player.List.Where(x => x.IsHuman).Count() / Player.List.Where(x => x.IsScp)?.Count() <= 10)
                                         {
                                             Success = true;
 
@@ -120,171 +171,365 @@ namespace Control.Patches
                                             sender.RaReply($"ControlNR#Успешно..", Success, true, string.Empty);
                                             return Allowed;
                                         }
-
-                                        Success = false;
-                                        sender.RaReply($"ControlNR#Кол-во игроков для спавна SCP меньше необходимого..", Success, true, string.Empty);
-                                        return Allowed;
+                                        else
+                                        {
+                                            Success = false;
+                                            sender.RaReply($"ControlNR#Кол-во игроков для спавна SCP меньше необходимого..", Success, true, string.Empty);
+                                            return Allowed;
+                                        }
                                     }
 
-                                    if (Player.List.Where(x => x.IsHuman).Count() / Player.List.Where(x => x.IsScp)?.Count() <= 10)
+                                    if (args[2].ToLower().StartsWith("ntf") || args[2].ToLower().StartsWith("chaos"))
                                     {
-                                        Success = true;
-
-                                        log.cooldownRole = true;
-                                        log.ForcedTimes += 1;
-                                        log.ForcedToSCP = true;
-
-                                        ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
-
-                                        sender.RaReply($"ControlNR#Успешно..", Success, true, string.Empty);
-                                        return Allowed;
+                                        if (Round.ElapsedTime.TotalMinutes <= 3)
+                                        {
+                                            Success = false;
+                                            sender.RaReply($"ControlNR#За МОГ и ХАОС можно форснутся после 3-х минут раунда..", Success, true, string.Empty);
+                                            return Allowed;
+                                        }
                                     }
-                                    else
-                                    {
-                                        Success = false;
-                                        sender.RaReply($"ControlNR#Кол-во игроков для спавна SCP меньше необходимого..", Success, true, string.Empty);
-                                        return Allowed;
-                                    }
-                                }
 
-                                if (args[2].ToLower().StartsWith("ntf") || args[2].ToLower().StartsWith("chaos"))
-                                {
-                                    if (Round.ElapsedTime.TotalMinutes <= 3)
+                                    if (args[2].ToLower().StartsWith("tutorial") || args[2].ToLower().StartsWith("overwatch"))
                                     {
                                         Success = false;
-                                        sender.RaReply($"ControlNR#За МОГ и ХАОС можно форснутся после 3-х минут раунда..", Success, true, string.Empty);
+                                        sender.RaReply($"ControlNR#Не-не..", Success, true, string.Empty);
                                         return Allowed;
                                     }
-                                }
 
-                                if (args[2].ToLower().StartsWith("tutorial") || args[2].ToLower().StartsWith("overwatch"))
-                                {
-                                    Success = false;
-                                    sender.RaReply($"ControlNR#Не-не..", Success, true, string.Empty);
+                                    Enum.TryParse(args[2], true, out RoleTypeId role);
+
+                                    log.cooldownRole = true;
+                                    log.ForcedTimes += 1;
+
+                                    ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
+
+                                    player.Role.Set(role);
+
                                     return Allowed;
                                 }
-
-                                Enum.TryParse(args[2], true, out RoleTypeId role);
-
-                                log.cooldownRole = true;
-                                log.ForcedTimes += 1;
-
-                                ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
-
-                                player.Role.Set(role);
-
-                                return Allowed;
+                                catch (Exception ex)
+                                {
+                                    Log.Error(ex);
+                                }
                             }
-                            catch (Exception ex)
+                            if (args[0] == "give")
                             {
-                                Log.Error(ex);
+                                try
+                                {
+                                    if (player.Role.Team == Team.SCPs)
+                                    {
+                                        Allowed = false;
+                                        sender.RaReply($"ControlNR#Зачем..", Success, true, string.Empty);
+                                        return Allowed;
+                                    }
+
+                                    if (player.Items.Count >= 8)
+                                    {
+                                        Allowed = false;
+                                        sender.RaReply($"ControlNR#У вас больше 8 предметов.. отмена..", Success, true, string.Empty);
+                                        return Allowed;
+                                    }
+
+                                    Success = true;
+
+                                    if (Round.ElapsedTime.Minutes < 3)
+                                    {
+                                        // 0, 1, 2 , 3
+                                        switch (args[2].Substring(0, 2))
+                                        {
+                                            case "0.":
+                                            case "1.":
+                                            case "2.":
+                                            case "3.":
+                                            case "15":
+                                            case "14":
+                                            case "17":
+                                            case "34":
+                                            case "33":
+                                            case "35":
+                                                {
+                                                    break;
+                                                }
+                                            default:
+                                                {
+                                                    Success = false;
+                                                    sender.RaReply($"ControlNR#Этот предмет нельзя выдать до 3-ех минут раунда..", Success, true, string.Empty);
+                                                    return Allowed;
+                                                }
+                                        }
+                                    }
+
+                                    if (log.GivedTimes >= 2)
+                                    {
+                                        Success = false;
+                                        sender.RaReply($"ControlNR#Вы использовали все свои попытки..", Success, true, string.Empty);
+                                        return Allowed;
+                                    }
+
+                                    if (log.cooldownItem == true)
+                                    {
+                                        Success = false;
+                                        sender.RaReply($"ControlNR#Подождите 2 минуты перед тем, как выдавать себе вещи..", Success, true, string.Empty);
+                                        return Allowed;
+                                    }
+
+                                    log.cooldownItem = true;
+                                    log.GivedTimes += 1;
+
+                                    ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
+
+                                    Timing.CallDelayed(120f, () =>
+                                    {
+                                        var ValueChange = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(player.UserId);
+                                        ValueChange.cooldownItem = false;
+                                        ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
+                                    });
+
+                                    Enum.TryParse(args[2].Substring(0, 2).Replace(".", ""), true, out ItemType item);
+
+                                    player.AddItem(item, 1);
+
+                                    sender.RaReply($"ControlNR#Успешно..", Success, true, string.Empty);
+                                    return Allowed;
+                                }
+                                catch (Exception ex)
+                                {
+                                    Log.Error(ex);
+                                }
                             }
                         }
-                        if (args[0] == "give")
+
+                        if (player?.GroupName == "d2")
                         {
-                            try
+                            if (args[0] == "forceclass")
                             {
-                                args = q.Trim().Split(QueryProcessor.SpaceArray, 512);
-
-                                if (player.Role.Team == Team.SCPs)
+                                try
                                 {
-                                    Allowed = false;
-                                    sender.RaReply($"ControlNR#Зачем..", Success, true, string.Empty);
-                                    return Allowed;
-                                }
-
-                                if (player.Items.Count >= 8)
-                                {
-                                    Allowed = false;
-                                    sender.RaReply($"ControlNR#У вас больше 8 предметов.. отмена..", Success, true, string.Empty);
-                                    return Allowed;
-                                }
-
-                                Success = true;
-
-                                if (Round.ElapsedTime.Minutes < 3)
-                                {
-                                    // 0, 1, 2 , 3
-                                    switch (args[2].Substring(0, 2))
+                                    if (log.ForcedTimes >= 3)
                                     {
-                                        case "0.":
-                                        case "1.":
-                                        case "2.":
-                                        case "3.":
-                                        case "15":
-                                        case "14":
-                                        case "17":
-                                        case "34":
-                                        case "33":
-                                        case "35":
+                                        Success = false;
+                                        sender.RaReply($"ControlNR#Вы уже использовали все свои попытки..", Success, true, string.Empty);
+                                        return Allowed;
+                                    }
+                                    if(log.cooldownRole == true)
+                                    {
+                                        Success = false;
+                                        sender.RaReply($"ControlNR#Ваша задержка на выдачу роли ещё не прошла..", Success, true, string.Empty);
+                                        return Allowed;
+                                    }
+
+                                    if (args[2].ToLower().StartsWith("scp"))
+                                    {
+                                        if (Player.List.Where(x => x.IsScp)?.Count() == 0)
+                                        {
+                                            if (Player.List.Where(x => x.IsHuman).Count() >= 6)
                                             {
-                                                break;
-                                            }
-                                        default:
-                                            {
-                                                Success = false;
-                                                sender.RaReply($"ControlNR#Этот предмет нельзя выдать до 3-ех минут раунда..", Success, true, string.Empty);
+                                                Success = true;
+
+                                                log.cooldownRole = true;
+                                                log.ForcedTimes += 1;
+                                                log.ForcedToSCP = true;
+
+                                                ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
+
+                                                sender.RaReply($"ControlNR#Успешно..", Success, true, string.Empty);
                                                 return Allowed;
                                             }
+
+                                            Success = false;
+                                            sender.RaReply($"ControlNR#Кол-во игроков для спавна SCP меньше необходимого..", Success, true, string.Empty);
+                                            return Allowed;
+                                        }
+
+                                        if (Player.List.Where(x => x.IsHuman).Count() / Player.List.Where(x => x.IsScp)?.Count() <= 10)
+                                        {
+                                            Success = true;
+
+                                            log.cooldownRole = true;
+                                            log.ForcedTimes += 1;
+                                            log.ForcedToSCP = true;
+
+                                            ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
+
+                                            sender.RaReply($"ControlNR#Успешно..", Success, true, string.Empty);
+                                            return Allowed;
+                                        }
+                                        else
+                                        {
+                                            Success = false;
+                                            sender.RaReply($"ControlNR#Кол-во игроков для спавна SCP меньше необходимого..", Success, true, string.Empty);
+                                            return Allowed;
+                                        }
+                                    }
+
+                                    if (args[2].ToLower().StartsWith("ntf") || args[2].ToLower().StartsWith("chaos"))
+                                    {
+                                        if (Round.ElapsedTime.TotalMinutes <= 3)
+                                        {
+                                            Success = false;
+                                            sender.RaReply($"ControlNR#За МОГ и ХАОС можно форснутся после 3-х минут раунда..", Success, true, string.Empty);
+                                            return Allowed;
+                                        }
+                                    }
+
+                                    if (args[2].ToLower().StartsWith("tutorial") || args[2].ToLower().StartsWith("overwatch"))
+                                    {
+                                        Success = false;
+                                        sender.RaReply($"ControlNR#Не-не..", Success, true, string.Empty);
+                                        return Allowed;
+                                    }
+
+                                    Enum.TryParse(args[2], true, out RoleTypeId role);
+
+                                    log.cooldownRole = true;
+                                    log.ForcedTimes += 1;
+                                    ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
+
+                                    player.Role.Set(role);
+
+                                    Timing.CallDelayed(120f, () =>
+                                    {
+                                        var ValueChange = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(player.UserId);
+                                        ValueChange.cooldownRole = false;
+                                        ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
+                                    });
+
+                                    Allowed = false;
+                                    return Allowed;
+                                }
+                                catch (Exception ex)
+                                {
+                                    Log.Error(ex);
+                                }
+                            }
+                            if (args[0] == "give")
+                            {
+                                try
+                                {
+                                    if (player.Role.Team == Team.SCPs)
+                                    {
+                                        Allowed = false;
+                                        sender.RaReply($"ControlNR#Зачем..", Success, true, string.Empty);
+                                        return Allowed;
+                                    }
+
+                                    if (player.Items.Count >= 8)
+                                    {
+                                        Allowed = false;
+                                        sender.RaReply($"ControlNR#У вас больше 8 предметов.. отмена..", Success, true, string.Empty);
+                                        return Allowed;
+                                    }
+
+                                    Success = true;
+
+                                    if (Round.ElapsedTime.Minutes < 3)
+                                    {
+                                        // 0, 1, 2 , 3
+                                        switch (args[2].Substring(0, 2))
+                                        {
+                                            case "0.":
+                                            case "1.":
+                                            case "2.":
+                                            case "3.":
+                                            case "15":
+                                            case "14":
+                                            case "17":
+                                            case "34":
+                                            case "33":
+                                            case "35":
+                                                {
+                                                    break;
+                                                }
+                                            default:
+                                                {
+                                                    Success = false;
+                                                    sender.RaReply($"ControlNR#Этот предмет нельзя выдать до 3-ех минут раунда..", Success, true, string.Empty);
+                                                    return Allowed;
+                                                }
+                                        }
+                                    }
+
+                                    if (log.GivedTimes >= 5)
+                                    {
+                                        Success = false;
+                                        sender.RaReply($"ControlNR#Вы использовали все свои попытки..", Success, true, string.Empty);
+                                        return Allowed;
+                                    }
+
+                                    if (log.cooldownItem == true)
+                                    {
+                                        Success = false;
+                                        sender.RaReply($"ControlNR#Подождите 2 минуты перед тем, как выдавать себе вещи..", Success, true, string.Empty);
+                                        return Allowed;
+                                    }
+
+                                    log.cooldownItem = true;
+                                    log.GivedTimes += 1;
+
+                                    ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
+
+                                    Timing.CallDelayed(120f, () =>
+                                    {
+                                        var ValueChange = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(player.UserId);
+                                        ValueChange.cooldownItem = false;
+                                        ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
+                                    });
+
+                                    Enum.TryParse(args[2].Substring(0, 2).Replace(".", ""), true, out ItemType item);
+
+                                    player.AddItem(item, 1);
+
+                                    sender.RaReply($"ControlNR#Успешно..", Success, true, string.Empty);
+                                    return Allowed;
+                                }
+                                catch (Exception ex)
+                                {
+                                    Log.Error(ex);
+                                }
+                            }
+                            if (args[0] == "SERVER_EVENT")
+                            {
+                                try
+                                {
+                                    if (args[1] == "RESPAWN_MTF" || args[1] == "RESPAWN_CI")
+                                    {
+                                        if (log.CallTimes >= 2)
+                                        {
+                                            Success = false;
+                                            sender.RaReply($"ControlNR#Вы уже использовали все свои попытки..", Success, true, string.Empty);
+                                            return Allowed;
+                                        }
+                                        if (log.cooldownCall == true)
+                                        {
+                                            Success = false;
+                                            sender.RaReply($"ControlNR#Ваша задержка на вызов ещё не прошла..", Success, true, string.Empty);
+                                            return Allowed;
+                                        }
+
+                                        log.cooldownCall = true;
+                                        log.CallTimes += 1;
+                                        ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
+
+                                        Enum.TryParse(args[1], out SpawnableTeamType spawn);
+                                        Respawn.ForceWave(spawn, true);
+
+                                        Timing.CallDelayed(120f, () =>
+                                        {
+                                            var ValueChange = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(player.UserId);
+                                            ValueChange.cooldownCall = false;
+                                            ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
+                                        });
+
+                                        Allowed = false;
+                                        return Allowed;
                                     }
                                 }
-
-                                if (log.GivedTimes >= 2)
+                                catch (Exception ex)
                                 {
-                                    Success = false;
-                                    sender.RaReply($"ControlNR#Вы использовали все свои попытки..", Success, true, string.Empty);
-                                    return Allowed;
-                                }
-
-                                if (log.cooldownItem == true)
-                                {
-                                    Success = false;
-                                    sender.RaReply($"ControlNR#Подождите 2 минуты перед тем, как выдавать себе вещи..", Success, true, string.Empty);
-                                    return Allowed;
-                                }
-
-                                log.cooldownItem = true;
-                                log.GivedTimes += 1;
-
-                                ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
-
-                                Timing.CallDelayed(120f, () =>
-                                {
-                                    var ValueChange = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(player.UserId);
-                                    ValueChange.cooldownItem = false;
-                                    ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
-                                });
-
-                                Enum.TryParse(args[2].Substring(0, 2).Replace(".", ""), true, out ItemType item);
-
-                                player.AddItem(item, 1);
-
-                                sender.RaReply($"ControlNR#Успешно..", Success, true, string.Empty);
-                                return Allowed;
-                            }
-                            catch (Exception ex)
-                            {
-                                Log.Error(ex);
-                            }
-                        }
-
-                        if (args[0] == "size")
-                        {
-                            if (float.TryParse(args[3], out float z) && float.TryParse(args[2], out float y) && float.TryParse(args[1], out float x))
-                            {
-                                if(x <= 0.9f || y <= 0.9f || z <= 0.9f)
-                                {
-                                    Success = false;
-                                    sender.RaReply($"ControlNR#Вы не можете изменить себе размер меньше 0.9..", Success, true, string.Empty);
-                                    return Allowed;
-                                }
-                                if (x >= 1.1f || y >= 1.1f|| z >= 1.1f)
-                                {
-                                    Success = false;
-                                    sender.RaReply($"ControlNR#Вы не можете изменить себе размер больше 1.1..", Success, true, string.Empty);
-                                    return Allowed;
+                                    Log.Error(ex);
                                 }
                             }
+                            // VOTE TO EVENTS
                         }
 
                         sender.RaReply($"ControlNR#Вы не можете использовать эту команду..", Success, true, string.Empty);

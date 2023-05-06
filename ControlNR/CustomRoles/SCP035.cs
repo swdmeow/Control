@@ -46,9 +46,9 @@ namespace Control.CustomRoles
         private void OnHurting(HurtingEventArgs ev)
         {
             if (ev.Attacker == null) return;
-            if (CustomRole.Get(2).Check(ev.Player) || CustomRole.Get(2).Check(ev.Attacker)) return;
+            if (CustomRole.Get((uint)2).Check(ev.Player) || CustomRole.Get((uint)2).Check(ev.Attacker)) return;
 
-            if (CustomRole.Get(1).Check(ev.Attacker))
+            if (CustomRole.Get((uint)1).Check(ev.Attacker))
             {
                 if (ev.Player.Role.Team == Team.SCPs)
                 {
@@ -62,7 +62,7 @@ namespace Control.CustomRoles
                 ev.IsAllowed = true;
             }
 
-            if (CustomRole.Get(1).Check(ev.Player))
+            if (CustomRole.Get((uint)1).Check(ev.Player))
             {
                 if (ev.Attacker.Role.Team == Team.SCPs)
                 {
@@ -96,15 +96,15 @@ namespace Control.CustomRoles
         }
         private void OnEnteringPocketDimension(EnteringPocketDimensionEventArgs ev)
         {
-            if (!CustomRole.Get(1).Check(ev.Player)) return;
+            if (!CustomRole.Get((uint)1).Check(ev.Player)) return;
 
             ev.IsAllowed = false;
         }
         private void OnDying(DyingEventArgs ev)
         {
-            if (ev.Attacker != null && CustomRole.Get(1).Check(ev.Attacker))
+            if (ev.Attacker != null && CustomRole.Get((uint)1).Check(ev.Attacker))
             {
-                ev.Attacker.ChangeAppearance(ev.Player.Role);
+                MirrorExtensions.ChangeAppearance(ev.Attacker, ev.Player.Role, 0);
 
                 ev.Attacker.DisplayNickname = ev.Player.Nickname;
 
@@ -156,7 +156,7 @@ namespace Control.CustomRoles
         }
         private void OnReceivingEffect(ReceivingEffectEventArgs ev)
         {
-            if (!CustomRole.Get(1).Check(ev.Player)) return;
+            if (!CustomRole.Get((uint)1).Check(ev.Player)) return;
 
             if (ev.Effect.name == "CardiacArrest")
             {

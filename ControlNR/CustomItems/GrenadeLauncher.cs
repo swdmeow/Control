@@ -59,7 +59,7 @@ namespace Control.CustomItems
 
         private void OnPickUpItem(PickingUpItemEventArgs ev)
         {
-            if (!CustomItem.Get(4).Check(ev.Pickup)) return;
+            if (!CustomItem.Get((uint)4).Check(ev.Pickup)) return;
 
             var FireItem = ev.Pickup as FirearmPickup;
 
@@ -71,7 +71,7 @@ namespace Control.CustomItems
 
         private void OnShooting(ShootingEventArgs ev)
         {
-            if (!CustomItem.Get(4).Check(ev.Player.CurrentItem)) return;
+            if (!CustomItem.Get((uint)4).Check(ev.Player.CurrentItem)) return;
 
             ev.IsAllowed = false;
 
@@ -107,7 +107,7 @@ namespace Control.CustomItems
 
         private async void OnReloading(ReloadingWeaponEventArgs ev)
         {
-            if (!CustomItem.Get(4).Check(ev.Player)) return;
+            if (!CustomItem.Get((uint)4).Check(ev.Player)) return;
 
             ev.IsAllowed = false;
 
@@ -131,7 +131,7 @@ namespace Control.CustomItems
 
                     AmmoCount += 1;
 
-                    if (!CustomItem.Get(4).Check(ev.Player.CurrentItem))
+                    if (!CustomItem.Get((uint)4).Check(ev.Player.CurrentItem))
                     {
                         ev.Player.ShowHint("Вы убрали пистолет из своей руки..", 3);
 
@@ -145,7 +145,7 @@ namespace Control.CustomItems
         }
         private void OnUnloadingWeapon(UnloadingWeaponEventArgs ev)
         {
-            if (!CustomItem.Get(4).Check(ev.Player.CurrentItem)) return;
+            if (!CustomItem.Get((uint)4).Check(ev.Player.CurrentItem)) return;
 
             ev.IsAllowed = false;
         }

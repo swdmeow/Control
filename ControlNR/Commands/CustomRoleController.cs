@@ -30,7 +30,7 @@
                 return false;
             }
 
-            if (!int.TryParse(arguments.At(0), out int x))
+            if (!uint.TryParse(arguments.At(0), out uint x))
             {
                 response = $"Первый аргумент не цифра..";
                 return false;

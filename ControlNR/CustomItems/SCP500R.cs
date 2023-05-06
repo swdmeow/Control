@@ -49,7 +49,7 @@ namespace Control.CustomItems
         }
         private void OnUsingItem(UsingItemEventArgs ev)
         {
-            if (CustomItem.Get(5).Check(ev.Item))
+            if (CustomItem.Get((uint)5).Check(ev.Item))
             {
                 ev.IsAllowed = false;
             }
@@ -59,7 +59,7 @@ namespace Control.CustomItems
         {
             foreach(Item item in ev.Player.Items)
             {
-                if (CustomItem.Get(5).Check(item))
+                if (CustomItem.Get((uint)5).Check(item))
                 {
                     ev.Player.ShowHint("Вы можете возвродиться в любой момент, написав в консоль команду \".res\"", 120);
 
@@ -90,7 +90,7 @@ namespace Control.CustomItems
 
                 item.Destroy();
 
-                CustomItem.Get(5).Spawn(item.Position);
+                CustomItem.Get((uint)5).Spawn(item.Position);
             });
         }
     }

@@ -26,7 +26,7 @@
 
     internal sealed class PlayerHandler
     {
-        public static bool elevIsLock = false;
+        //public static bool elevIsLock = false;
         public void OnEnabled()
         {
             Exiled.Events.Handlers.Player.ChangingRole += OnChangingRole;
@@ -67,7 +67,7 @@
         {
             Timing.CallDelayed(0.1f, () =>
             {
-                if (ev.Player.GroupName == "d1")
+                if (ev.Player.GroupName == "d1" || ev.Player.GroupName == "d2")
                 {
                     // Add player to DB;
                     ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Insert(new PlayerLog()
@@ -129,7 +129,7 @@
         {
             //if (ev.Player == null) return;
 
-            if (CustomRole.Get(2).Check(ev.Player)) return;
+            if (CustomRole.Get((uint)2).Check(ev.Player)) return;
 
             Timing.CallDelayed(0.1f, () =>
             {
@@ -189,7 +189,7 @@
        
         private void OnReloadWeapon(ReloadingWeaponEventArgs ev)
         {
-            if (CustomRole.Get(2).Check(ev.Player)) return;
+            if (CustomRole.Get((uint)2).Check(ev.Player)) return;
 
             ev.Player.SetAmmo(AmmoType.Nato9, 101);
             ev.Player.SetAmmo(AmmoType.Ammo44Cal, 101);

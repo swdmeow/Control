@@ -11,6 +11,8 @@ namespace Ñontrol
     using MEC;
     using Control.Extensions;
     using Control.CustomRoles;
+    using Utf8Json.Resolvers.Internal;
+
     public class ControlNR : Plugin<Config>
     {
         public static ControlNR Singleton;
@@ -45,7 +47,7 @@ namespace Ñontrol
             PlayerHandler.OnEnabled();
 
             CustomItem.RegisterItems();
-            CustomRole.RegisterRoles();
+            CustomRole.RegisterRoles(false, null, true);
 
             if (PlayerExtensions.HintCoroutineHandle == null || !PlayerExtensions.HintCoroutineHandle.Value.IsValid || !PlayerExtensions.HintCoroutineHandle.Value.IsRunning)
                 PlayerExtensions.HintCoroutineHandle = Timing.RunCoroutine(PlayerExtensions.HintCoroutine());

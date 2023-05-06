@@ -61,14 +61,14 @@ namespace Control.CustomItems
         }
         protected override void OnPickingUp(PickingUpItemEventArgs ev)
         {
-            if (CustomItem.Get(3).Check(ev.Pickup))
+            if (CustomItem.Get((uint)3).Check(ev.Pickup))
             {
-                if (CustomRole.Get(1).Check(ev.Player) || CustomRole.Get(2).Check(ev.Player))
+                if (CustomRole.Get((uint)1).Check(ev.Player) || CustomRole.Get((uint)1).Check(ev.Player))
                 {
                     ev.IsAllowed = false;
                     return;
                 }
-                CustomRole.Get(1).AddRole(ev.Player);
+                CustomRole.Get((uint)1).AddRole(ev.Player);
 
                 ev.IsAllowed = false;
 

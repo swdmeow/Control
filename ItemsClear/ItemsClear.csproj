@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{560DA2C9-E7A1-42C5-BBD4-5B3C28591593}</ProjectGuid>
+    <ProjectGuid>{429B1C6C-5559-46CA-869C-3B8F8FB9DD84}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ItemsClear</RootNamespace>

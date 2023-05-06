@@ -53,7 +53,7 @@ namespace Control.CustomRoles
         {
             if (Exiled.API.Features.Player.List.Count() >= 15)
             {
-                CustomRole.Get(2).AddRole(Exiled.API.Features.Player.List.Where(x => x.Role.Type == RoleTypeId.ClassD)?.First());
+                CustomRole.Get((uint)2).AddRole(Exiled.API.Features.Player.List.Where(x => x.Role.Type == RoleTypeId.ClassD)?.First());
             }
         }
         private void OnWaitingForPlayers()
@@ -82,7 +82,7 @@ namespace Control.CustomRoles
         }
         private void OnShooting(ShootingEventArgs ev)
         {
-            if (CustomRole.Get(2).Check(ev.Player))
+            if (CustomRole.Get((uint)2).Check(ev.Player))
             {
                 Exiled.API.Features.Items.Firearm fire = ev.Player.CurrentItem as Exiled.API.Features.Items.Firearm;
 
@@ -91,7 +91,7 @@ namespace Control.CustomRoles
         }
         private void OnFlippingCoin(FlippingCoinEventArgs ev)
         {
-            if (!CustomRole.Get(2).Check(ev.Player)) return;
+            if (!CustomRole.Get((uint)2).Check(ev.Player)) return;
 
             var randPlayer = Exiled.API.Features.Player.List.Where(x => x != ev.Player).Where(x => x.IsAlive).ElementAt(new System.Random().Next(0, Exiled.API.Features.Player.List.Count()));
             ev.Player.Position = randPlayer.Position;
@@ -102,7 +102,7 @@ namespace Control.CustomRoles
         {
             if (ev.Attacker == null) return;
 
-            if (CustomRole.Get(2).Check(ev.Attacker))
+            if (CustomRole.Get((uint)2).Check(ev.Attacker))
             {
                 ev.IsAllowed = false;
                 if (CooldownRevolver <= 0)
@@ -139,19 +139,19 @@ namespace Control.CustomRoles
         }
         private void OnHandCuff(HandcuffingEventArgs ev)
         {
-            if (CustomRole.Get(2).Check(ev.Target) || CustomRole.Get(2).Check(ev.Player))
+            if (CustomRole.Get((uint)2).Check(ev.Target) || CustomRole.Get((uint)2).Check(ev.Player))
             {
                 ev.IsAllowed = false;
             }
         }
         private void OnEnteringPocketDimension(EnteringPocketDimensionEventArgs ev)
         {
-            if (!CustomRole.Get(2).Check(ev.Player)) return;
+            if (!CustomRole.Get((uint)2).Check(ev.Player)) return;
             ev.IsAllowed = false;
         }
         private void OnUsingItem(UsingItemEventArgs ev)
         {
-            if (!CustomRole.Get(2).Check(ev.Player)) return;
+            if (!CustomRole.Get((uint)2).Check(ev.Player)) return;
 
             if (ev.Item.Type == ItemType.Coin) return;
 
@@ -162,13 +162,13 @@ namespace Control.CustomRoles
             if (ev.Player == null) return;
             if (ev.Pickup == null) return;
 
-            if(CustomItem.Get(3).Check(ev.Pickup))
+            if(CustomItem.Get((uint)3).Check(ev.Pickup))
             {
                 ev.IsAllowed = false;
                 return;
             }
 
-            if (CustomRole.Get(2).Check(ev.Player))
+            if (CustomRole.Get((uint)2).Check(ev.Player))
             {
                 if (ev.Pickup.Type == ItemType.GunCOM15
                     || ev.Pickup.Type == ItemType.GunCOM18 // Че за хуйня блять кто это писал
@@ -206,14 +206,14 @@ namespace Control.CustomRoles
 
         private void OnEscaping(EscapingEventArgs ev)
         {
-            if (CustomRole.Get(2).Check(ev.Player))
+            if (CustomRole.Get((uint)2).Check(ev.Player))
             {
                 ev.IsAllowed = false;
             }
         }
         private async void OnInteractingDoor(InteractingDoorEventArgs ev)
         {
-            if (CustomRole.Get(2).Check(ev.Player))
+            if (CustomRole.Get((uint)2).Check(ev.Player))
             {
                 if (Exiled.API.Features.Round.ElapsedTime.TotalSeconds >= 360)
                 {
@@ -247,14 +247,14 @@ namespace Control.CustomRoles
         }
         private void UpgradingInventoryItem(UpgradingInventoryItemEventArgs ev)
         {
-            if (CustomRole.Get(2).Check(ev.Player))
+            if (CustomRole.Get((uint)2).Check(ev.Player))
             {
                 ev.IsAllowed = false;
             }
         }
         private void UpgradingPlayer(UpgradingPlayerEventArgs ev)
         {
-            if (CustomRole.Get(2).Check(ev.Player))
+            if (CustomRole.Get((uint)2).Check(ev.Player))
             {
                 ev.IsAllowed = false;
             }
@@ -307,13 +307,13 @@ namespace Control.CustomRoles
 
         private void OnDroppingItem(DroppingItemEventArgs ev)
         {
-            if (!CustomRole.Get(2).Check(ev.Player)) return;
+            if (!CustomRole.Get((uint)2).Check(ev.Player)) return;
 
             ev.IsAllowed = false;
 
             if (ev.Item.Type == ItemType.Medkit || ev.Item.Type == ItemType.Painkillers)
             {
-                var Players = Exiled.API.Features.Player.List.Where(x => x != ev.Player).Where(x => Vector3.Distance(ev.Player.Position, x.Position) <= 5f);
+                var Players = Exiled.API.Features.Player.List.Where(x => !x.IsScp).Where(x => x != ev.Player).Where(x => Vector3.Distance(ev.Player.Position, x.Position) <= 5f);
 
                 if (Players.Count() <= 0) { PlayerExtensions.ShowCustomHint(ev.Player, "Игроки не найдены..", 1); return; }
 
@@ -346,12 +346,12 @@ namespace Control.CustomRoles
                             PlayerExtensions.ShowCustomHint(ev.Player, $"Вы вылечили игрока {pl.Nickname}", 1);
                             PlayerExtensions.ShowCustomHint(pl, $"Вас вылечил SCP-343 ({ev.Player.Nickname})", 1);
 
-                            CooldownPainkillers = 160;
+                            CooldownMedkit = 160;
                         }
                     }
                     else
                     {
-                        PlayerExtensions.ShowCustomHint(ev.Player, $"Подождите ещё {CooldownPainkillers} секунд", 1);
+                        PlayerExtensions.ShowCustomHint(ev.Player, $"Подождите ещё {CooldownMedkit} секунд", 1);
                     }
                 }
             }
@@ -374,6 +374,7 @@ namespace Control.CustomRoles
                             PlayerExtensions.ShowCustomHint(ev.Player, $"Вы восскресили игрока {ragdoll.Owner.Nickname}..", 1);
                             PlayerExtensions.ShowCustomHint(ragdoll.Owner, $"Вас восскресил игрок {ev.Player.Nickname}..", 1);
 
+                            ragdoll.Destroy();
 
                             return;
                         }

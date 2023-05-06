@@ -71,7 +71,7 @@
 
            //Cassie.Message($"{subtitles} <color=#ffffff00>h {msg}", false, false, true);
 
-            CustomItem.Get(3).Spawn(Room.List.ElementAt(new System.Random().Next(0, Room.List.Count())).transform.position + Vector3.up);
+            CustomItem.Get((uint)3).Spawn(Room.List.ElementAt(new System.Random().Next(0, Room.List.Count())).transform.position + Vector3.up);
             /*
             Room room = Room.Get(RoomType.LczAirlock);
 
@@ -179,13 +179,10 @@
         }
         private void OnEndingRound(EndingRoundEventArgs ev)
         {
-            bool mtf = Player.List.Count(p => p.Role.Team == Team.FoundationForces && !CustomRole.Get(1).Check(p)) > 0;
-            bool classd = Player.List.Count(p => p.Role == RoleTypeId.ClassD && !CustomRole.Get(2).Check(p) && !CustomRole.Get(1).Check(p)) > 0;
-            bool chaos = Player.List.Count(p => p.Role.Team == Team.ChaosInsurgency && !CustomRole.Get(1).Check(p)) > 0;
-            bool scps = Player.List.Count(p => p.Role.Team == Team.SCPs || CustomRole.Get(1).Check(p)) > 0;
-
-            Log.Info(mtf);
-
+            bool mtf = Player.List.Where(p => p.Role.Team == Team.FoundationForces && !CustomRole.Get((uint)1).Check(p)).Count() > 0;
+            bool classd = Player.List.Where(p => p.Role == RoleTypeId.ClassD && !CustomRole.Get((uint)2).Check(p) && !CustomRole.Get((uint)1).Check(p)).Count() > 0;
+            bool chaos = Player.List.Where(p => p.Role.Team == Team.ChaosInsurgency && !CustomRole.Get((uint)1).Check(p)).Count() > 0;
+            bool scps = Player.List.Where(p => p.Role.Team == Team.SCPs || CustomRole.Get((uint)1).Check(p)).Count() > 0;
 
             if (mtf && !classd && !scps && !chaos) ev.IsRoundEnded = true;
             else if (!mtf && !classd && scps) ev.IsRoundEnded = true;
@@ -200,7 +197,7 @@
 
                 Server.FriendlyFire = true;
 
-                Cassie.Message("Огонь по своим включён.. <color=#ffffff00>h F F enabled .g1", false, false, true);
+                Cassie.Message("Огонь по своим включён.. <color=#ffffff00>h F F enabled .g1", true, false, true);
             }
         }
     }
