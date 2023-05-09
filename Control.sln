@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "control-rp", "ControlRP\con
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItemsClear", "ItemsClear\ItemsClear.csproj", "{429B1C6C-5559-46CA-869C-3B8F8FB9DD84}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoEvent", "AutoEvent\AutoEvent.csproj", "{3C3FC008-22E1-4B28-BA50-A241B30CC216}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{429B1C6C-5559-46CA-869C-3B8F8FB9DD84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{429B1C6C-5559-46CA-869C-3B8F8FB9DD84}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{429B1C6C-5559-46CA-869C-3B8F8FB9DD84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C3FC008-22E1-4B28-BA50-A241B30CC216}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C3FC008-22E1-4B28-BA50-A241B30CC216}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C3FC008-22E1-4B28-BA50-A241B30CC216}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C3FC008-22E1-4B28-BA50-A241B30CC216}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

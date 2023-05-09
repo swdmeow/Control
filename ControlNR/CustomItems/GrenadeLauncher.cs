@@ -19,14 +19,15 @@ using UnityEngine;
 
 namespace Control.CustomItems
 {
-    [CustomItem(ItemType.GunCOM15)]
+    [CustomItem(ItemType.GunCOM18)]
     public class GrenadeLauncher : CustomItem
     {
         public override uint Id { get; set; } = 4;
         public override string Name { get; set; } = "гранатомёт";
         public override string Description { get; set; } = "Стреляет гранатами. Максимум гранат в обойме - 2. Перезарядка гранатами, 1 граната - 3 секунды";
-        public override ItemType Type { get; set; } = ItemType.GunCOM15;
+        public override ItemType Type { get; set; } = ItemType.GunCOM18;
 
+        private bool isReloadActive = false;
         public override float Weight { get; set; }
         public override SpawnProperties SpawnProperties { get; set; } = new()
         {
@@ -109,6 +110,8 @@ namespace Control.CustomItems
         {
             if (!CustomItem.Get((uint)4).Check(ev.Player)) return;
 
+            if (isReloadActive == true) return;
+
             ev.IsAllowed = false;
 
             if (ev.Firearm.Ammo == 3)
@@ -120,21 +123,21 @@ namespace Control.CustomItems
             int AmmoCount = 0;
 
             foreach (Item item in ev.Player.Items.ToList())
-            {
+            { 
                 if (item.Type == ItemType.GrenadeHE)
                 {
                     ev.Player.ShowHint($"Перезарядка..\n{(AmmoCount == 0 ? "+1" : $"+{AmmoCount}")}", 3);
-
                     if (GrenadeLauncher.Ammo >= 3) return;
 
+                    isReloadActive = true;
                     await Task.Delay(3000);
-
+                    isReloadActive = false;
                     AmmoCount += 1;
 
                     if (!CustomItem.Get((uint)4).Check(ev.Player.CurrentItem))
                     {
                         ev.Player.ShowHint("Вы убрали пистолет из своей руки..", 3);
-
+                        isReloadActive = false;
                         return;
                     }
 

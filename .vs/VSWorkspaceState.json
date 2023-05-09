@@ -5,9 +5,10 @@
     "\\ControlNR\\API",
     "\\ControlNR\\API\\Serialization",
     "\\ControlNR\\Commands",
+    "\\ControlNR\\CustomItems",
     "\\ControlNR\\Events",
     "\\ControlNR\\Patches"
   ],
-  "SelectedNode": "\\ControlNR\\Patches\\RemoteAdmin.cs",
+  "SelectedNode": "\\ControlNR\\Events\\ServerHandler.cs",
   "PreviewInSolutionExplorer": false
 }

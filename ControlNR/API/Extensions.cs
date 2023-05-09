@@ -1,0 +1,67 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using Mirror;
+using UnityEngine;
+using PlayerRoles;
+using Exiled.API.Features;
+using InventorySystem.Items.Pickups;
+using MapEditorReborn.API.Features;
+using MapEditorReborn.API.Features.Objects;
+using SCPSLAudioApi.AudioCore;
+using Object = UnityEngine.Object;
+
+namespace Control.API
+{
+    internal class Extensions
+    {
+        public static List<ReferenceHub> Dummies;
+        /// <summary>Проиграть аудиофайл</summary>
+        public static void PlayAudio(string audioFile, byte volume, bool loop, string eventName)
+        {
+            try
+            {
+                Dummies = new List<ReferenceHub>();
+                var newPlayer = Object.Instantiate(NetworkManager.singleton.playerPrefab);
+                int id = Dummies.Count;
+                var fakeConnection = new FakeConnection(id++);
+                var hubPlayer = newPlayer.GetComponent<ReferenceHub>();
+                Dummies.Add(hubPlayer);
+                NetworkServer.AddPlayerForConnection(fakeConnection, newPlayer);
+
+                hubPlayer.characterClassManager.InstanceMode = ClientInstanceMode.Unverified;
+
+                try
+                {
+                    hubPlayer.nicknameSync.SetNick(eventName);
+                }
+                catch (Exception) { }
+
+                var audioPlayer = AudioPlayerBase.Get(hubPlayer);
+
+                var path = Path.Combine(Path.Combine(Paths.Configs, "ControlNR/Music"), audioFile);
+
+                audioPlayer.Enqueue(path, -1);
+                audioPlayer.LogDebug = false;
+                audioPlayer.BroadcastChannel = VoiceChat.VoiceChatChannel.Intercom;
+                audioPlayer.Volume = volume;
+                audioPlayer.Loop = loop;
+                audioPlayer.Play(0);
+                Log.Debug($"Playing sound {path}");
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Error on: {e.Data} -- {e.StackTrace}");
+            }
+        }
+        /// <summary>Остановить прогирывание</summary>
+        public static void StopAudio()
+        {
+            foreach (var dummies in Dummies)
+            {
+                NetworkServer.Destroy(dummies.gameObject);
+            }
+            Dummies.Clear();
+        }
+    }
+}

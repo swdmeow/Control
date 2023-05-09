@@ -27,6 +27,7 @@ using Exiled.CustomItems.API.Features;
 using Exiled.Loader;
 using Mirror;
 using CustomPlayerEffects;
+using System.Text;
 
 namespace Control.CustomRoles
 {
@@ -162,6 +163,74 @@ namespace Control.CustomRoles
             {
                 ev.IsAllowed = false;
             }
+        }
+        public override void AddRole(Exiled.API.Features.Player player)
+        {
+            Log.Debug(Name + ": Adding role to " + player.Nickname + ".");
+            TrackedPlayers.Add(player);
+            if (Role != RoleTypeId.None)
+            {
+                if (KeepPositionOnSpawn && KeepInventoryOnSpawn)
+                {
+                    player.Role.Set(Role, SpawnReason.ForceClass, RoleSpawnFlags.None);
+                }
+                else if (KeepPositionOnSpawn)
+                {
+                    player.Role.Set(Role, SpawnReason.ForceClass, RoleSpawnFlags.AssignInventory);
+                }
+                else if (KeepInventoryOnSpawn)
+                {
+                    player.Role.Set(Role, SpawnReason.ForceClass, RoleSpawnFlags.UseSpawnpoint);
+                }
+                else
+                {
+                    player.Role.Set(Role, SpawnReason.ForceClass, RoleSpawnFlags.All);
+                }
+            }
+
+            if (!KeepInventoryOnSpawn)
+            {
+                Log.Debug(Name + ": Clearing " + player.Nickname + "'s inventory.");
+                player.ClearInventory();
+            }
+
+            foreach (string item in Inventory)
+            {
+                Log.Debug(Name + ": Adding " + item + " to inventory.");
+                TryAddItem(player, item);
+            }
+
+            Log.Debug(Name + ": Setting health values.");
+            player.Health = MaxHealth;
+            player.MaxHealth = MaxHealth;
+            player.Scale = Scale;
+            Vector3 spawnPosition = GetSpawnPosition();
+            if (spawnPosition != Vector3.zero)
+            {
+                player.Position = spawnPosition;
+            }
+
+            Log.Debug(Name + ": Setting player info");
+            player.CustomInfo = player.CustomName + "\n" + CustomInfo;
+            player.InfoArea &= ~(PlayerInfoArea.Nickname | PlayerInfoArea.Role);
+            if (CustomAbilities != null)
+            {
+                foreach (CustomAbility item2 in CustomAbilities!)
+                {
+                    item2.AddAbility(player);
+                }
+            }
+
+            ShowMessage(player);
+            ShowBroadcast(player);
+            RoleAdded(player);
+            player.UniqueRole = Name;
+            player.TryAddCustomRoleFriendlyFire(Name, CustomRoleFFMultiplier);
+            if (string.IsNullOrEmpty(ConsoleMessage))
+            {
+                return;
+            }
+            // Delete stringBuilder to not cause console message
         }
     }
 }

@@ -21,6 +21,12 @@
         public string Description { get; } = "Команда для изменения своего размера..";
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
+            if (!CommandProcessor.CheckPermissions(((CommandSender)sender), "size", PlayerPermissions.PlayersManagement, "control", false))
+            {
+                response = "У вас нет прав..";
+                return false;
+            }
+
             Player player = Player.Get(sender);
 
             if (!float.TryParse(arguments.At(1), out float x) || !float.TryParse(arguments.At(2), out float y) || !float.TryParse(arguments.At(3), out float z))

@@ -49,6 +49,9 @@
     <Reference Include="Assembly-CSharp-Publicized">
       <HintPath>C:\Users\swd\Desktop\d\Assembly-CSharp-Publicized.dll</HintPath>
     </Reference>
+    <Reference Include="AutoEvent">
+      <HintPath>..\AutoEvent\bin\Debug\AutoEvent.dll</HintPath>
+    </Reference>
     <Reference Include="BouncyCastle.Crypto">
       <HintPath>C:\Users\swd\Desktop\d\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
@@ -138,18 +141,24 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\Extensions.cs" />
+    <Compile Include="API\FakeConnection.cs" />
     <Compile Include="API\Serialization\PlayerLog.cs" />
+    <Compile Include="Commands\size.cs" />
     <Compile Include="Commands\kill.cs" />
     <Compile Include="Commands\force.cs" />
-    <Compile Include="Commands\res.cs" />
     <Compile Include="Commands\CustomItemController.cs" />
     <Compile Include="Commands\CustomRoleController.cs" />
+    <Compile Include="Commands\res.cs" />
     <Compile Include="ControlNR.cs" />
     <Compile Include="Configs\Plugin.cs" />
-    <Compile Include="CustomItems\SCP500R.cs" />
+    <Compile Include="CustomItems\Coin.cs" />
     <Compile Include="CustomItems\SCP035Mask.cs" />
+    <Compile Include="CustomItems\SCP500R.cs" />
     <Compile Include="CustomRoles\SCP035.cs" />
     <Compile Include="CustomRoles\SCP343.cs" />
+    <Compile Include="Events\Scp914Handler.cs" />
+    <Compile Include="Events\WarheadHandler.cs" />
     <Compile Include="Events\MapHandler.cs" />
     <Compile Include="Events\Scp330Handler.cs" />
     <Compile Include="Events\ServerHandler.cs" />

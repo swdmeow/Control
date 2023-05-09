@@ -218,7 +218,6 @@ D:\github\Control\ControlNR\Release\Mono.Posix.dll
 D:\github\Control\ControlNR\Release\Mono.Security.dll
 D:\github\Control\ControlNR\Release\Mono.WebBrowser.dll
 D:\github\Control\ControlNR\Release\PluginAPI.dll
-D:\github\Control\ControlNR\Release\SCPSLAudioApi.dll
 D:\github\Control\ControlNR\Release\UnityEngine.PhysicsModule.dll
 D:\github\Control\ControlNR\Release\Unity.Timeline.dll
 D:\github\Control\ControlNR\Release\UnityEngine.ParticleSystemModule.dll
@@ -288,3 +287,5 @@ D:\github\Control\ControlNR\obj\Debug\ControlNR.csproj.CopyComplete
 D:\github\Control\ControlNR\obj\Debug\ControlNR.dll
 D:\github\Control\ControlNR\obj\Debug\ControlNR.pdb
 D:\github\Control\ControlNR\Release\YamlDotNet.dll
+D:\github\Control\ControlNR\Release\AutoEvent.dll
+D:\github\Control\ControlNR\Release\AutoEvent.pdb

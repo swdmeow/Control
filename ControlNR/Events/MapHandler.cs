@@ -19,6 +19,7 @@
         {
             Exiled.Events.Handlers.Map.PlacingBlood += OnPlacingBlood;
             Exiled.Events.Handlers.Map.PlacingBulletHole += OnPlacingBulletHole;
+            Exiled.Events.Handlers.Map.SpawningItem += OnSpawningItem;
 
             Exiled.Events.Handlers.Map.AnnouncingScpTermination += OnAnnouncingScpTermination;
             Exiled.Events.Handlers.Map.AnnouncingNtfEntrance += OnAnnouncingNtfEntrance;
@@ -31,6 +32,17 @@
             Exiled.Events.Handlers.Map.AnnouncingScpTermination -= OnAnnouncingScpTermination;
             Exiled.Events.Handlers.Map.AnnouncingNtfEntrance -= OnAnnouncingNtfEntrance;
 
+        }
+        private void OnSpawningItem(SpawningItemEventArgs ev)
+        {
+            if(ev.Pickup.Type == ItemType.Ammo12gauge ||
+               ev.Pickup.Type == ItemType.Ammo44cal ||
+               ev.Pickup.Type == ItemType.Ammo556x45 ||
+               ev.Pickup.Type == ItemType.Ammo762x39 ||
+               ev.Pickup.Type == ItemType.Ammo9x19)
+            {
+                ev.IsAllowed = false;
+            }
         }
         private void OnAnnouncingScpTermination(AnnouncingScpTerminationEventArgs ev)
         {

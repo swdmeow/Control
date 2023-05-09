@@ -3,7 +3,6 @@ namespace Ñontrol
     using Exiled.API.Features;
     using Exiled.CustomItems.API.Features;
     using Exiled.CustomRoles.API.Features;
-    using Control.Events;
     using LiteDB;
     using System.IO;
     using HarmonyLib;
@@ -11,7 +10,7 @@ namespace Ñontrol
     using MEC;
     using Control.Extensions;
     using Control.CustomRoles;
-    using Utf8Json.Resolvers.Internal;
+    using Control.Events;
 
     public class ControlNR : Plugin<Config>
     {
@@ -24,12 +23,15 @@ namespace Ñontrol
         private Control.Events.ServerHandler ServerHandler;
         private Control.Events.Scp330Handler Scp330Handler;
         private Control.Events.MapHandler MapHandler;
+        private Control.Events.WarheadHandler WarheadHandler;
+        private Control.Events.Scp914Handler Scp914Handler;
         private Harmony harmony;
 
         public LiteDatabase db;
         public override void OnEnabled()
         {
             if (!Directory.Exists(Path.Combine(Paths.Configs, "ControlNR"))) Directory.CreateDirectory(Path.Combine(Paths.Configs, "ControlNR"));
+            if (!Directory.Exists(Path.Combine(Paths.Configs, "ControlNR/Music"))) Directory.CreateDirectory(Path.Combine(Paths.Configs, "ControlNR/Music"));
 
             db = new LiteDatabase(Path.Combine(Paths.Configs, @".\ControlNR\LimitDonator.db"));
             Singleton = this;
@@ -40,11 +42,15 @@ namespace Ñontrol
             ServerHandler = new Control.Events.ServerHandler();
             MapHandler = new Control.Events.MapHandler();
             Scp330Handler = new Control.Events.Scp330Handler();
+            WarheadHandler = new Control.Events.WarheadHandler();
+            Scp914Handler = new Control.Events.Scp914Handler();
 
+            Scp914Handler.OnEnabled();
             ServerHandler.OnEnabled();
             Scp330Handler.OnEnabled();
             MapHandler.OnEnabled();
             PlayerHandler.OnEnabled();
+            WarheadHandler.OnEnabled();
 
             CustomItem.RegisterItems();
             CustomRole.RegisterRoles(false, null, true);
@@ -65,11 +71,6 @@ namespace Ñontrol
         }
         public override void OnDisabled()
         {
-            PlayerHandler = null;
-            ServerHandler = null;
-            MapHandler = null;
-            Scp330Handler = null;
-
             harmony.UnpatchAll();
             harmony = null;
 
@@ -80,9 +81,17 @@ namespace Ñontrol
             Scp330Handler.OnDisabled();
             MapHandler.OnDisabled();
             PlayerHandler.OnDisabled();
+            WarheadHandler.OnDisabled();
+            Scp914Handler.OnDisabled();
 
             CustomItem.UnregisterItems();
             CustomRole.UnregisterRoles();
+
+            PlayerHandler = null;
+            ServerHandler = null;
+            MapHandler = null;
+            Scp330Handler = null;
+            WarheadHandler = null;
 
             Singleton = null;
 

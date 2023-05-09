@@ -12,6 +12,8 @@
     using PlayerRoles;
     using Control.Extensions;
     using CustomPlayerEffects;
+    using UnityEngine;
+    using MEC;
 
     [CommandHandler(typeof(ClientCommandHandler))]
     public class Res : ICommand
@@ -33,14 +35,19 @@
                 RoleTypeId role = RoleDiedWithSCP500R.First();
 
                 player.Role.Set(role, RoleSpawnFlags.None);
-                // 
-                player.Position = oldPlayer.Position;
+
+                if(Warhead.IsDetonated == true)
+                {
+                    Timing.CallDelayed(0.1f, () =>
+                    {
+
+                    });
+                }
 
                 foreach(StatusEffectBase effect in StatusEffectBase)
                 {
                     player.EnableEffect(effect, effect.Duration);
                 }
-
                 player.ShowHint("", 0.1f);
                 DiedWithSCP500R.Clear();
                 RoleDiedWithSCP500R.Clear();

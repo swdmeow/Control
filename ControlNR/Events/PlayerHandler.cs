@@ -23,44 +23,59 @@
     using Exiled.API.Features.Roles;
     using System.Threading.Tasks;
     using Mono.Security.X509.Extensions;
+    using Player = Exiled.Events.Handlers.Player;
+    using PlayerStatsSystem;
+    using Exiled.API.Features.Pickups.Projectiles;
+    using InventorySystem.Items.ThrowableProjectiles;
 
     internal sealed class PlayerHandler
     {
         //public static bool elevIsLock = false;
         public void OnEnabled()
         {
-            Exiled.Events.Handlers.Player.ChangingRole += OnChangingRole;
-            Exiled.Events.Handlers.Player.DroppingAmmo += OnDroppingAmmo;
-            Exiled.Events.Handlers.Player.Dying += OnDying;
-            Exiled.Events.Handlers.Player.ReloadingWeapon += OnReloadWeapon;
-            Exiled.Events.Handlers.Player.Left += OnLeft;
-            Exiled.Events.Handlers.Player.Verified += OnVerified;
-            Exiled.Events.Handlers.Player.UsingRadioBattery += OnUsingRadioBatteryEventArgs;
+            Player.ChangingRole += OnChangingRole;
+            Player.DroppingAmmo += OnDroppingAmmo;
+            Player.Dying += OnDying;
+            Player.ReloadingWeapon += OnReloadWeapon;
+            Player.Left += OnLeft;
+            Player.Verified += OnVerified;
+            Player.UsingRadioBattery += OnUsingRadioBatteryEventArgs;
+            Player.InteractingDoor += OnInteractingDoor;
+            Player.UnlockingGenerator += OnUnlockingGenerator;
+            Player.ActivatingWarheadPanel += OnActivatingWarheadPanel;
+            Player.InteractingLocker += OnInteractingLocker;
+            Player.TriggeringTesla += OnTriggeringTesla;
+            Player.Handcuffing += OnHandcuffing;
 
-            Exiled.Events.Handlers.Player.InteractingDoor += OnInteractingDoor;
-            Exiled.Events.Handlers.Player.UnlockingGenerator += OnUnlockingGenerator;
-            Exiled.Events.Handlers.Player.ActivatingWarheadPanel += OnActivatingWarheadPanel;
-            Exiled.Events.Handlers.Player.InteractingLocker += OnInteractingLocker;
-            Exiled.Events.Handlers.Player.TriggeringTesla += OnTriggeringTesla;
-            //Exiled.Events.Handlers.Player.PickingUpItem += OnPickingUpItem; //
+            Player.ThrownProjectile += OnThrownProjectile;
+
+            //Player.PickingUpItem += OnPickingUpItem; //
 
         }
         public void OnDisabled()
         {
-            Exiled.Events.Handlers.Player.ChangingRole -= OnChangingRole;
-            Exiled.Events.Handlers.Player.DroppingAmmo -= OnDroppingAmmo;
-            Exiled.Events.Handlers.Player.Dying -= OnDying;
-            Exiled.Events.Handlers.Player.ReloadingWeapon -= OnReloadWeapon;
-            Exiled.Events.Handlers.Player.Left -= OnLeft;
-            Exiled.Events.Handlers.Player.Verified -= OnVerified;
-            Exiled.Events.Handlers.Player.UsingRadioBattery -= OnUsingRadioBatteryEventArgs;
+            Player.ChangingRole -= OnChangingRole;
+            Player.DroppingAmmo -= OnDroppingAmmo;
+            Player.Dying -= OnDying;
+            Player.ReloadingWeapon -= OnReloadWeapon;
+            Player.Left -= OnLeft;
+            Player.Verified -= OnVerified;
+            Player.UsingRadioBattery -= OnUsingRadioBatteryEventArgs;
+            Player.Handcuffing -= OnHandcuffing;
 
-
-            Exiled.Events.Handlers.Player.InteractingDoor -= OnInteractingDoor;
-            Exiled.Events.Handlers.Player.UnlockingGenerator -= OnUnlockingGenerator;
-            Exiled.Events.Handlers.Player.ActivatingWarheadPanel -= OnActivatingWarheadPanel;
-            Exiled.Events.Handlers.Player.InteractingLocker -= OnInteractingLocker;
-            Exiled.Events.Handlers.Player.TriggeringTesla -= OnTriggeringTesla;
+            Player.InteractingDoor -= OnInteractingDoor;
+            Player.UnlockingGenerator -= OnUnlockingGenerator;
+            Player.ActivatingWarheadPanel -= OnActivatingWarheadPanel;
+            Player.InteractingLocker -= OnInteractingLocker;
+            Player.TriggeringTesla -= OnTriggeringTesla;
+        }
+        public void OnHandcuffing(HandcuffingEventArgs ev)
+        {
+            ev.Target.SetAmmo(AmmoType.Nato9, 0);
+            ev.Target.SetAmmo(AmmoType.Ammo44Cal, 0);
+            ev.Target.SetAmmo(AmmoType.Nato762, 0);
+            ev.Target.SetAmmo(AmmoType.Ammo12Gauge, 0);
+            ev.Target.SetAmmo(AmmoType.Nato556, 0);
         }
 
         private void OnVerified(VerifiedEventArgs ev)
@@ -85,6 +100,9 @@
                 }
             });
         }
+        private void OnThrownProjectile(ThrownProjectileEventArgs ev)
+        {
+        } 
         /*private void OnPickingUpItem(PickingUpItemEventArgs ev)
         {
             if(ServerHandler.InteractingItemsElevator.Contains(ev.Pickup))
@@ -109,7 +127,7 @@
         {
             if (!ev.IsAllowed && ev.Player.HasKeycardPermission(ev.Door.RequiredPermissions.RequiredPermissions))
                 ev.IsAllowed = true;
-        } 
+        }
         private void OnUnlockingGenerator(UnlockingGeneratorEventArgs ev)
         {
             if (!ev.IsAllowed && ev.Player.HasKeycardPermission(ev.Generator.Base._requiredPermission))
@@ -117,8 +135,8 @@
         }
         private void OnInteractingLocker(InteractingLockerEventArgs ev)
         {
-                if (!ev.IsAllowed && ev.Chamber != null && ev.Player.HasKeycardPermission(ev.Chamber.RequiredPermissions))
-                    ev.IsAllowed = true;
+            if (!ev.IsAllowed && ev.Chamber != null && ev.Player.HasKeycardPermission(ev.Chamber.RequiredPermissions))
+                ev.IsAllowed = true;
         }
         private void OnActivatingWarheadPanel(ActivatingWarheadPanelEventArgs ev)
         {
@@ -131,6 +149,11 @@
 
             if (CustomRole.Get((uint)2).Check(ev.Player)) return;
 
+            //var rand = new System.Random();
+
+            //ev.Player.Position = ev.Player.Position + Vector3.up;
+            //ev.Player.Scale = new Vector3((float)rand.Next((int)0.9, (int)1.1), (float)rand.Next((int)0.9, (int)1.1), (float)rand.Next((int)0.9, (int)1.1));
+
             Timing.CallDelayed(0.1f, () =>
             {
                 ev.Player.SetAmmo(AmmoType.Nato9, 101);
@@ -140,10 +163,16 @@
                 ev.Player.SetAmmo(AmmoType.Nato556, 101);
             });
 
-            if(ev.NewRole == RoleTypeId.NtfPrivate && ev.Items.Contains(ItemType.KeycardNTFOfficer))
+            if (ev.NewRole == RoleTypeId.NtfPrivate && ev.Items.Contains(ItemType.KeycardNTFOfficer))
             {
                 ev.Items.Remove(ItemType.KeycardNTFOfficer);
                 ev.Items.Add(ItemType.KeycardNTFLieutenant);
+
+            }
+            if (ev.NewRole == RoleTypeId.FacilityGuard && ev.Items.Contains(ItemType.KeycardGuard))
+            {
+                ev.Items.Remove(ItemType.KeycardGuard);
+                ev.Items.Add(ItemType.KeycardNTFOfficer);
 
             }
             if (ev.NewRole == RoleTypeId.ClassD)
@@ -153,7 +182,7 @@
         }
         private void OnLeft(LeftEventArgs ev)
         {
-            if(Res.DiedWithSCP500R.Contains(ev.Player))
+            if (Res.DiedWithSCP500R.Contains(ev.Player))
             {
                 Res.DiedWithSCP500R.Remove(ev.Player);
                 Res.RoleDiedWithSCP500R.Clear();
@@ -186,16 +215,19 @@
             ev.Player.SetAmmo(AmmoType.Ammo12Gauge, 0);
             ev.Player.SetAmmo(AmmoType.Nato556, 0);
         }
-       
+
         private void OnReloadWeapon(ReloadingWeaponEventArgs ev)
         {
             if (CustomRole.Get((uint)2).Check(ev.Player)) return;
 
-            ev.Player.SetAmmo(AmmoType.Nato9, 101);
-            ev.Player.SetAmmo(AmmoType.Ammo44Cal, 101);
-            ev.Player.SetAmmo(AmmoType.Nato762, 101);
-            ev.Player.SetAmmo(AmmoType.Ammo12Gauge, 14);
-            ev.Player.SetAmmo(AmmoType.Nato556, 101);
+            Timing.CallDelayed(0.1f, () =>
+            {
+                ev.Player.SetAmmo(AmmoType.Nato9, 101);
+                ev.Player.SetAmmo(AmmoType.Ammo44Cal, 101);
+                ev.Player.SetAmmo(AmmoType.Nato762, 101);
+                ev.Player.SetAmmo(AmmoType.Ammo12Gauge, 14);
+                ev.Player.SetAmmo(AmmoType.Nato556, 101);
+            });
         }
         /*
         private async void runElevator()

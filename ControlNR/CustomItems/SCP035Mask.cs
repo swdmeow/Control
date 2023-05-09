@@ -9,9 +9,11 @@ using Exiled.CustomItems.API.Features;
 using Exiled.CustomRoles.API.Features;
 using Exiled.Events.EventArgs.Player;
 using Exiled.Loader;
+using InventorySystem.Items.Coin;
 using MEC;
 using Mirror;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.ExceptionServices;
 using UnityEngine;
 
@@ -59,6 +61,12 @@ namespace Control.CustomItems
         {
             // Do nothing, to not cause pickup message and other things..
         }
+        private void OnRoundStarted()
+        {
+            Pickup mask = CustomItem.Get((uint)3).Spawn(Room.List.ElementAt(new System.Random().Next(0, Room.List.Count())).transform.position + Vector3.up);
+
+            Log.Info(mask.Position);
+        }
         protected override void OnPickingUp(PickingUpItemEventArgs ev)
         {
             if (CustomItem.Get((uint)3).Check(ev.Pickup))
@@ -74,6 +82,18 @@ namespace Control.CustomItems
 
                 ev.Pickup.Destroy();
             }
+        }
+        protected override void SubscribeEvents()
+        {
+            Exiled.Events.Handlers.Server.RoundStarted += OnRoundStarted;
+
+            base.SubscribeEvents();
+        }
+        protected override void UnsubscribeEvents()
+        {
+            Exiled.Events.Handlers.Server.RoundStarted -= OnRoundStarted;
+
+            base.UnsubscribeEvents();
         }
     }
 }

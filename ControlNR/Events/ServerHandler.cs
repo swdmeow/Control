@@ -46,8 +46,10 @@
         //public static Vector3 pos;
         public static bool RoomRotated = false;
 
+        private bool isWarheadCassie1Minute = false;
+        private bool isWarheadStart = false;
         public static int CassieDestroyedLVL = 0;
-        public static HashSet<Pickup> InteractingItemsElevator { get; } = new HashSet<Pickup>();
+        //public static HashSet<Pickup> InteractingItemsElevator { get; } = new HashSet<Pickup>();
         public void OnEnabled()
         {
             Exiled.Events.Handlers.Server.WaitingForPlayers += OnWaitingForPlayers;
@@ -69,9 +71,9 @@
             //string subtitles = $"Сканирование систем.. Сканирование систем заверешено.. обнаружено нарушение условий содержаний SCP-объектов {SCPs.Join(x => x.Role.Name, ", ")}";
             //string msg = $"Scanning System . . . pitch_0.9 .g1 pitch_0.85 .g1 pitch_0.8 .g1 pitch_0.775 .g1 pitch_0.74 .g1 . pitch_2 .g6 . . . pitch_0.9 .g2 pitch_1 .g2 pitch_1.05 .g2 pitch_1.1 .g2 pitch_1.135 .g2 pitch_1.16 .g2 . . . pitch_1.05 . system scan completed . .g1 . detected CONTAINMENT breach of {SCPs.Join(x => x.Role.Name.Replace("-", " "), " . ")}";
 
-           //Cassie.Message($"{subtitles} <color=#ffffff00>h {msg}", false, false, true);
+            //Cassie.Message($"{subtitles} <color=#ffffff00>h {msg}", false, false, true);
 
-            CustomItem.Get((uint)3).Spawn(Room.List.ElementAt(new System.Random().Next(0, Room.List.Count())).transform.position + Vector3.up);
+            //CustomItem.Get((uint)3).Spawn(Room.List.ElementAt(new System.Random().Next(0, Room.List.Count())).transform.position + Vector3.up);
             /*
             Room room = Room.Get(RoomType.LczAirlock);
 
@@ -145,7 +147,7 @@
         }
         private void OnRespawningTeam(RespawningTeamEventArgs ev)
         {
-            if(ev.NextKnownTeam == SpawnableTeamType.ChaosInsurgency)
+            if (ev.NextKnownTeam == SpawnableTeamType.ChaosInsurgency)
             {
                 Cassie.Message("О̸̲̮͆паc█ос█ь! Внешний ██риме̸т̵р нару█ен неи███стным отря██м. Всему персоналу р███енд█ется укрыться в безо̸̙̌п̸̖͐̀асном м████.. <color=#ffffff00>h pitch_0.15 .g4 . .g4 . pitch_0.6 danger .g2 . pitch_0.7 external pitch_0.5 .g4 jam_1_1 board r was pitch_8 breached by  . pitch_0.6 .g4 . pitch_0.7 an unknown unit . all remaining personnel . pitch_0.6 .g6 . are advised to take shelter in a safe location </color>", false, false, true);
                 CassieDestroyedLVL += 1;
@@ -156,15 +158,17 @@
             //doorAirlock = null;
             //door035 = null;
             //room035 = null;
-            Log.Info("Dropping collections and lists..");
+            Log.Info("Dropping collections and lists, kill coroutines..");
             try
             {
+                Timing.KillCoroutines(WarheadHandler.ChangeColorsCoroutineHandle);
+
                 Res.DiedWithSCP500R.Clear();
                 Res.RoleDiedWithSCP500R.Clear();
                 Res.StatusEffectBase.Clear();
                 CassieDestroyedLVL = 0;
 
-                ControlNR.Singleton.db.Execute("DROP COLLECTION VIPPlayers");
+                ControlNR.Singleton.db.DropCollection("VIPPlayers");
             }
             catch (Exception ex)
             {
@@ -179,17 +183,33 @@
         }
         private void OnEndingRound(EndingRoundEventArgs ev)
         {
+
             bool mtf = Player.List.Where(p => p.Role.Team == Team.FoundationForces && !CustomRole.Get((uint)1).Check(p)).Count() > 0;
             bool classd = Player.List.Where(p => p.Role == RoleTypeId.ClassD && !CustomRole.Get((uint)2).Check(p) && !CustomRole.Get((uint)1).Check(p)).Count() > 0;
-            bool chaos = Player.List.Where(p => p.Role.Team == Team.ChaosInsurgency && !CustomRole.Get((uint)1).Check(p)).Count() > 0;
+            bool chaos = Player.List.Where(p => p.Role.Team == Team.ChaosInsurgency && p.Role != RoleTypeId.ClassD && !CustomRole.Get((uint)1).Check(p)).Count() > 0;
             bool scps = Player.List.Where(p => p.Role.Team == Team.SCPs || CustomRole.Get((uint)1).Check(p)).Count() > 0;
 
-            if (mtf && !classd && !scps && !chaos) ev.IsRoundEnded = true;
-            else if (!mtf && !classd && scps) ev.IsRoundEnded = true;
-            else if (mtf && (classd || chaos) && !scps) ev.IsRoundEnded = false;
-            else if (!mtf && classd && !scps) ev.IsRoundEnded = true;
-            else if (mtf && !classd && !scps && chaos) ev.IsRoundEnded = false;
-            else if (!mtf && !classd && !scps && !chaos) ev.IsRoundEnded = true;
+            // Никто не в живых..
+            if (!mtf && !classd && !scps && !chaos) { ev.IsRoundEnded = true; Log.Debug("1"); }
+            // ТОЛЬКО Класс д или ПХ в живых
+            else if (!mtf && (chaos || classd) && !scps) { ev.IsRoundEnded = true; Log.Debug("2"); }
+            // Если класс д или пх и мог живыф
+            else if ((chaos || classd) && mtf && !scps) { ev.IsRoundEnded = false; Log.Debug("3"); }
+            // МОГ И СЦП
+            else if (mtf && scps) { ev.IsRoundEnded = false; Log.Debug("4"); }
+            // Класс д или хаос и сцп
+            else if ((classd || chaos) && scps) { ev.IsRoundEnded = false; Log.Debug("5"); }
+            else
+            {
+                Log.Debug("=========НЕИЗВЕСТНЫЙ СЦЕНАРИЙ КОНЦА РАУНДА================");
+                Log.Debug($"МТФ ЖИВЫ: {mtf} ");
+                Log.Debug($"ХАОС ЖИВЫ: {chaos} ");
+                Log.Debug($"КЛАССД ЖИВЫ: {classd} ");
+                Log.Debug($"СЦП ЖИВЫ: {scps} ");
+                Log.Debug($"ДОЛЖЕН РАУНД ЗАКОНЧИТСЯ?: ${ev.IsRoundEnded}");
+                Log.Debug("=========НЕИЗВЕСТНЫЙ СЦЕНАРИЙ КОНЦА РАУНДА================");
+
+            }
 
             if (ev.IsRoundEnded == true)
             {
@@ -198,6 +218,22 @@
                 Server.FriendlyFire = true;
 
                 Cassie.Message("Огонь по своим включён.. <color=#ffffff00>h F F enabled .g1", true, false, true);
+            }
+
+            if (!isWarheadCassie1Minute && Round.ElapsedTime.Minutes >= 24)
+            {
+                isWarheadCassie1Minute = true;
+                Cassie.Message("Детонация альфа-боеголовки будет запущена через 1<b></b> минуту.. <color=#ffffff00>h Alpha warhead detonation SEQUENCE .G1 will be started . in TMINUS . 1 minute");
+            }
+
+            if (!isWarheadStart && Round.ElapsedTime.Minutes >= 25)
+            {
+                isWarheadStart = true;
+
+                Warhead.Start();
+                Warhead.IsLocked = true;
+
+                //Cassie.Message("Детонация альфа-боеголовки будет запущена через 1 минуту.. <color=#ffffff00>h Alpha warhead detonation will be started in t minute 1 minute ");
             }
         }
     }

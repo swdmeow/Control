@@ -61,6 +61,8 @@ namespace Control.Patches
                 {
                     if (player?.GroupName == "d1" || player?.GroupName == "d2")
                     {
+                        string UserID = player.UserId;
+
                         Allowed = false;
                         var log = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(player.UserId);
 
@@ -88,7 +90,7 @@ namespace Control.Patches
                         {
                             Success = false;
                             sender.RaReply($"ControlNR#Раунд не начался..", Success, true, string.Empty);
-                            return Allowed;
+                            return Allowed; 
                         }
 
                         Success = true;
@@ -126,6 +128,7 @@ namespace Control.Patches
                         {
                             if (args[0] == "forceclass")
                             {
+                                Enum.TryParse(args[2], true, out RoleTypeId role);
                                 try
                                 {
                                     if (log.ForcedTimes >= 1)
@@ -137,6 +140,12 @@ namespace Control.Patches
 
                                     if (args[2].ToLower().StartsWith("scp"))
                                     {
+                                        if (log.ForcedToSCP == true)
+                                        {
+                                            Success = false;
+                                            sender.RaReply($"ControlNR#Вы уже форсались за SCP..", Success, true, string.Empty);
+                                            return Allowed;
+                                        }
                                         if (Player.List.Where(x => x.IsScp)?.Count() == 0)
                                         {
                                             if (Player.List.Where(x => x.IsHuman).Count() >= 6)
@@ -148,6 +157,8 @@ namespace Control.Patches
                                                 log.ForcedToSCP = true;
 
                                                 ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
+
+                                                player.Role.Set(role);
 
                                                 sender.RaReply($"ControlNR#Успешно..", Success, true, string.Empty);
                                                 return Allowed;
@@ -168,6 +179,7 @@ namespace Control.Patches
 
                                             ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
 
+                                            player.Role.Set(role);
                                             sender.RaReply($"ControlNR#Успешно..", Success, true, string.Empty);
                                             return Allowed;
                                         }
@@ -195,8 +207,6 @@ namespace Control.Patches
                                         sender.RaReply($"ControlNR#Не-не..", Success, true, string.Empty);
                                         return Allowed;
                                     }
-
-                                    Enum.TryParse(args[2], true, out RoleTypeId role);
 
                                     log.cooldownRole = true;
                                     log.ForcedTimes += 1;
@@ -280,7 +290,8 @@ namespace Control.Patches
 
                                     Timing.CallDelayed(120f, () =>
                                     {
-                                        var ValueChange = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(player.UserId);
+                                        Log.Info("Catch end cooldown, update");
+                                        var ValueChange = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(UserID);
                                         ValueChange.cooldownItem = false;
                                         ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
                                     });
@@ -320,6 +331,12 @@ namespace Control.Patches
 
                                     if (args[2].ToLower().StartsWith("scp"))
                                     {
+                                        if (log.ForcedToSCP == true)
+                                        {
+                                            Success = false;
+                                            sender.RaReply($"ControlNR#Вы уже форсались за SCP..", Success, true, string.Empty);
+                                            return Allowed;
+                                        }
                                         if (Player.List.Where(x => x.IsScp)?.Count() == 0)
                                         {
                                             if (Player.List.Where(x => x.IsHuman).Count() >= 6)
@@ -389,7 +406,8 @@ namespace Control.Patches
 
                                     Timing.CallDelayed(120f, () =>
                                     {
-                                        var ValueChange = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(player.UserId);
+                                        Log.Info("Catch end cooldown, update");
+                                        var ValueChange = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(UserID);
                                         ValueChange.cooldownRole = false;
                                         ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
                                     });
@@ -470,7 +488,8 @@ namespace Control.Patches
 
                                     Timing.CallDelayed(120f, () =>
                                     {
-                                        var ValueChange = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(player.UserId);
+                                        Log.Info("Catch end cooldown, update");
+                                        var ValueChange = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(UserID);
                                         ValueChange.cooldownItem = false;
                                         ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
                                     });
@@ -510,17 +529,16 @@ namespace Control.Patches
                                         log.CallTimes += 1;
                                         ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
 
-                                        Enum.TryParse(args[1], out SpawnableTeamType spawn);
-                                        Respawn.ForceWave(spawn, true);
-
                                         Timing.CallDelayed(120f, () =>
                                         {
-                                            var ValueChange = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(player.UserId);
+                                            Log.Info("Catch end cooldown, update");
+                                            var ValueChange = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(UserID);
                                             ValueChange.cooldownCall = false;
                                             ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
                                         });
 
-                                        Allowed = false;
+                                        // Only one allow in this text file lmao
+                                        Allowed = true;
                                         return Allowed;
                                     }
                                 }
