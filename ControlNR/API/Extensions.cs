@@ -5,11 +5,9 @@ using Mirror;
 using UnityEngine;
 using PlayerRoles;
 using Exiled.API.Features;
-using InventorySystem.Items.Pickups;
-using MapEditorReborn.API.Features;
-using MapEditorReborn.API.Features.Objects;
 using SCPSLAudioApi.AudioCore;
 using Object = UnityEngine.Object;
+using MEC;
 
 namespace Control.API
 {
@@ -57,9 +55,12 @@ namespace Control.API
         /// <summary>Остановить прогирывание</summary>
         public static void StopAudio()
         {
+            if (Dummies.Count == 0) return;
             foreach (var dummies in Dummies)
             {
-                NetworkServer.Destroy(dummies.gameObject);
+                var audioPlayer = AudioPlayerBase.Get(dummies);
+
+                Timing.CallDelayed(0.1f, () => { NetworkServer.Destroy(dummies.gameObject); });
             }
             Dummies.Clear();
         }

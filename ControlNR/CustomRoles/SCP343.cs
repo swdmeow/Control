@@ -200,7 +200,18 @@ namespace Control.CustomRoles
 
                     ev.IsAllowed = false;
 
-                    return; // А это что????
+                    return;
+                }
+
+                if (ev.Pickup.Type == ItemType.MicroHID)
+                {
+                    ev.Pickup?.Destroy();
+
+                    Pickup.CreateAndSpawn(ItemType.MicroHID, ev.Player.Position, new Quaternion(0f, 0f, 0f, 0f));
+
+                    ev.IsAllowed = false;
+
+                    return;
                 }
 
                 ev.IsAllowed = false;
@@ -393,7 +404,6 @@ namespace Control.CustomRoles
         {
             for (; ; )
             {
-                Log.Debug("Ticked cooldown..");
                 if (CooldownPainkillers > 0) CooldownPainkillers--;
                 if (CooldownRevolver > 0) CooldownRevolver--;
                 if (CooldownMedkit > 0) CooldownMedkit--;

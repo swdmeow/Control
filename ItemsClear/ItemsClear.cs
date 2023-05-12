@@ -90,7 +90,9 @@ namespace Alpha
                     {
                         if (item.Type == Type)
                         {
-                            UnityEngine.MonoBehaviour.Destroy(item.GameObject);
+                            item.InUse = false;
+                            item.Position = new UnityEngine.Vector3(0, 0, 0);
+                            item.Destroy();
                         }
                     }
                 }

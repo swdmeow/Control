@@ -18,7 +18,7 @@
         public string Description { get; } = "Команда для выдачи кастомных ролей.. [ID роли, ID игрока]";
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            if (!CommandProcessor.CheckPermissions(((CommandSender)sender), "CustomRole", PlayerPermissions.PlayersManagement, "control", false))
+            if (!CommandProcessor.CheckPermissions(((CommandSender)sender), "CustomRole", PlayerPermissions.Broadcasting, "ControlNR", false))
             {
                 response = "У вас нет прав..";
                 return false;

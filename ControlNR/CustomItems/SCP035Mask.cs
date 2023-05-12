@@ -57,7 +57,7 @@ namespace Control.CustomItems
 
             return Type;
         }
-        protected override void OnAcquired(Exiled.API.Features.Player player)
+        protected override void OnAcquired(Exiled.API.Features.Player player, bool DisplayMessage)
         {
             // Do nothing, to not cause pickup message and other things..
         }

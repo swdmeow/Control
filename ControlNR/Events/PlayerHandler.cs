@@ -27,10 +27,10 @@
     using PlayerStatsSystem;
     using Exiled.API.Features.Pickups.Projectiles;
     using InventorySystem.Items.ThrowableProjectiles;
+    using Steamworks.ServerList;
 
     internal sealed class PlayerHandler
     {
-        //public static bool elevIsLock = false;
         public void OnEnabled()
         {
             Player.ChangingRole += OnChangingRole;
@@ -46,11 +46,7 @@
             Player.InteractingLocker += OnInteractingLocker;
             Player.TriggeringTesla += OnTriggeringTesla;
             Player.Handcuffing += OnHandcuffing;
-
             Player.ThrownProjectile += OnThrownProjectile;
-
-            //Player.PickingUpItem += OnPickingUpItem; //
-
         }
         public void OnDisabled()
         {
@@ -77,7 +73,6 @@
             ev.Target.SetAmmo(AmmoType.Ammo12Gauge, 0);
             ev.Target.SetAmmo(AmmoType.Nato556, 0);
         }
-
         private void OnVerified(VerifiedEventArgs ev)
         {
             Timing.CallDelayed(0.1f, () =>
@@ -103,26 +98,12 @@
         private void OnThrownProjectile(ThrownProjectileEventArgs ev)
         {
         } 
-        /*private void OnPickingUpItem(PickingUpItemEventArgs ev)
-        {
-            if(ServerHandler.InteractingItemsElevator.Contains(ev.Pickup))
-            {
-                ev.IsAllowed = false;
-
-                if (elevIsLock) return;
-
-                runElevator();
-            }
-        }*/
         private void OnTriggeringTesla(TriggeringTeslaEventArgs ev)
         {
             ev.IsAllowed = false;
             ev.IsInIdleRange = false;
         }
-        private void OnUsingRadioBatteryEventArgs(UsingRadioBatteryEventArgs ev)
-        {
-            ev.Drain = 0f;
-        }
+        private void OnUsingRadioBatteryEventArgs(UsingRadioBatteryEventArgs ev) => ev.Drain = 0f;
         private void OnInteractingDoor(InteractingDoorEventArgs ev)
         {
             if (!ev.IsAllowed && ev.Player.HasKeycardPermission(ev.Door.RequiredPermissions.RequiredPermissions))
@@ -136,7 +117,9 @@
         private void OnInteractingLocker(InteractingLockerEventArgs ev)
         {
             if (!ev.IsAllowed && ev.Chamber != null && ev.Player.HasKeycardPermission(ev.Chamber.RequiredPermissions))
+            {
                 ev.IsAllowed = true;
+            }
         }
         private void OnActivatingWarheadPanel(ActivatingWarheadPanelEventArgs ev)
         {
@@ -145,14 +128,7 @@
         }
         private void OnChangingRole(ChangingRoleEventArgs ev)
         {
-            //if (ev.Player == null) return;
-
             if (CustomRole.Get((uint)2).Check(ev.Player)) return;
-
-            //var rand = new System.Random();
-
-            //ev.Player.Position = ev.Player.Position + Vector3.up;
-            //ev.Player.Scale = new Vector3((float)rand.Next((int)0.9, (int)1.1), (float)rand.Next((int)0.9, (int)1.1), (float)rand.Next((int)0.9, (int)1.1));
 
             Timing.CallDelayed(0.1f, () =>
             {
@@ -229,27 +205,5 @@
                 ev.Player.SetAmmo(AmmoType.Nato556, 101);
             });
         }
-        /*
-        private async void runElevator()
-        {
-            elevIsLock = true;
-            ServerHandler.doorAirlock.AnimationController.Play("Close", "FIFIF");
-
-            await Task.Delay(1500);
-
-            var Players = Player.List.Where(x => Vector3.Distance(ServerHandler.positionToTeleport, x.Position) <= 3f);
-
-            foreach (Player pl in Players)
-            {
-                if (!ServerHandler.RoomRotated) pl.Position = ServerHandler.pos + new Vector3(-12f, 101f, 0.2f);
-                if (ServerHandler.RoomRotated) pl.Position = ServerHandler.pos + new Vector3(0f, 101f, 0f);
-            };
-
-            await Task.Delay(500);
-
-            ServerHandler.door035.AnimationController.Play("Open", "FIFIF");
-
-            elevIsLock = false;
-        }*/
     }
 }

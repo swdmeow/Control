@@ -33,7 +33,7 @@ namespace Ñontrol
             if (!Directory.Exists(Path.Combine(Paths.Configs, "ControlNR"))) Directory.CreateDirectory(Path.Combine(Paths.Configs, "ControlNR"));
             if (!Directory.Exists(Path.Combine(Paths.Configs, "ControlNR/Music"))) Directory.CreateDirectory(Path.Combine(Paths.Configs, "ControlNR/Music"));
 
-            db = new LiteDatabase(Path.Combine(Paths.Configs, @".\ControlNR\LimitDonator.db"));
+            db = new LiteDatabase(Path.Combine(Paths.Configs, @"ControlNR/LimitDonator.db"));
             Singleton = this;
 
             harmony = new Harmony($"ControlNR - {DateTime.Now.Ticks}");
@@ -58,6 +58,11 @@ namespace Ñontrol
             if (PlayerExtensions.HintCoroutineHandle == null || !PlayerExtensions.HintCoroutineHandle.Value.IsValid || !PlayerExtensions.HintCoroutineHandle.Value.IsRunning)
                 PlayerExtensions.HintCoroutineHandle = Timing.RunCoroutine(PlayerExtensions.HintCoroutine());
 
+            if (PlayerExtensions.HintCoroutineHandle == null || !PlayerExtensions.HintCoroutineHandle.Value.IsValid || !PlayerExtensions.HintCoroutineHandle.Value.IsRunning)
+            {
+                PlayerExtensions.WriteHintCoroutineHandle = Timing.RunCoroutine(PlayerExtensions.WriteHint());
+            }
+
             if (SCP343.HintCooldownCoroutineHandle == null || !SCP343.HintCooldownCoroutineHandle.Value.IsValid || !SCP343.HintCooldownCoroutineHandle.Value.IsRunning)
                 SCP343.HintCooldownCoroutineHandle = Timing.RunCoroutine(SCP343.HintCoroutine());
 
@@ -65,10 +70,7 @@ namespace Ñontrol
             
             base.OnEnabled();
         }
-        public override void OnReloaded()
-        {
-            base.OnReloaded();
-        }
+        public override void OnReloaded() { }
         public override void OnDisabled()
         {
             harmony.UnpatchAll();

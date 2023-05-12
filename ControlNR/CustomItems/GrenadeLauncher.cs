@@ -1,5 +1,6 @@
 using Control.Extensions;
 using Exiled.API.Enums;
+using Exiled.API.Extensions;
 using Exiled.API.Features;
 using Exiled.API.Features.Attributes;
 using Exiled.API.Features.Items;
@@ -8,9 +9,9 @@ using Exiled.API.Features.Spawn;
 using Exiled.API.Interfaces;
 using Exiled.CustomItems.API.Features;
 using Exiled.Events.EventArgs.Player;
+using Exiled.Loader;
 using Hints;
 using MEC;
-using PostProcessing;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -24,50 +25,20 @@ namespace Control.CustomItems
     {
         public override uint Id { get; set; } = 4;
         public override string Name { get; set; } = "гранатомёт";
-        public override string Description { get; set; } = "Стреляет гранатами. Максимум гранат в обойме - 2. Перезарядка гранатами, 1 граната - 3 секунды";
+        public override string Description { get; set; } = "Стреляет гранатами. Перезарядка гранат - <b>раз в 30 секунд..</b>";
         public override ItemType Type { get; set; } = ItemType.GunCOM18;
 
-        private bool isReloadActive = false;
+        public static bool CooldownIsEnable = false;
         public override float Weight { get; set; }
-        public override SpawnProperties SpawnProperties { get; set; } = new()
+        public override SpawnProperties SpawnProperties { get; set; } = null;
+        private void OnStartedRound()
         {
-            Limit = 2,
-            DynamicSpawnPoints = new List<DynamicSpawnPoint>
-            {
-                new()
-                {
-                    Chance = 100,
-                    Location = SpawnLocationType.InsideHczArmory,
-                },
-                new()
-                {
-                    Chance = 55,
-                    Location = SpawnLocationType.InsideLczArmory,
-                },
-                new()
-                {
-                    Chance = 25,
-                    Location = SpawnLocationType.Inside049Armory,
-                },
-                new()
-                {
-                    Chance = 10,
-                    Location = SpawnLocationType.Inside173Armory,
-                },
-            }
+            FirearmPickup pickup;
 
-        };
+            if (Loader.Random.Next(100) > 50) pickup = CustomItem.Get((uint)4).Spawn(Room.Get(RoomType.LczArmory).transform.position + Vector3.up) as FirearmPickup;
+            else pickup = CustomItem.Get((uint)4).Spawn(Room.Get(RoomType.HczArmory).transform.position + Vector3.up) as FirearmPickup;
 
-        private void OnPickUpItem(PickingUpItemEventArgs ev)
-        {
-            if (!CustomItem.Get((uint)4).Check(ev.Pickup)) return;
-
-            var FireItem = ev.Pickup as FirearmPickup;
-
-            if(FireItem.Ammo > 3)
-            {
-                FireItem.Ammo = 1;
-            }
+            Timing.CallDelayed(0.1f, () => { pickup.Ammo = 1; });
         }
 
         private void OnShooting(ShootingEventArgs ev)
@@ -75,12 +46,11 @@ namespace Control.CustomItems
             if (!CustomItem.Get((uint)4).Check(ev.Player.CurrentItem)) return;
 
             ev.IsAllowed = false;
-
+            
             var FireItem = ev.Player.CurrentItem as Firearm;
 
             if(FireItem.Ammo + 1 > 0)
             {
-                ev.Player.ShowHitMarker(1);
                 ev.Player.ThrowGrenade(Exiled.API.Enums.ProjectileType.FragGrenade);
                 FireItem.Ammo--;
                 return;
@@ -92,7 +62,8 @@ namespace Control.CustomItems
             Exiled.Events.Handlers.Player.Shooting += OnShooting;
             Exiled.Events.Handlers.Player.ReloadingWeapon += OnReloading;
             Exiled.Events.Handlers.Player.UnloadingWeapon += OnUnloadingWeapon;
-            Exiled.Events.Handlers.Player.PickingUpItem += OnPickUpItem;
+            Exiled.Events.Handlers.Server.RoundStarted += OnStartedRound;
+
 
             base.SubscribeEvents();
         }
@@ -101,56 +72,36 @@ namespace Control.CustomItems
             Exiled.Events.Handlers.Player.Shooting -= OnShooting;
             Exiled.Events.Handlers.Player.ReloadingWeapon -= OnReloading;
             Exiled.Events.Handlers.Player.UnloadingWeapon -= OnUnloadingWeapon;
-            Exiled.Events.Handlers.Player.PickingUpItem -= OnPickUpItem;
+            Exiled.Events.Handlers.Server.RoundStarted -= OnStartedRound;
 
             base.UnsubscribeEvents();
         }
 
-        private async void OnReloading(ReloadingWeaponEventArgs ev)
+        private void OnReloading(ReloadingWeaponEventArgs ev)
         {
-            if (!CustomItem.Get((uint)4).Check(ev.Player)) return;
+            if (!CustomItem.Get((uint)4).Check(ev.Player.CurrentItem)) return;
 
-            if (isReloadActive == true) return;
+            if (CooldownIsEnable || ev.Firearm.Ammo >= 1) { ev.IsAllowed = false; return; }
 
-            ev.IsAllowed = false;
+            CooldownIsEnable = true;
 
-            if (ev.Firearm.Ammo == 3)
-            {
-                return;
-            }
+            Firearm firearm = ev.Firearm;
 
-            Firearm GrenadeLauncher = ev.Firearm;
-            int AmmoCount = 0;
+            Timing.CallDelayed(2.3f, () => { firearm.Ammo = 1;  });
 
-            foreach (Item item in ev.Player.Items.ToList())
-            { 
-                if (item.Type == ItemType.GrenadeHE)
-                {
-                    ev.Player.ShowHint($"Перезарядка..\n{(AmmoCount == 0 ? "+1" : $"+{AmmoCount}")}", 3);
-                    if (GrenadeLauncher.Ammo >= 3) return;
-
-                    isReloadActive = true;
-                    await Task.Delay(3000);
-                    isReloadActive = false;
-                    AmmoCount += 1;
-
-                    if (!CustomItem.Get((uint)4).Check(ev.Player.CurrentItem))
-                    {
-                        ev.Player.ShowHint("Вы убрали пистолет из своей руки..", 3);
-                        isReloadActive = false;
-                        return;
-                    }
-
-                    GrenadeLauncher.Ammo++;
-                    ev.Player.RemoveItem(item);
-                }
-            }
+            Timing.RunCoroutine(_DelayedCall());
         }
         private void OnUnloadingWeapon(UnloadingWeaponEventArgs ev)
         {
             if (!CustomItem.Get((uint)4).Check(ev.Player.CurrentItem)) return;
 
             ev.IsAllowed = false;
+        }
+        private IEnumerator<float> _DelayedCall()
+        {
+            yield return Timing.WaitForSeconds(30f);
+
+            CooldownIsEnable = false;
         }
     }
 }

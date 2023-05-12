@@ -29,6 +29,12 @@
         {
             Player player = Player.Get(sender);
 
+            if(player.IsAlive)
+            {
+                response = "... что ты пытаешься сделать?";
+                return false;
+            }
+
             if (DiedWithSCP500R.Contains(player))
             {
                 Player oldPlayer = DiedWithSCP500R.Find(x => x == player);
@@ -40,7 +46,7 @@
                 {
                     Timing.CallDelayed(0.1f, () =>
                     {
-
+                        player.Position = Room.Get(Exiled.API.Enums.RoomType.Surface).transform.position + Vector3.up;
                     });
                 }
 

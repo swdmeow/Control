@@ -21,6 +21,7 @@
             Exiled.Events.Handlers.Map.PlacingBulletHole += OnPlacingBulletHole;
             Exiled.Events.Handlers.Map.SpawningItem += OnSpawningItem;
 
+
             Exiled.Events.Handlers.Map.AnnouncingScpTermination += OnAnnouncingScpTermination;
             Exiled.Events.Handlers.Map.AnnouncingNtfEntrance += OnAnnouncingNtfEntrance;
         }
@@ -28,7 +29,7 @@
         {
             Exiled.Events.Handlers.Map.PlacingBlood -= OnPlacingBlood;
             Exiled.Events.Handlers.Map.PlacingBulletHole -= OnPlacingBulletHole;
-
+            Exiled.Events.Handlers.Map.SpawningItem -= OnSpawningItem;
             Exiled.Events.Handlers.Map.AnnouncingScpTermination -= OnAnnouncingScpTermination;
             Exiled.Events.Handlers.Map.AnnouncingNtfEntrance -= OnAnnouncingNtfEntrance;
 
@@ -50,10 +51,12 @@
 
             if(ServerHandler.CassieDestroyedLVL >= 1)
             {
+                //if(ev.TerminationCause == Term)
                 Cassie.Message("SCP-███<b></b> успе█нjjjj у̸н̸и̴ч̸т████. При█ин█ с̸͓̍м̶̟͛е̵̰̰̽̈р̵͍͑ти - н̸е̸известна.. <color=#ffffff00>h pitch_0.8 SCP . pitch_0.6 .G6 .g1 . .g1 . .g1 . has . been .g3 . SUCCESSFULLY . .g4 terminated . .g4 . termination cause is pitch_0.5 unspecified . .g5 . pitch_0.3 .g5 pitch_0.1 .g5", false, false, true);
 
                 ev.IsAllowed = false;
             }
+
         }
         private void OnAnnouncingNtfEntrance(AnnouncingNtfEntranceEventArgs ev)
         {
@@ -61,6 +64,7 @@
 
             if (ServerHandler.CassieDestroyedLVL >= 1)
             {
+                Cassie.Message("pitch_1 .g6 pitch_0.4 . .g5 . . .g4 . . .g4 . . pitch_0.96  pitch_0.5 .g1 .g2 pitch_0.3 .g2 .g3 pitch_1. . pitch_0.9 pitch_0.2 .g5 .g4 .g7 pitch_1", true, false, false); ;
                 ev.IsAllowed = false;
             }
         }

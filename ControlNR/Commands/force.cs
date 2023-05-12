@@ -22,6 +22,12 @@
         {
             Player player = Player.Get(sender);
 
+            if (arguments.At(0) == null || !int.TryParse(arguments.At(0), out int _x))
+            {
+                response = "Использование .force [номер SCP]";
+                return false;
+            }
+
             if (!player.IsScp)
             {
                 response = "Вы не SCP объект..";
@@ -31,12 +37,6 @@
             if(Round.ElapsedTime.TotalSeconds >= 120)
             {
                 response = "Прошло более 120 секунд после начала раунда..";
-                return false;
-            }
-
-            if(arguments.At(0) == null || !int.TryParse(arguments.At(0), out int _x))
-            {
-                response = "Использование .force [номер SCP]";
                 return false;
             }
 

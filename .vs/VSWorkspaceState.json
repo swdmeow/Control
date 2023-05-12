@@ -9,6 +9,6 @@
     "\\ControlNR\\Events",
     "\\ControlNR\\Patches"
   ],
-  "SelectedNode": "\\ControlNR\\Events\\ServerHandler.cs",
+  "SelectedNode": "\\ControlNR\\API\\Extensions.cs",
   "PreviewInSolutionExplorer": false
 }

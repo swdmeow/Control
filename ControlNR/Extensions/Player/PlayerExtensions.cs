@@ -3,6 +3,7 @@ using System.Linq;
 using CustomPlayerEffects;
 using Exiled.API.Features;
 using Exiled.API.Features.Items;
+using Exiled.CustomRoles.API.Features;
 using Interactables.Interobjects.DoorUtils;
 using MEC;
 
@@ -11,6 +12,7 @@ namespace Control.Extensions
     public static class PlayerExtensions
     {
         public static CoroutineHandle? HintCoroutineHandle = null;
+        public static CoroutineHandle? WriteHintCoroutineHandle = null;
         public static bool HasKeycardPermission(this Player player, KeycardPermissions permissions, bool requiresAllPermissions = false)
         {
             return requiresAllPermissions ?
@@ -76,6 +78,44 @@ namespace Control.Extensions
             {
                 (time, text)
             });
+        }
+        public static IEnumerator<float> WriteHint()
+        {
+            for (; ; )
+            {
+                foreach (Player pl in Player.List.Where(x => !x.IsScp && !CustomRole.Get((uint)1).Check(x) && x.IsAlive))
+                {
+                    if (!pl.CurrentHint.Content.StartsWith("<b></b>")) { Log.Debug(pl.CurrentHint.Content); Log.Debug("Dont pass"); continue; }
+
+                    string Hint = "<b></b><size=66%>";
+
+                    Hint += "<br><br><br><br><br><br><b>[R<color=#0000ff>U</color><color=#ff0000>S</color>] <color=#8DFF29>bezname</color> | <color=#00B7EB>NoRules</color></b><br>";
+
+                    Hint += "</size>";
+                    Log.Info(Hint);
+                    pl.ShowHint(Hint, 0.6f);
+                }
+
+                foreach (Player pl in Player.List.Where(x => x.IsScp || CustomRole.Get((uint)1).Check(x)))
+                {
+                    if (!pl.CurrentHint.Content.StartsWith("<b></b>")) { Log.Debug(pl.CurrentHint.Content);  Log.Debug("Dont pass"); continue; }
+
+                    string Hint = "<b></b><size=75%>";
+
+                    Hint += "<b>[R<color=#0000ff>U</color><color=#ff0000>S</color>] <color=#8DFF29>bezname</color> | <color=#00B7EB>NoRules</color></b><br>";
+
+                    foreach (Player AddTarget in Player.List.Where(x => x.IsScp || CustomRole.Get((uint)1).Check(x)))
+                    {
+                        Hint += $"<pos=55%><color=red>{AddTarget.Role.Name} - {AddTarget.Health}/{AddTarget.MaxHealth}</color><br>";
+                    }
+
+                    Hint += "</size></color>";
+                    Log.Info(Hint);
+                    pl.ShowHint(Hint, 0.6f);
+                }
+
+                yield return Timing.WaitForSeconds(0.5f);
+            }
         }
     }
 }

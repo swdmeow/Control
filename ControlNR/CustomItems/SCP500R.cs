@@ -68,6 +68,8 @@ namespace Control.CustomItems
 
                     foreach(StatusEffectBase eff in ev.Player.ActiveEffects)
                     {
+                        if (eff.name == "CardiacArrest") continue;
+
                         Res.StatusEffectBase.Add(eff);
                     }
 

@@ -93,7 +93,7 @@ namespace Control.CustomRoles
             Exiled.API.Features.Roles.Scp096Role.TurnedPlayers.Remove(player);
 
             player.DisplayNickname = null;
-            Cassie.Message("SCP-035<b></b> был устранён <color=#ffffff00>h scp 0 3 5 has been terminated", false, false, true);
+            Cassie.Message("SCP-035<b></b> был устранён.. <color=#ffffff00>h scp 0 3 5 has been terminated", false, false, true);
         }
         private void OnEnteringPocketDimension(EnteringPocketDimensionEventArgs ev)
         {
@@ -130,8 +130,16 @@ namespace Control.CustomRoles
             Exiled.Events.Handlers.Player.Dying += OnDying;
             Exiled.Events.Handlers.Player.EnteringPocketDimension += OnEnteringPocketDimension;
             Exiled.Events.Handlers.Player.Hurting += OnHurting;
+            Exiled.Events.Handlers.Player.Escaping += OnEscaping;
+
 
             Exiled.Events.Handlers.Player.ReceivingEffect += OnReceivingEffect;
+        }
+        private void OnEscaping(EscapingEventArgs ev)
+        {
+            if (!CustomRole.Get((uint)1).Check(ev.Player)) return;
+
+            ev.IsAllowed = false;
         }
         protected override void UnsubscribeEvents()
         {
@@ -146,7 +154,7 @@ namespace Control.CustomRoles
             Exiled.Events.Handlers.Player.EnteringPocketDimension -= OnEnteringPocketDimension;
             Exiled.Events.Handlers.Player.Hurting -= OnHurting;
 
-            Exiled.Events.Handlers.Player.ReceivingEffect += OnReceivingEffect;
+            Exiled.Events.Handlers.Player.ReceivingEffect -= OnReceivingEffect;
         }
         private void OnInternalChangingRole(ChangingRoleEventArgs ev)
         {
