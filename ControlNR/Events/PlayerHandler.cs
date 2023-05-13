@@ -119,7 +119,6 @@
                 if (scp096 == null) return;
 
                 scp096.Role.Set(RoleTypeId.Scp096);
-
             }
         }
         private void OnUnlockingGenerator(UnlockingGeneratorEventArgs ev)
