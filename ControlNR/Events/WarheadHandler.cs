@@ -48,16 +48,17 @@
         {
             WarheadEvent.Stopping += OnStopping;
             WarheadEvent.Starting += OnStaring;
-            WarheadEvent.Detonated += OnDetonated;
+            WarheadEvent.Detonating += OnDetonating;
 
         }
         public void OnDisabled()
         {
             WarheadEvent.Stopping -= OnStopping;
             WarheadEvent.Starting -= OnStaring;
-            WarheadEvent.Detonated -= OnDetonated;
+            WarheadEvent.Detonating -= OnDetonating;
+
         }
-        private async void OnDetonated()
+        private async void OnDetonating(DetonatingEventArgs ev)
         {
             Control.API.Extensions.StopAudio();
 

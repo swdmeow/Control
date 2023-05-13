@@ -11,6 +11,7 @@
     using Control.Commands;
     using Control.Extensions;
     using Control.CustomItems;
+    using UnityEngine;
 
     internal sealed class ServerHandler
     {
@@ -37,11 +38,15 @@
         {
             Timing.CallDelayed(0.1f, () =>
             {
-                foreach(Player pl in Player.List.Where(x => x.IsScp))
+                foreach (Player pl in Player.List.Where(x => x.IsScp))
                 {
                     pl.ShowHint("<size=75%>Вы можете поменять свою игровую роль на другой SCP-объект<br>Используя команду .force [номер SCP]<br>Эта команда действует до 2-х минут раунда</size>", 30);
                 }
             });
+
+            if (HintExtensions.WriteHintCoroutineHandle == null || !HintExtensions.WriteHintCoroutineHandle.Value.IsValid || !HintExtensions.WriteHintCoroutineHandle.Value.IsRunning)
+                HintExtensions.WriteHintCoroutineHandle = Timing.RunCoroutine(HintExtensions.WriteHint());
+
         }
         private void OnRespawningTeam(RespawningTeamEventArgs ev)
         {
@@ -86,7 +91,7 @@
         private void OnEndingRound(EndingRoundEventArgs ev)
         {
             
-            bool mtf = Player.List.Where(p => p.Role.Team == Team.FoundationForces && !CustomRole.Get((uint)1).Check(p)).Count() > 0;
+            bool mtf = Player.List.Where(p => p.Role.Team == Team.FoundationForces || p.Role == RoleTypeId.Scientist && !CustomRole.Get((uint)1).Check(p)).Count() > 0;
             bool chaos = Player.List.Where(p => p.Role.Team == Team.ChaosInsurgency || p.Role == RoleTypeId.ClassD && !CustomRole.Get((uint)1).Check(p)).Count() > 0;
             bool scps = Player.List.Where(p => p.Role.Team == Team.SCPs || CustomRole.Get((uint)1).Check(p)).Count() > 0;
 
@@ -119,7 +124,7 @@
 
                 Cassie.Message("Огонь по своим включён.. <color=#ffffff00>h F F enabled .g1", true, false, true);
 
-                API.Extensions.StopAudio();
+                if(API.Extensions.Dummies.Count() > 0) API.Extensions.StopAudio();
             }
 
             if (!isWarheadCassie1Minute && Round.ElapsedTime.Minutes >= 24)

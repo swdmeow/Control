@@ -28,6 +28,10 @@
     using Exiled.API.Features.Pickups.Projectiles;
     using InventorySystem.Items.ThrowableProjectiles;
     using Steamworks.ServerList;
+    using Exiled.Loader;
+    using PluginAPI.Commands;
+    using CommandSystem.Commands.RemoteAdmin;
+    using GameCore;
 
     internal sealed class PlayerHandler
     {
@@ -46,7 +50,6 @@
             Player.InteractingLocker += OnInteractingLocker;
             Player.TriggeringTesla += OnTriggeringTesla;
             Player.Handcuffing += OnHandcuffing;
-            Player.ThrownProjectile += OnThrownProjectile;
         }
         public void OnDisabled()
         {
@@ -95,9 +98,6 @@
                 }
             });
         }
-        private void OnThrownProjectile(ThrownProjectileEventArgs ev)
-        {
-        } 
         private void OnTriggeringTesla(TriggeringTeslaEventArgs ev)
         {
             ev.IsAllowed = false;
@@ -108,6 +108,19 @@
         {
             if (!ev.IsAllowed && ev.Player.HasKeycardPermission(ev.Door.RequiredPermissions.RequiredPermissions))
                 ev.IsAllowed = true;
+
+            if(ev.Door.Type == DoorType.Scp096 && ev.IsAllowed)
+            {
+                ev.Door.IsOpen = true;
+                ev.Door.ChangeLock(DoorLockType.Isolation);
+
+                Exiled.API.Features.Player scp096 = Exiled.API.Features.Player.List.Where(x => !x.IsAlive).First();
+
+                if (scp096 == null) return;
+
+                scp096.Role.Set(RoleTypeId.Scp096);
+
+            }
         }
         private void OnUnlockingGenerator(UnlockingGeneratorEventArgs ev)
         {
@@ -155,6 +168,10 @@
             {
                 ev.Items.Add(ItemType.KeycardJanitor);
             }
+            if(ev.Player.GroupName == "d2")
+            {
+                Timing.CallDelayed(0.1f, () => CustomItem.Get((uint)7).Give(ev.Player));
+            }
         }
         private void OnLeft(LeftEventArgs ev)
         {
@@ -176,10 +193,7 @@
 
             ev.Player.IsOverwatchEnabled = false;
         }
-        private void OnDroppingAmmo(DroppingAmmoEventArgs ev)
-        {
-            ev.IsAllowed = false;
-        }
+        private void OnDroppingAmmo(DroppingAmmoEventArgs ev) => ev.IsAllowed = false;
         private void OnDying(DyingEventArgs ev)
         {
             if (ev.Player == null) return;

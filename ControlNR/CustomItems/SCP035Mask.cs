@@ -37,6 +37,10 @@ namespace Control.CustomItems
             new(ItemType.Adrenaline, 30),
             new(ItemType.Coin, 100),
         };
+        public override void Give(Exiled.API.Features.Player player, bool displayMessage = true)
+        {
+            Give(player, Exiled.API.Features.Items.Item.Create(RandomType()), displayMessage);
+        }
         public override Pickup Spawn(Vector3 position, Player owner = null)
         {
             Pickup pickup = Pickup.CreateAndSpawn(RandomType(), position, default);
@@ -64,8 +68,6 @@ namespace Control.CustomItems
         private void OnRoundStarted()
         {
             Pickup mask = CustomItem.Get((uint)3).Spawn(Room.List.ElementAt(new System.Random().Next(0, Room.List.Count())).transform.position + Vector3.up);
-
-            Log.Info(mask.Position);
         }
         protected override void OnPickingUp(PickingUpItemEventArgs ev)
         {

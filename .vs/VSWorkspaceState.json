@@ -2,13 +2,15 @@
   "ExpandedNodes": [
     "",
     "\\ControlNR",
-    "\\ControlNR\\API",
-    "\\ControlNR\\API\\Serialization",
-    "\\ControlNR\\Commands",
-    "\\ControlNR\\CustomItems",
     "\\ControlNR\\Events",
-    "\\ControlNR\\Patches"
+    "\\ControlNR\\Extensions",
+    "\\ControlNR\\Extensions\\Player",
+    "\\ControlNR\\Patches",
+    "\\RainbowTags",
+    "\\RainbowTags\\RainbowTags",
+    "\\TextTags",
+    "\\TextTags\\RainbowTags"
   ],
-  "SelectedNode": "\\ControlNR\\API\\Extensions.cs",
+  "SelectedNode": "\\Control.sln",
   "PreviewInSolutionExplorer": false
 }

@@ -55,7 +55,6 @@ namespace Control.API
         /// <summary>Остановить прогирывание</summary>
         public static void StopAudio()
         {
-            if (Dummies.Count == 0) return;
             foreach (var dummies in Dummies)
             {
                 var audioPlayer = AudioPlayerBase.Get(dummies);

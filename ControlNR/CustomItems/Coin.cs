@@ -12,6 +12,7 @@ using Exiled.Loader;
 using InventorySystem.Items.Usables.Scp330;
 using MEC;
 using Mirror;
+using PlayerRoles;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.ExceptionServices;
@@ -25,7 +26,7 @@ namespace Control.CustomItems
     public class Coin : CustomItem
     {
         public override uint Id { get; set; } = 7;
-        public override string Name { get; set; } = "монетку.";
+        public override string Name { get; set; } = "подозрительную монетку.";
         public override string Description { get; set; } = "Подкиньте монетку - узнайте что с вами случится..";
         public override ItemType Type { get; set; } = ItemType.Coin;
         public override float Weight { get; set; }
@@ -65,7 +66,7 @@ namespace Control.CustomItems
             CandyKindID.Blue,
             CandyKindID.Red
         };
-        private string[] Events { get; } = new string[] { "teleport", "boom", "ToZombie", "betrayTeam", "speed", "candy", "flash" };
+        private string[] Events { get; } = new string[] { "teleport", "boom", "ToZombie", "betrayTeam", "speed", "candy", "flash", "size" };
         public override SpawnProperties SpawnProperties { get; set; } = null;
         private void OnFlippingCoin(FlippingCoinEventArgs ev)
         {
@@ -104,6 +105,14 @@ namespace Control.CustomItems
                 {
                     ev.Player.CurrentItem.Destroy();
 
+                    if(CustomRole.Get((uint)1).Check(ev.Player))
+                    {
+                        // lmao..
+                        ev.Player.EnableEffect(EffectType.SeveredHands, 1f);
+
+                        return;
+                    }
+
                     ev.Player.Role.Set(PlayerRoles.RoleTypeId.Scp0492);
                 }
 
@@ -111,7 +120,7 @@ namespace Control.CustomItems
                 {
                     ev.Player.CurrentItem.Destroy();
 
-                    if (ev.Player.Role.Team == PlayerRoles.Team.FoundationForces)
+                    if (ev.Player.Role.Team == PlayerRoles.Team.FoundationForces || ev.Player.Role == RoleTypeId.Scientist)
                     {
                         ev.Player.Role.Set(PlayerRoles.RoleTypeId.ChaosConscript, PlayerRoles.RoleSpawnFlags.None);
                     }
@@ -159,11 +168,29 @@ namespace Control.CustomItems
                         flashes++;
                     }
                 }
+                if (needTo == "size")
+                {
+                    ev.Player.CurrentItem.Destroy();
+
+                    CustomRole.Get((uint)8).AddRole(ev.Player);
+                }
             }
         }
         private void OnRoundStarted()
         {
             CustomItem.Get((uint)7).Spawn(Room.List.ElementAt(new System.Random().Next(0, Room.List.Count())).transform.position + Vector3.up);
+            
+            foreach(Pickup _pickup in Pickup.List)
+            {
+                if(_pickup.Type == ItemType.Coin)
+                {
+                    CustomItem.Get((uint)7).Spawn(_pickup.Position + Vector3.up);
+
+                    _pickup.Destroy();
+
+                    return;
+                }
+            }
         }
         protected override void SubscribeEvents()
         {
@@ -183,15 +210,16 @@ namespace Control.CustomItems
         public static IEnumerator<float> EveryoneCandy()
         {
             int candy = 0;
-            while (candy <= 10)
+            while (candy <= 15)
             {
                 foreach (Player pl in Player.List.Where(x => x.IsAlive && !x.IsScp))
                 {
                     pl.TryAddCandy(_candyID.RandomItem());
 
                     Scp330 bag_candy = (Scp330)Item.Create(ItemType.SCP330);
-                    bag_candy.AddCandy(_candyID.RandomItem());
-                    bag_candy.CreatePickup(pl.Position);
+                    CandyKindID _candyId = _candyID.RandomItem();
+                    bag_candy.AddCandy(_candyId);
+                    Pickup pickup = bag_candy.CreatePickup(pl.Position);
                 }
 
                 candy++;

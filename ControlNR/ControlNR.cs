@@ -58,11 +58,6 @@ namespace Ñontrol
             if (PlayerExtensions.HintCoroutineHandle == null || !PlayerExtensions.HintCoroutineHandle.Value.IsValid || !PlayerExtensions.HintCoroutineHandle.Value.IsRunning)
                 PlayerExtensions.HintCoroutineHandle = Timing.RunCoroutine(PlayerExtensions.HintCoroutine());
 
-            if (PlayerExtensions.HintCoroutineHandle == null || !PlayerExtensions.HintCoroutineHandle.Value.IsValid || !PlayerExtensions.HintCoroutineHandle.Value.IsRunning)
-            {
-                PlayerExtensions.WriteHintCoroutineHandle = Timing.RunCoroutine(PlayerExtensions.WriteHint());
-            }
-
             if (SCP343.HintCooldownCoroutineHandle == null || !SCP343.HintCooldownCoroutineHandle.Value.IsValid || !SCP343.HintCooldownCoroutineHandle.Value.IsRunning)
                 SCP343.HintCooldownCoroutineHandle = Timing.RunCoroutine(SCP343.HintCoroutine());
 

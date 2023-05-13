@@ -12,6 +12,7 @@
     using System.Linq.Expressions;
     using System;
     using Control.Events;
+    using Steamworks.ServerList;
 
     internal sealed class MapHandler
     {
@@ -20,8 +21,6 @@
             Exiled.Events.Handlers.Map.PlacingBlood += OnPlacingBlood;
             Exiled.Events.Handlers.Map.PlacingBulletHole += OnPlacingBulletHole;
             Exiled.Events.Handlers.Map.SpawningItem += OnSpawningItem;
-
-
             Exiled.Events.Handlers.Map.AnnouncingScpTermination += OnAnnouncingScpTermination;
             Exiled.Events.Handlers.Map.AnnouncingNtfEntrance += OnAnnouncingNtfEntrance;
         }

@@ -90,7 +90,7 @@ namespace Control.Patches
                         {
                             Success = false;
                             sender.RaReply($"ControlNR#Раунд не начался..", Success, true, string.Empty);
-                            return Allowed; 
+                            return Allowed;
                         }
 
                         Success = true;
@@ -290,7 +290,6 @@ namespace Control.Patches
 
                                     Timing.CallDelayed(120f, () =>
                                     {
-                                        Log.Info("Catch end cooldown, update");
                                         var ValueChange = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(UserID);
                                         ValueChange.cooldownItem = false;
                                         ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
@@ -322,7 +321,7 @@ namespace Control.Patches
                                         sender.RaReply($"ControlNR#Вы уже использовали все свои попытки..", Success, true, string.Empty);
                                         return Allowed;
                                     }
-                                    if(log.cooldownRole == true)
+                                    if (log.cooldownRole == true)
                                     {
                                         Success = false;
                                         sender.RaReply($"ControlNR#Ваша задержка на выдачу роли ещё не прошла..", Success, true, string.Empty);
@@ -406,7 +405,6 @@ namespace Control.Patches
 
                                     Timing.CallDelayed(120f, () =>
                                     {
-                                        Log.Info("Catch end cooldown, update");
                                         var ValueChange = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(UserID);
                                         ValueChange.cooldownRole = false;
                                         ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
@@ -488,7 +486,6 @@ namespace Control.Patches
 
                                     Timing.CallDelayed(120f, () =>
                                     {
-                                        Log.Info("Catch end cooldown, update");
                                         var ValueChange = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(UserID);
                                         ValueChange.cooldownItem = false;
                                         ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
@@ -531,7 +528,6 @@ namespace Control.Patches
 
                                         Timing.CallDelayed(120f, () =>
                                         {
-                                            Log.Info("Catch end cooldown, update");
                                             var ValueChange = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(UserID);
                                             ValueChange.cooldownCall = false;
                                             ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);

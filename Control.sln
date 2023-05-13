@@ -15,7 +15,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscordIntegration", "Disco
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdminTools", "AdminTools\AdminTools\AdminTools.csproj", "{C4359EC8-2608-470E-9BCB-1986048B0D2D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RainbowTags", "RainbowTags\RainbowTags\RainbowTags.csproj", "{638EE7D1-ED8F-4565-8C08-14165D93E041}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RainbowTags", "RainbowTags\RainbowTags.csproj", "{638EE7D1-ED8F-4565-8C08-14165D93E041}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControlGG", "ControlGG\ControlGG.csproj", "{47B7A9F6-6591-4291-A517-DFD86BB68FF1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{638EE7D1-ED8F-4565-8C08-14165D93E041}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{638EE7D1-ED8F-4565-8C08-14165D93E041}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{638EE7D1-ED8F-4565-8C08-14165D93E041}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47B7A9F6-6591-4291-A517-DFD86BB68FF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47B7A9F6-6591-4291-A517-DFD86BB68FF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47B7A9F6-6591-4291-A517-DFD86BB68FF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47B7A9F6-6591-4291-A517-DFD86BB68FF1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

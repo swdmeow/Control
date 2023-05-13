@@ -249,3 +249,12 @@ D:\github\Control\ControlNR\Release\Unity.RenderPipelines.HighDefinition.Config.
 D:\github\Control\ControlNR\Release\Unity.Timeline.dll
 D:\github\Control\ControlNR\Release\Unity.Burst.Unsafe.dll
 D:\github\Control\ControlNR\Release\SCPSLAudioApi.dll
+D:\github\Control\ControlNR\Release\Exiled.CreditTags.dll
+D:\github\Control\ControlNR\Release\Exiled.CustomItems.dll
+D:\github\Control\ControlNR\Release\Exiled.CustomRoles.dll
+D:\github\Control\ControlNR\Release\Exiled.Events.dll
+D:\github\Control\ControlNR\Release\Exiled.Permissions.dll
+D:\github\Control\ControlNR\Release\Exiled.Updater.dll
+D:\github\Control\ControlNR\Release\Exiled.API.dll
+D:\github\Control\ControlNR\Release\Exiled.Loader.dll
+D:\github\Control\ControlNR\Release\YamlDotNet.dll

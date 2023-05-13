@@ -59,23 +59,23 @@
     <Reference Include="CommandSystem.Core, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>C:\Users\swd\Desktop\d\CommandSystem.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.API, Version=6.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+    <Reference Include="Exiled.API, Version=7.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Users\swd\Desktop\d\Exiled.API.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.CreditTags, Version=6.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+    <Reference Include="Exiled.CreditTags, Version=7.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Users\swd\Desktop\d\Exiled.CreditTags.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.CustomItems, Version=6.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+    <Reference Include="Exiled.CustomItems, Version=7.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Users\swd\Desktop\d\Exiled.CustomItems.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.CustomRoles, Version=6.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+    <Reference Include="Exiled.CustomRoles, Version=7.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Users\swd\Desktop\d\Exiled.CustomRoles.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.Events, Version=6.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+    <Reference Include="Exiled.Events, Version=7.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Users\swd\Desktop\d\Exiled.Events.dll</HintPath>
     </Reference>
@@ -83,11 +83,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Users\swd\Desktop\d\Exiled.Loader.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.Permissions, Version=6.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+    <Reference Include="Exiled.Permissions, Version=7.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Users\swd\Desktop\d\Exiled.Permissions.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.Updater, Version=3.1.1.0, Culture=neutral, processorArchitecture=AMD64">
+    <Reference Include="Exiled.Updater, Version=3.1.2.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Users\swd\Desktop\d\Exiled.Updater.dll</HintPath>
     </Reference>
@@ -151,6 +151,7 @@
     <Compile Include="CustomItems\Coin.cs" />
     <Compile Include="CustomItems\SCP035Mask.cs" />
     <Compile Include="CustomItems\SCP500R.cs" />
+    <Compile Include="CustomRoles\Baby.cs" />
     <Compile Include="CustomRoles\SCP035.cs" />
     <Compile Include="CustomRoles\SCP343.cs" />
     <Compile Include="Events\Scp914Handler.cs" />
@@ -160,6 +161,7 @@
     <Compile Include="Events\ServerHandler.cs" />
     <Compile Include="Events\PlayerHandler.cs" />
     <Compile Include="CustomItems\GrenadeLauncher.cs" />
+    <Compile Include="Extensions\Player\HintExtensions.cs" />
     <Compile Include="Extensions\Player\PlayerExtensions.cs" />
     <Compile Include="Patches\RemoteAdmin.cs" />
   </ItemGroup>
