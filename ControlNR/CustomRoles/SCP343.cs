@@ -225,7 +225,7 @@ namespace Control.CustomRoles
                 ev.IsAllowed = false;
             }
         }
-        private async void OnInteractingDoor(InteractingDoorEventArgs ev)
+        private void OnInteractingDoor(InteractingDoorEventArgs ev)
         {
             if (CustomRole.Get((uint)2).Check(ev.Player))
             {
@@ -238,23 +238,7 @@ namespace Control.CustomRoles
                     DoorPermissions doorPerms = Door.Get(ev.Door.Type).RequiredPermissions;
                     if (doorPerms.RequiredPermissions != Interactables.Interobjects.DoorUtils.KeycardPermissions.None)
                     {
-                        int CountSeconds = 0;
-
-                        while (CountSeconds < 3)
-                        {
-                            string msg = $"Вы можете открывать двери через {Math.Round(360 - Exiled.API.Features.Round.ElapsedTime.TotalSeconds)} секунд";
-
-                            for(int pl = 0; pl <= CountSeconds; pl++)
-                            {
-                                msg += ".";
-                            }
-
-                            PlayerExtensions.ShowCustomHint(ev.Player, msg, 1f);
-
-                            CountSeconds++;
-
-                            await Task.Delay(999);
-                        }
+                        PlayerExtensions.ShowCustomHint(ev.Player, $"Вы можете открывать двери через {Math.Round(360 - Exiled.API.Features.Round.ElapsedTime.TotalSeconds)} секунд", 1f);
                     }
                 }
             }

@@ -1,16 +1,16 @@
 {
   "ExpandedNodes": [
     "",
+    "\\AutoEvent",
+    "\\AutoEvent\\API",
     "\\ControlNR",
-    "\\ControlNR\\Events",
     "\\ControlNR\\Extensions",
     "\\ControlNR\\Extensions\\Player",
     "\\ControlNR\\Patches",
     "\\RainbowTags",
-    "\\RainbowTags\\RainbowTags",
     "\\TextTags",
     "\\TextTags\\RainbowTags"
   ],
-  "SelectedNode": "\\Control.sln",
+  "SelectedNode": "\\AutoEvent\\API\\FakeConnection.cs",
   "PreviewInSolutionExplorer": false
 }

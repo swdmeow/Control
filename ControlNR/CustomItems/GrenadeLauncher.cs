@@ -46,13 +46,13 @@ namespace Control.CustomItems
             if (!CustomItem.Get((uint)4).Check(ev.Player.CurrentItem)) return;
 
             ev.IsAllowed = false;
-            
+
             var FireItem = ev.Player.CurrentItem as Firearm;
 
-            if(FireItem.Ammo + 1 > 0)
+            if (FireItem.Ammo + 1 > 0)
             {
                 ev.Player.ThrowGrenade(Exiled.API.Enums.ProjectileType.FragGrenade);
-                FireItem.Ammo--;
+                FireItem.Ammo = 0;
                 return;
             }
         }
@@ -81,13 +81,11 @@ namespace Control.CustomItems
         {
             if (!CustomItem.Get((uint)4).Check(ev.Player.CurrentItem)) return;
 
-            if (CooldownIsEnable || ev.Firearm.Ammo >= 1) { ev.IsAllowed = false; return; }
+            if (CooldownIsEnable == true || ev.Firearm.Ammo >= 1 || !ev.IsAllowed) { ev.IsAllowed = false; return; }
 
             CooldownIsEnable = true;
 
-            Firearm firearm = ev.Firearm;
-
-            Timing.CallDelayed(2.3f, () => { firearm.Ammo = 1;  });
+            Timing.CallDelayed(2.4f, () => { ev.Firearm.Ammo = 1; });
 
             Timing.RunCoroutine(_DelayedCall());
         }

@@ -32,7 +32,7 @@ namespace Control.Extensions
                     if (!pl.IsScp && !CustomRole.Get((uint)1).Check(pl))
                     {
                         Hint += "<size=66%>";
-                        Hint += "<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><b><color=#8DFF29>bezname</color> | <color=#00B7EB>NoRules</color></b><br>";
+                        Hint += $"<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>{(Round.IsLobby ? "" : $"{Round.ElapsedTime.Minutes}:{(Round.ElapsedTime.Seconds.ToString().Length == 1 ? "0" + Round.ElapsedTime.Seconds : Round.ElapsedTime.Seconds)}")}<br><b><color=#8DFF29>bezname</color> | <color=#00B7EB>NoRules</color></b><br>";
 
                         Hint += "</size>";
                         pl.ShowHint(Hint, 0.7f);

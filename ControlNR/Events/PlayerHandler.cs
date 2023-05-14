@@ -50,6 +50,8 @@
             Player.InteractingLocker += OnInteractingLocker;
             Player.TriggeringTesla += OnTriggeringTesla;
             Player.Handcuffing += OnHandcuffing;
+            Player.Escaping += OnEscaping;
+
         }
         public void OnDisabled()
         {
@@ -67,6 +69,16 @@
             Player.ActivatingWarheadPanel -= OnActivatingWarheadPanel;
             Player.InteractingLocker -= OnInteractingLocker;
             Player.TriggeringTesla -= OnTriggeringTesla;
+            Player.Escaping += OnEscaping;
+        }
+        private void OnEscaping(EscapingEventArgs ev)
+        {
+            if (ev.IsAllowed) return;
+
+            if (!ev.Player.IsCuffed) return;
+
+            if (ev.Player.Role.Team == Team.ChaosInsurgency) { ev.IsAllowed = true; ev.EscapeScenario = EscapeScenario.CuffedClassD; } // МОГ
+            if (ev.Player.Role.Team == Team.FoundationForces) { ev.IsAllowed = true; ev.EscapeScenario = EscapeScenario.CuffedScientist; } // ПХ
         }
         public void OnHandcuffing(HandcuffingEventArgs ev)
         {
@@ -108,18 +120,6 @@
         {
             if (!ev.IsAllowed && ev.Player.HasKeycardPermission(ev.Door.RequiredPermissions.RequiredPermissions))
                 ev.IsAllowed = true;
-
-            if(ev.Door.Type == DoorType.Scp096 && ev.IsAllowed)
-            {
-                ev.Door.IsOpen = true;
-                ev.Door.ChangeLock(DoorLockType.Isolation);
-
-                Exiled.API.Features.Player scp096 = Exiled.API.Features.Player.List.Where(x => !x.IsAlive).First();
-
-                if (scp096 == null) return;
-
-                scp096.Role.Set(RoleTypeId.Scp096);
-            }
         }
         private void OnUnlockingGenerator(UnlockingGeneratorEventArgs ev)
         {
@@ -135,8 +135,13 @@
         }
         private void OnActivatingWarheadPanel(ActivatingWarheadPanelEventArgs ev)
         {
+
+            // Disabled due exiled bug
+
+
+            /*
             if (!ev.IsAllowed && ev.Player.HasKeycardPermission(Interactables.Interobjects.DoorUtils.KeycardPermissions.AlphaWarhead))
-                ev.IsAllowed = true;
+                ev.IsAllowed = true;*/
         }
         private void OnChangingRole(ChangingRoleEventArgs ev)
         {

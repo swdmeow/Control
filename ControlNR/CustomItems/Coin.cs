@@ -172,6 +172,12 @@ namespace Control.CustomItems
                 {
                     ev.Player.CurrentItem.Destroy();
 
+                    if(CustomRole.Get((uint)8).Check(ev.Player))
+                    {
+                        Pickup.CreateAndSpawn(ItemType.GrenadeHE, ev.Player.Position, new Quaternion());
+
+                        return;
+                    }
                     CustomRole.Get((uint)8).AddRole(ev.Player);
                 }
             }

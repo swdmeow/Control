@@ -35,6 +35,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Commands\MaxHealth.cs" />
     <Compile Include="Commands\radio.cs" />
     <Compile Include="Commands\CustomItemController.cs" />
     <Compile Include="Commands\CustomRoleController.cs" />

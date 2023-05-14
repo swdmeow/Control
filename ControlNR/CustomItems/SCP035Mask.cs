@@ -29,6 +29,34 @@ namespace Control.CustomItems
         public override float Weight { get; set; }
         public override SpawnProperties SpawnProperties { get; set; } = null;
 
+        private List<RoomType> _rooms = new List<RoomType>()
+        {
+            RoomType.Surface,
+            RoomType.Hcz939,
+            RoomType.Hcz106,
+            RoomType.HczTCross,
+            RoomType.EzCheckpointHallway,
+            RoomType.EzConference,
+            RoomType.EzCrossing,
+            RoomType.LczToilets,
+            RoomType.LczTCross,
+            RoomType.HczArmory,
+            RoomType.LczArmory,
+            RoomType.HczElevatorA,
+            RoomType.LczCafe,
+            RoomType.Lcz330,
+            RoomType.Lcz914,
+            RoomType.LczAirlock,
+            RoomType.LczClassDSpawn,
+            RoomType.LczCheckpointA,
+            RoomType.LczCheckpointB,
+            RoomType.HczHid,
+            RoomType.EzCafeteria,
+            RoomType.EzCheckpointHallway,
+            RoomType.EzGateA,
+            RoomType.EzGateB
+        };
+
         public List<(ItemType a, int b)> Types = new()
         {
             new(ItemType.Painkillers, 10),
@@ -67,7 +95,7 @@ namespace Control.CustomItems
         }
         private void OnRoundStarted()
         {
-            Pickup mask = CustomItem.Get((uint)3).Spawn(Room.List.ElementAt(new System.Random().Next(0, Room.List.Count())).transform.position + Vector3.up);
+            CustomItem.Get((uint)3).Spawn(Room.Get(_rooms.RandomItem()).transform.position + Vector3.up);
         }
         protected override void OnPickingUp(PickingUpItemEventArgs ev)
         {

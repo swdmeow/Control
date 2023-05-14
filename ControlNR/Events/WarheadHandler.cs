@@ -62,12 +62,6 @@
         {
             Control.API.Extensions.StopAudio();
 
-            foreach (Room room in Room.List)
-            {
-                room.FlickerableLightController.WarheadLightOverride = false;
-
-                room.ResetColor();
-            }
             Timing.KillCoroutines(ChangeColorsCoroutineHandle);
 
             Cassie.Message("Attention . DECONTAMINATION process of surface zone will be started in TMINUS . 1 minute", true, false, false); ;
@@ -95,17 +89,19 @@
 
             Control.API.Extensions.StopAudio();
 
-            foreach (Room room in Room.List)
+            Timing.CallDelayed(0.1f, () =>
             {
-                room.FlickerableLightController.WarheadLightOverride = false;
+                foreach (Room room in Room.List)
+                {
+                    room.ResetColor();
+                }
+            });
 
-                room.ResetColor();
-            }
             Timing.KillCoroutines(ChangeColorsCoroutineHandle);
         }
         private void OnStaring(StartingEventArgs ev)
         {
-            Control.API.Extensions.PlayAudio($"{new System.Random().Next(1, Directory.GetFiles(Path.Combine(Paths.Configs, "ControlNR/Music/")).Length)}.ogg", 75, true, "da.mp9");
+            Control.API.Extensions.PlayAudio($"{new System.Random().Next(1, Directory.GetFiles(Path.Combine(Paths.Configs, "ControlNR/Music/")).Length + 1)}.ogg", 75, true, "da.mp9");
 
             ChangeColorsCoroutineHandle = Timing.RunCoroutine(ChangeColors());
         }

@@ -70,6 +70,8 @@
                 Res.StatusEffectBase.Clear();
                 CassieDestroyedLVL = 0;
                 GrenadeLauncher.CooldownIsEnable = false;
+                isWarheadStart = false;
+                isWarheadCassie1Minute = false;
 
                 ControlNR.Singleton.db.DropCollection("VIPPlayers");
             }
@@ -86,9 +88,25 @@
         }
         private void OnEndingRound(EndingRoundEventArgs ev)
         {
-            
+            if (!isWarheadCassie1Minute && Round.ElapsedTime.Minutes >= 34 && !Warhead.IsDetonated)
+            {
+                isWarheadCassie1Minute = true;
+                Cassie.Message("Неизбежная детонация альфа-боеголовки будет запущена через 1<b></b> минуту.. <color=#ffffff00>h Alpha warhead detonation SEQUENCE .G1 will be started . in TMINUS . 1 minute", true, false, true);
+            }
+
+            if (!isWarheadStart && Round.ElapsedTime.Minutes >= 35 && !Warhead.IsDetonated)
+            {
+                isWarheadStart = true;
+
+                if (Warhead.IsInProgress == false) Warhead.Start();
+
+                Warhead.IsLocked = true;
+
+                //Cassie.Message("Детонация альфа-боеголовки будет запущена через 1 минуту.. <color=#ffffff00>h Alpha warhead detonation will be started in t minute 1 minute ");
+            }
+
             bool mtf = Player.List.Where(p => p.Role.Team == Team.FoundationForces || p.Role == RoleTypeId.Scientist && !CustomRole.Get((uint)1).Check(p)).Count() > 0;
-            bool chaos = Player.List.Where(p => p.Role.Team == Team.ChaosInsurgency || p.Role == RoleTypeId.ClassD && !CustomRole.Get((uint)1).Check(p)).Count() > 0;
+            bool chaos = Player.List.Where(p => p.Role.Team == Team.ChaosInsurgency || p.Role == RoleTypeId.ClassD && !CustomRole.Get((uint)1).Check(p) && !CustomRole.Get((uint)2).Check(p)).Count() > 0;
             bool scps = Player.List.Where(p => p.Role.Team == Team.SCPs || CustomRole.Get((uint)1).Check(p)).Count() > 0;
 
             // Если кто-то один остался в живых..
@@ -121,23 +139,6 @@
                 Cassie.Message("Огонь по своим включён.. <color=#ffffff00>h F F enabled .g1", true, false, true);
 
                 if(API.Extensions.Dummies.Count() > 0) API.Extensions.StopAudio();
-            }
-
-            if (!isWarheadCassie1Minute && Round.ElapsedTime.Minutes >= 24)
-            {
-                isWarheadCassie1Minute = true;
-                Cassie.Message("Неизбежная детонация альфа-боеголовки будет запущена через 1<b></b> минуту.. <color=#ffffff00>h Alpha warhead detonation SEQUENCE .G1 will be started . in TMINUS . 1 minute", true,false,true);
-            }
-
-            if (!isWarheadStart && Round.ElapsedTime.Minutes >= 25)
-            {
-                isWarheadStart = true;
-
-                if (Warhead.IsInProgress == false) Warhead.Start();
-
-                Warhead.IsLocked = true;
-
-                //Cassie.Message("Детонация альфа-боеголовки будет запущена через 1 минуту.. <color=#ffffff00>h Alpha warhead detonation will be started in t minute 1 minute ");
             }
         }
     }

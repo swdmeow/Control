@@ -61,10 +61,20 @@
         {
             if (ServerHandler.CassieDestroyedLVL == 0) return;
 
+            if (ServerHandler.CassieDestroyedLVL >= 3)
+            {
+                ev.IsAllowed = false;
+                Cassie.Message("pitch_1 .g6 pitch_0.4 . .g5", true, false, false);
+
+                return;
+            }
+
             if (ServerHandler.CassieDestroyedLVL >= 1)
             {
-                Cassie.Message("pitch_1 .g6 pitch_0.4 . .g5 . . .g4 . . .g4 . . pitch_0.96  pitch_0.5 .g1 .g2 pitch_0.3 .g2 .g3 pitch_1. . pitch_0.9 pitch_0.2 .g5 .g4 .g7 pitch_1", true, false, false); ;
+                Cassie.Message("pitch_1 .g6 pitch_0.4 . .g5 . . .g4 . . .g4 . . pitch_0.96  pitch_0.5 .g1 .g2 pitch_0.3 .g2 .g3 pitch_1. . pitch_0.9 pitch_0.2 .g5 .g4 pitch_1", true, false, false); ;
                 ev.IsAllowed = false;
+
+                return;
             }
         }
         private void OnPlacingBulletHole(PlacingBulletHole ev)

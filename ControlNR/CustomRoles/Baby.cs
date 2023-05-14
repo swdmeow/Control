@@ -65,7 +65,10 @@ namespace Control.CustomRoles
                     {
                         continue;
                     }
-                    player.DropItem(item);
+                    player.RemoveItem(item);
+                    player.AddItem(ItemType.GunCOM18);
+
+                    return;
                 }
             }
 
@@ -108,6 +111,8 @@ namespace Control.CustomRoles
                 if (ev.Player.CurrentItem.Type == ItemType.GunCOM15 || ev.Player.CurrentItem.Type == ItemType.GunCOM18) return;
 
                 ev.IsAllowed = false;
+                ev.Player.ShowHint("Вы не можете использовать тяжёлое оружие играя за ребёнка..");
+                ev.Player.DropItem(ev.Player.CurrentItem);
             }
         }
         protected override void UnsubscribeEvents()
@@ -191,10 +196,6 @@ namespace Control.CustomRoles
             RoleAdded(player);
             player.UniqueRole = Name;
             player.TryAddCustomRoleFriendlyFire(Name, CustomRoleFFMultiplier);
-            if (string.IsNullOrEmpty(ConsoleMessage))
-            {
-                return;
-            }
             // Delete stringBuilder to not cause console message
         }
     }

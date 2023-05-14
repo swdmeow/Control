@@ -49,6 +49,9 @@ namespace Control.CustomRoles
             if (ev.Attacker == null) return;
             if (CustomRole.Get((uint)2).Check(ev.Player) || CustomRole.Get((uint)2).Check(ev.Attacker)) return;
 
+            if (ev.Attacker == ev.Player) return;
+
+
             if (CustomRole.Get((uint)1).Check(ev.Attacker))
             {
                 if (ev.Player.Role.Team == Team.SCPs)
