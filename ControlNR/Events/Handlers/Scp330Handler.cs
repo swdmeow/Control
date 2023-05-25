@@ -1,4 +1,4 @@
-﻿namespace Control.Events
+﻿namespace Control.Handlers.Events
 {
     using Exiled.API.Features;
     using Exiled.API.Enums;
@@ -10,7 +10,7 @@
 
     internal sealed class Scp330Handler
     {
-        public void OnEnabled()
+        public Scp330Handler()
         {
             Exiled.Events.Handlers.Scp330.InteractingScp330 += InteractingScp330;
         }

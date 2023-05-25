@@ -1,4 +1,4 @@
-﻿namespace Control.Events
+﻿namespace Control.Handlers.Events
 {
     using Exiled.API.Features;
     using Exiled.API.Enums;
@@ -44,19 +44,17 @@
         public static CoroutineHandle ChangeColorsCoroutineHandle;
         public static CoroutineHandle DecontamitionSequnse;
 
-        public void OnEnabled()
+        public WarheadHandler()
         {
             WarheadEvent.Stopping += OnStopping;
             WarheadEvent.Starting += OnStaring;
             WarheadEvent.Detonating += OnDetonating;
-
         }
         public void OnDisabled()
         {
             WarheadEvent.Stopping -= OnStopping;
             WarheadEvent.Starting -= OnStaring;
             WarheadEvent.Detonating -= OnDetonating;
-
         }
         private async void OnDetonating(DetonatingEventArgs ev)
         {

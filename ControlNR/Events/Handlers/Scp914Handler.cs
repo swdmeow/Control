@@ -1,4 +1,4 @@
-﻿namespace Control.Events
+﻿namespace Control.Handlers.Events
 {
     using Exiled.API.Features;
     using Exiled.API.Enums;
@@ -7,7 +7,7 @@
     using Mirror;
     using Exiled.Events.EventArgs.Scp330;
     using InventorySystem.Items.Usables.Scp330;
-    using Scp914 = Exiled.Events.Handlers.Scp914;
+    using Scp914Event = Exiled.Events.Handlers.Scp914;
     using Exiled.Events.EventArgs.Scp914;
     using PlayerRoles;
     using Scp914;
@@ -16,13 +16,13 @@
 
     internal sealed class Scp914Handler
     {
-        public void OnEnabled()
+        public Scp914Handler()
         {
-            Scp914.UpgradingPlayer += OnUpgradingPlayer;
+            Scp914Event.UpgradingPlayer += OnUpgradingPlayer;
         }
         public void OnDisabled()
         {
-            Scp914.UpgradingPlayer -= OnUpgradingPlayer;
+            Scp914Event.UpgradingPlayer -= OnUpgradingPlayer;
         }
         private void OnUpgradingPlayer(UpgradingPlayerEventArgs ev)
         {

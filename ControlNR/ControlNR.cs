@@ -8,9 +8,6 @@ namespace Ñontrol
     using HarmonyLib;
     using System;
     using MEC;
-    using Control.Extensions;
-    using Control.CustomRoles;
-    using Control.Events;
 
     public class ControlNR : Plugin<Config>
     {
@@ -19,13 +16,9 @@ namespace Ñontrol
         public override string Author => "swd";
         public override System.Version Version => new System.Version(1, 5, 0);
 
-        private Control.Events.PlayerHandler PlayerHandler;
-        private Control.Events.ServerHandler ServerHandler;
-        private Control.Events.Scp330Handler Scp330Handler;
-        private Control.Events.MapHandler MapHandler;
-        private Control.Events.WarheadHandler WarheadHandler;
-        private Control.Events.Scp914Handler Scp914Handler;
         private Harmony harmony;
+
+        private Control.Handlers.Handler Handler;
 
         public LiteDatabase db;
         public override void OnEnabled()
@@ -38,34 +31,21 @@ namespace Ñontrol
 
             harmony = new Harmony($"ControlNR - {DateTime.Now.Ticks}");
 
-            PlayerHandler = new Control.Events.PlayerHandler();
-            ServerHandler = new Control.Events.ServerHandler();
-            MapHandler = new Control.Events.MapHandler();
-            Scp330Handler = new Control.Events.Scp330Handler();
-            WarheadHandler = new Control.Events.WarheadHandler();
-            Scp914Handler = new Control.Events.Scp914Handler();
-
-            Scp914Handler.OnEnabled();
-            ServerHandler.OnEnabled();
-            Scp330Handler.OnEnabled();
-            MapHandler.OnEnabled();
-            PlayerHandler.OnEnabled();
-            WarheadHandler.OnEnabled();
+            Handler = new Control.Handlers.Handler();
 
             CustomItem.RegisterItems();
             CustomRole.RegisterRoles(false, null, true);
 
-            if (PlayerExtensions.HintCoroutineHandle == null || !PlayerExtensions.HintCoroutineHandle.Value.IsValid || !PlayerExtensions.HintCoroutineHandle.Value.IsRunning)
-                PlayerExtensions.HintCoroutineHandle = Timing.RunCoroutine(PlayerExtensions.HintCoroutine());
+            if (Control.Extensions.PlayerExtensions.HintCoroutineHandle == null || !Control.Extensions.PlayerExtensions.HintCoroutineHandle.Value.IsValid || !Control.Extensions.PlayerExtensions.HintCoroutineHandle.Value.IsRunning)
+                Control.Extensions.PlayerExtensions.HintCoroutineHandle = Timing.RunCoroutine(Control.Extensions.PlayerExtensions.HintCoroutine());
 
-            if (SCP343.HintCooldownCoroutineHandle == null || !SCP343.HintCooldownCoroutineHandle.Value.IsValid || !SCP343.HintCooldownCoroutineHandle.Value.IsRunning)
-                SCP343.HintCooldownCoroutineHandle = Timing.RunCoroutine(SCP343.HintCoroutine());
+            if (Control.CustomRoles.SCP343.HintCooldownCoroutineHandle == null || !Control.CustomRoles.SCP343.HintCooldownCoroutineHandle.Value.IsValid || !Control.CustomRoles.SCP343.HintCooldownCoroutineHandle.Value.IsRunning)
+                Control.CustomRoles.SCP343.HintCooldownCoroutineHandle = Timing.RunCoroutine(Control.CustomRoles.SCP343.HintCoroutine());
 
             harmony.PatchAll();
             
             base.OnEnabled();
         }
-        public override void OnReloaded() { }
         public override void OnDisabled()
         {
             harmony.UnpatchAll();
@@ -74,21 +54,11 @@ namespace Ñontrol
             db.Dispose();
             db = null;
 
-            ServerHandler.OnDisabled();
-            Scp330Handler.OnDisabled();
-            MapHandler.OnDisabled();
-            PlayerHandler.OnDisabled();
-            WarheadHandler.OnDisabled();
-            Scp914Handler.OnDisabled();
+            Handler.Dispose();
+            Handler = null;
 
             CustomItem.UnregisterItems();
             CustomRole.UnregisterRoles();
-
-            PlayerHandler = null;
-            ServerHandler = null;
-            MapHandler = null;
-            Scp330Handler = null;
-            WarheadHandler = null;
 
             Singleton = null;
 

@@ -1,4 +1,4 @@
-﻿namespace Control.Events
+﻿namespace Control.Handlers.Events
 {
     using Exiled.API.Enums;
     using Exiled.API.Features;
@@ -23,7 +23,7 @@
     using Exiled.API.Features.Roles;
     using System.Threading.Tasks;
     using Mono.Security.X509.Extensions;
-    using Player = Exiled.Events.Handlers.Player;
+    using PlayerEvent = Exiled.Events.Handlers.Player;
     using PlayerStatsSystem;
     using Exiled.API.Features.Pickups.Projectiles;
     using InventorySystem.Items.ThrowableProjectiles;
@@ -35,41 +35,40 @@
 
     internal sealed class PlayerHandler
     {
-        public void OnEnabled()
+        public PlayerHandler()
         {
-            Player.ChangingRole += OnChangingRole;
-            Player.DroppingAmmo += OnDroppingAmmo;
-            Player.Dying += OnDying;
-            Player.ReloadingWeapon += OnReloadWeapon;
-            Player.Left += OnLeft;
-            Player.Verified += OnVerified;
-            Player.UsingRadioBattery += OnUsingRadioBatteryEventArgs;
-            Player.InteractingDoor += OnInteractingDoor;
-            Player.UnlockingGenerator += OnUnlockingGenerator;
-            Player.ActivatingWarheadPanel += OnActivatingWarheadPanel;
-            Player.InteractingLocker += OnInteractingLocker;
-            Player.TriggeringTesla += OnTriggeringTesla;
-            Player.Handcuffing += OnHandcuffing;
-            Player.Escaping += OnEscaping;
-
+            PlayerEvent.ChangingRole += OnChangingRole;
+            PlayerEvent.DroppingAmmo += OnDroppingAmmo;
+            PlayerEvent.Dying += OnDying;
+            PlayerEvent.ReloadingWeapon += OnReloadWeapon;
+            PlayerEvent.Left += OnLeft;
+            PlayerEvent.Verified += OnVerified;
+            PlayerEvent.UsingRadioBattery += OnUsingRadioBatteryEventArgs;
+            PlayerEvent.InteractingDoor += OnInteractingDoor;
+            PlayerEvent.UnlockingGenerator += OnUnlockingGenerator;
+            PlayerEvent.ActivatingWarheadPanel += OnActivatingWarheadPanel;
+            PlayerEvent.InteractingLocker += OnInteractingLocker;
+            PlayerEvent.TriggeringTesla += OnTriggeringTesla;
+            PlayerEvent.Handcuffing += OnHandcuffing;
+            PlayerEvent.Escaping += OnEscaping;
         }
         public void OnDisabled()
         {
-            Player.ChangingRole -= OnChangingRole;
-            Player.DroppingAmmo -= OnDroppingAmmo;
-            Player.Dying -= OnDying;
-            Player.ReloadingWeapon -= OnReloadWeapon;
-            Player.Left -= OnLeft;
-            Player.Verified -= OnVerified;
-            Player.UsingRadioBattery -= OnUsingRadioBatteryEventArgs;
-            Player.Handcuffing -= OnHandcuffing;
+            PlayerEvent.ChangingRole -= OnChangingRole;
+            PlayerEvent.DroppingAmmo -= OnDroppingAmmo;
+            PlayerEvent.Dying -= OnDying;
+            PlayerEvent.ReloadingWeapon -= OnReloadWeapon;
+            PlayerEvent.Left -= OnLeft;
+            PlayerEvent.Verified -= OnVerified;
+            PlayerEvent.UsingRadioBattery -= OnUsingRadioBatteryEventArgs;
+            PlayerEvent.Handcuffing -= OnHandcuffing;
 
-            Player.InteractingDoor -= OnInteractingDoor;
-            Player.UnlockingGenerator -= OnUnlockingGenerator;
-            Player.ActivatingWarheadPanel -= OnActivatingWarheadPanel;
-            Player.InteractingLocker -= OnInteractingLocker;
-            Player.TriggeringTesla -= OnTriggeringTesla;
-            Player.Escaping += OnEscaping;
+            PlayerEvent.InteractingDoor -= OnInteractingDoor;
+            PlayerEvent.UnlockingGenerator -= OnUnlockingGenerator;
+            PlayerEvent.ActivatingWarheadPanel -= OnActivatingWarheadPanel;
+            PlayerEvent.InteractingLocker -= OnInteractingLocker;
+            PlayerEvent.TriggeringTesla -= OnTriggeringTesla;
+            PlayerEvent.Escaping += OnEscaping;
         }
         private void OnEscaping(EscapingEventArgs ev)
         {

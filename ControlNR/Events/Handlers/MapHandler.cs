@@ -1,4 +1,4 @@
-﻿namespace Control.Events
+﻿namespace Control.Handlers.Events
 {
     using Exiled.API.Features;
     using Exiled.API.Enums;
@@ -13,25 +13,25 @@
     using System;
     using Control.Events;
     using Steamworks.ServerList;
+    using MapEvent = Exiled.Events.Handlers.Map;
 
     internal sealed class MapHandler
     {
-        public void OnEnabled()
+        public MapHandler()
         {
-            Exiled.Events.Handlers.Map.PlacingBlood += OnPlacingBlood;
-            Exiled.Events.Handlers.Map.PlacingBulletHole += OnPlacingBulletHole;
-            Exiled.Events.Handlers.Map.SpawningItem += OnSpawningItem;
-            Exiled.Events.Handlers.Map.AnnouncingScpTermination += OnAnnouncingScpTermination;
-            Exiled.Events.Handlers.Map.AnnouncingNtfEntrance += OnAnnouncingNtfEntrance;
+            MapEvent.PlacingBlood += OnPlacingBlood;
+            MapEvent.PlacingBulletHole += OnPlacingBulletHole;
+            MapEvent.SpawningItem += OnSpawningItem;
+            MapEvent.AnnouncingScpTermination += OnAnnouncingScpTermination;
+            MapEvent.AnnouncingNtfEntrance += OnAnnouncingNtfEntrance;
         }
         public void OnDisabled()
         {
-            Exiled.Events.Handlers.Map.PlacingBlood -= OnPlacingBlood;
-            Exiled.Events.Handlers.Map.PlacingBulletHole -= OnPlacingBulletHole;
-            Exiled.Events.Handlers.Map.SpawningItem -= OnSpawningItem;
-            Exiled.Events.Handlers.Map.AnnouncingScpTermination -= OnAnnouncingScpTermination;
-            Exiled.Events.Handlers.Map.AnnouncingNtfEntrance -= OnAnnouncingNtfEntrance;
-
+            MapEvent.PlacingBlood -= OnPlacingBlood;
+            MapEvent.PlacingBulletHole -= OnPlacingBulletHole;
+            MapEvent.SpawningItem -= OnSpawningItem;
+            MapEvent.AnnouncingScpTermination -= OnAnnouncingScpTermination;
+            MapEvent.AnnouncingNtfEntrance -= OnAnnouncingNtfEntrance;
         }
         private void OnSpawningItem(SpawningItemEventArgs ev)
         {
