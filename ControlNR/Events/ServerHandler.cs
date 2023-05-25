@@ -52,7 +52,7 @@
         {
             if (ev.NextKnownTeam == SpawnableTeamType.ChaosInsurgency && ev.IsAllowed)
             {
-                Cassie.Message("О̸̲̮͆паc█ос█ь! Внешний ██риме̸т̵р нару█ен неи███стным отря██м. Всему персоналу р███енд█ется укрыться в безо̸̙̌п̸̖͐̀асном м████.. <color=#ffffff00>h pitch_0.15 .g4 . .g4 . pitch_0.6 danger .g2 . pitch_0.7 external pitch_0.5 .g4 jam_1_1 board r was pitch_8 breached by  . pitch_0.6 .g4 . pitch_0.7 an unknown unit . all remaining personnel . pitch_0.6 .g6 . are advised to take shelter in a safe location </color>", false, false, true);
+                Cassie.Message("О̸̲̮͆паc█ос█ь! Внешний ██риме̸т̵р нару█ен неи███стным отря██м. Всему персоналу р███енд█ется укрыться в безо̸̙̌п̸̖͐̀асном м████.. <color=#ffffff00>h pitch_0.15 .g4 . .g4 . pitch_0.6 danger .g2 . pitch_0.7 external pitch_0.5 .g4 jam_1_1 board r was pitch_8 breached by  . pitch_0.6 .g4 . pitch_0.7 an unknown unit . all remaining personnel . pitch_0.6 .g6 . are advised to take shelter in a safe location </color>", false, false, true);
                 CassieDestroyedLVL += 1;
             }
         }
@@ -105,8 +105,8 @@
                 //Cassie.Message("Детонация альфа-боеголовки будет запущена через 1 минуту.. <color=#ffffff00>h Alpha warhead detonation will be started in t minute 1 minute ");
             }
 
-            bool mtf = Player.List.Where(p => p.Role.Team == Team.FoundationForces || p.Role == RoleTypeId.Scientist && !CustomRole.Get((uint)1).Check(p)).Count() > 0;
-            bool chaos = Player.List.Where(p => p.Role.Team == Team.ChaosInsurgency || p.Role == RoleTypeId.ClassD && !CustomRole.Get((uint)1).Check(p) && !CustomRole.Get((uint)2).Check(p)).Count() > 0;
+            bool mtf = Player.List.Where(p => (p.Role.Team == Team.FoundationForces || p.Role == RoleTypeId.Scientist) && !CustomRole.Get((uint)1).Check(p)).Count() > 0;
+            bool chaos = Player.List.Where(p => (p.Role.Team == Team.ChaosInsurgency || p.Role == RoleTypeId.ClassD) && !CustomRole.Get((uint)1).Check(p) && !CustomRole.Get((uint)2).Check(p)).Count() > 0;
             bool scps = Player.List.Where(p => p.Role.Team == Team.SCPs || CustomRole.Get((uint)1).Check(p)).Count() > 0;
 
             // Если кто-то один остался в живых..
