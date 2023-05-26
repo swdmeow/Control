@@ -28,6 +28,7 @@ using Exiled.Loader;
 using Mirror;
 using CustomPlayerEffects;
 using System.Text;
+using System.Diagnostics.SymbolStore;
 
 namespace Control.CustomRoles
 {
@@ -120,11 +121,14 @@ namespace Control.CustomRoles
                     ev.Attacker.EnableEffect(effect, effect.TimeLeft);
                 }
 
+                bool AllowedToTp = true;
                 Vector3 pos = ev.Player.Position;
 
+                if (ev.DamageHandler.Type == DamageType.Explosion) AllowedToTp = false;
+                
                 Timing.CallDelayed(0.1f, () =>
                 {
-                    ev.Attacker.Teleport(pos);
+                    if(AllowedToTp == true) ev.Attacker.Teleport(pos);
                 });
             }
         }
