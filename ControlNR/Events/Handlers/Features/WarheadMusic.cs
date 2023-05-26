@@ -39,12 +39,12 @@
     using System.IO;
     using System.Threading.Tasks;
 
-    internal sealed class WarheadHandler
+    internal sealed class WarheadMusic
     {
         public static CoroutineHandle ChangeColorsCoroutineHandle;
         public static CoroutineHandle DecontamitionSequnse;
 
-        public WarheadHandler()
+        public WarheadMusic()
         {
             WarheadEvent.Stopping += OnStopping;
             WarheadEvent.Starting += OnStaring;
@@ -58,6 +58,20 @@
         }
         private async void OnDetonating(DetonatingEventArgs ev)
         {
+            foreach (Pickup pickup in Pickup.List)
+            {
+                if (pickup.Room.Type != RoomType.Surface)
+                {
+                    pickup.Destroy();
+                }
+            }
+            foreach (Ragdoll ragdoll in Ragdoll.List)
+            {
+                if (ragdoll.Room.Type != RoomType.Surface)
+                {
+                    ragdoll.Destroy();
+                }
+            }
             Control.API.Extensions.StopAudio();
 
             Timing.KillCoroutines(ChangeColorsCoroutineHandle);
@@ -119,7 +133,7 @@
         {
             for (; ; )
             {
-                foreach(Player pl in Player.List.Where(x => x.IsAlive))
+                foreach (Player pl in Player.List.Where(x => x.IsAlive))
                 {
                     pl.EnableEffect(EffectType.Decontaminating, 1f);
                 }

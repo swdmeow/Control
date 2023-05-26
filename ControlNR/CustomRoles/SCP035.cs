@@ -87,6 +87,7 @@ namespace Control.CustomRoles
         {
             Exiled.API.Features.Roles.Scp173Role.TurnedPlayers.Add(player);
             Exiled.API.Features.Roles.Scp096Role.TurnedPlayers.Add(player);
+            Exiled.API.Features.Roles.Scp049Role.TurnedPlayers.Add(player);
 
             Cassie.Message("Внимание! Обнаружено возможное нарушение условий содержаний SCP-035.<b></b> <color=#ffffff00>h ATTENTION ALL PERSONNEL . Detected possible CONTAINMENT breach of scp 0 3 5 ", false, false, true);
         }
@@ -94,6 +95,7 @@ namespace Control.CustomRoles
         {
             Exiled.API.Features.Roles.Scp173Role.TurnedPlayers.Remove(player);
             Exiled.API.Features.Roles.Scp096Role.TurnedPlayers.Remove(player);
+            Exiled.API.Features.Roles.Scp049Role.TurnedPlayers.Remove(player);
 
             player.DisplayNickname = null;
             Cassie.Message("SCP-035<b></b> был устранён.. <color=#ffffff00>h scp 0 3 5 has been terminated", false, false, true);
@@ -134,9 +136,6 @@ namespace Control.CustomRoles
             Exiled.Events.Handlers.Player.EnteringPocketDimension += OnEnteringPocketDimension;
             Exiled.Events.Handlers.Player.Hurting += OnHurting;
             Exiled.Events.Handlers.Player.Escaping += OnEscaping;
-
-
-            Exiled.Events.Handlers.Player.ReceivingEffect += OnReceivingEffect;
         }
         private void OnEscaping(EscapingEventArgs ev)
         {
@@ -156,23 +155,12 @@ namespace Control.CustomRoles
             Exiled.Events.Handlers.Player.Dying -= OnDying;
             Exiled.Events.Handlers.Player.EnteringPocketDimension -= OnEnteringPocketDimension;
             Exiled.Events.Handlers.Player.Hurting -= OnHurting;
-
-            Exiled.Events.Handlers.Player.ReceivingEffect -= OnReceivingEffect;
         }
         private void OnInternalChangingRole(ChangingRoleEventArgs ev)
         {
             if (Check(ev.Player) && ((ev.NewRole == RoleTypeId.Spectator && !KeepRoleOnDeath) || (ev.NewRole != RoleTypeId.Spectator && ev.NewRole != Role && !KeepRoleOnChangingRole)))
             {
                 RemoveRole(ev.Player);
-            }
-        }
-        private void OnReceivingEffect(ReceivingEffectEventArgs ev)
-        {
-            if (!CustomRole.Get((uint)1).Check(ev.Player)) return;
-
-            if (ev.Effect.name == "CardiacArrest")
-            {
-                ev.IsAllowed = false;
             }
         }
         public override void AddRole(Exiled.API.Features.Player player)

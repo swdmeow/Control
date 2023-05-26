@@ -31,8 +31,9 @@ namespace Control.Extensions
 
                     if (!pl.IsScp && !CustomRole.Get((uint)1).Check(pl))
                     {
+
                         Hint += "<size=66%>";
-                        Hint += $"<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>{(Round.IsLobby ? "" : $"{Round.ElapsedTime.Minutes}:{(Round.ElapsedTime.Seconds.ToString().Length == 1 ? "0" + Round.ElapsedTime.Seconds : Round.ElapsedTime.Seconds)}")}<br><b><color=#8DFF29>bezname</color> | <color=#00B7EB>NoRules</color></b><br>";
+                        Hint += $"<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>{((Round.IsLobby || !pl.IsAlive) ? "" : $"👥 {pl.CurrentSpectatingPlayers.Count()}")}<br>{(Round.IsLobby ? "" : $"{(Round.ElapsedTime.Hours.ToString().Length == 1 ? "0" + Round.ElapsedTime.Hours : Round.ElapsedTime.Hours)}:{(Round.ElapsedTime.Minutes.ToString().Length == 1 ? "0" + Round.ElapsedTime.Minutes : Round.ElapsedTime.Minutes)}:{(Round.ElapsedTime.Seconds.ToString().Length == 1 ? "0" + Round.ElapsedTime.Seconds : Round.ElapsedTime.Seconds)}")}<br><b><color=#8DFF29>bezname</color> | <color=#00B7EB>NoRules</color></b><br>";
 
                         Hint += "</size>";
                         pl.ShowHint(Hint, 0.7f);
@@ -42,7 +43,7 @@ namespace Control.Extensions
                     {
                         Hint += "<size=59%><pos=75%>";
 
-                        Hint += "<b><color=#8DFF29>bezname</color> | <color=#00B7EB>NoRules</color></b></size><br>";
+                        Hint += $"👥 {pl.CurrentSpectatingPlayers.Count()}<br><pos=75%><b><color=#8DFF29>bezname</color> | <color=#00B7EB>NoRules</color></b></size><br>";
 
                         foreach (Player AddTarget in Player.List.Where(x => x.IsScp || CustomRole.Get((uint)1).Check(x)))
                         {

@@ -10,13 +10,17 @@ using Exiled.API.Interfaces;
 using Exiled.CustomItems.API.Features;
 using Exiled.Events.EventArgs.Player;
 using Exiled.Loader;
-using Hints;
+using InventorySystem.Items.Firearms.Attachments;
+using InventorySystem.Items.Firearms.BasicMessages;
 using MEC;
+using PluginAPI.Enums;
+using PluginAPI.Events;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
+using Utils.Networking;
 
 namespace Control.CustomItems
 {
@@ -48,11 +52,11 @@ namespace Control.CustomItems
             ev.IsAllowed = false;
 
             var FireItem = ev.Player.CurrentItem as Firearm;
-
+           
             if (FireItem.Ammo + 1 > 0)
             {
                 ev.Player.ThrowGrenade(Exiled.API.Enums.ProjectileType.FragGrenade);
-                FireItem.Ammo = 0;
+                FireItem.Ammo--;
                 return;
             }
         }
@@ -81,25 +85,21 @@ namespace Control.CustomItems
         {
             if (!CustomItem.Get((uint)4).Check(ev.Player.CurrentItem)) return;
 
-            if (CooldownIsEnable == true || ev.Firearm.Ammo >= 1 || !ev.IsAllowed) { ev.IsAllowed = false; return; }
+            ev.IsAllowed = false;
 
+            if (CooldownIsEnable == true || ev.Firearm.Ammo >= 1) return;
+
+            new RequestMessage(ev.Firearm.Serial, RequestType.Reload).SendToAuthenticated();
+
+            ev.Firearm.Ammo = 1;
             CooldownIsEnable = true;
-
-            Timing.CallDelayed(2.4f, () => { ev.Firearm.Ammo = 1; });
-
-            Timing.RunCoroutine(_DelayedCall());
+            Timing.CallDelayed(30f, () => CooldownIsEnable = false) ;
         }
         private void OnUnloadingWeapon(UnloadingWeaponEventArgs ev)
         {
             if (!CustomItem.Get((uint)4).Check(ev.Player.CurrentItem)) return;
 
             ev.IsAllowed = false;
-        }
-        private IEnumerator<float> _DelayedCall()
-        {
-            yield return Timing.WaitForSeconds(30f);
-
-            CooldownIsEnable = false;
         }
     }
 }

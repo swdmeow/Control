@@ -66,10 +66,11 @@ namespace Control.CustomRoles
         }
         protected override void RoleAdded(Exiled.API.Features.Player player)
         {
-            player.SendConsoleMessage("\n", "yellow");
+            player.SendConsoleMessage("\nВы - SCP-343\nВы можете оглушать игроков, используя револьвер - перезарядка", "yellow");
 
             Exiled.API.Features.Roles.Scp173Role.TurnedPlayers.Add(player);
             Exiled.API.Features.Roles.Scp096Role.TurnedPlayers.Add(player);
+            Exiled.API.Features.Roles.Scp049Role.TurnedPlayers.Add(player);
 
             player.IsGodModeEnabled = true;
         }
@@ -78,6 +79,7 @@ namespace Control.CustomRoles
         {
             Exiled.API.Features.Roles.Scp173Role.TurnedPlayers.Remove(player);
             Exiled.API.Features.Roles.Scp096Role.TurnedPlayers.Remove(player);
+            Exiled.API.Features.Roles.Scp049Role.TurnedPlayers.Remove(player);
 
             player.IsGodModeEnabled = false;
         }
@@ -115,7 +117,7 @@ namespace Control.CustomRoles
                     PlayerExtensions.ShowCustomHint(ev.Player, $"Вы были оглушены игроком {ev.Attacker.Nickname}", 2);
 
                     Vector3 pos = ev.Player.Position;
-
+                    
 
                     PlayerExtensions.ShowCustomHint(ev.Attacker, $"Вы оглушили игрока {ev.Player.Nickname}", 2);
 
@@ -266,7 +268,6 @@ namespace Control.CustomRoles
             Exiled.Events.Handlers.Player.Shooting += OnShooting;
             Exiled.Events.Handlers.Player.UsingItem += OnUsingItem;
             Exiled.Events.Handlers.Player.Escaping += OnEscaping;
-
             Exiled.Events.Handlers.Scp914.UpgradingInventoryItem += UpgradingInventoryItem;
             Exiled.Events.Handlers.Scp914.UpgradingPlayer += UpgradingPlayer;
 

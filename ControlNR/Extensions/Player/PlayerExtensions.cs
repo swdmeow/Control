@@ -19,7 +19,6 @@ namespace Control.Extensions
                 player.Items.Any(item => item is Keycard keycard && keycard.Permissions.HasFlag(permissions))
                 : player.Items.Any(item => item is Keycard keycard && (keycard.Base.Permissions & permissions) != 0);
         }
-         // 1
         internal static Dictionary<Player, List<(float, string)>> _hintQueue = new Dictionary<Player, List<(float, string)>>();
         public static IEnumerator<float> HintCoroutine()
         {

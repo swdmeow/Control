@@ -59,7 +59,7 @@ namespace Control.Patches
 
                 if (player != null)
                 {
-                    if (player?.GroupName == "d1" || player?.GroupName == "d2")
+                    if (player.GroupName.StartsWith("d1") || player.GroupName.StartsWith("d2"))
                     {
                         string UserID = player.UserId;
 
@@ -97,79 +97,33 @@ namespace Control.Patches
 
                         if (args[0] == "size")
                         {
-                            Allowed = false;
-                            Success = false;
-
-                            if (!float.TryParse(args[1], out float x) || !float.TryParse(args[2], out float y) || !float.TryParse(args[3], out float z))
-                            {
-                                sender.RaReply($"ControlNR#X, Y или Z - не цифра..", Success, true, string.Empty);
-                                return Allowed;
-                            }
-
-                            if (x < 0.9f || y < 0.9f || z < 0.9f)
-                            {
-                                sender.RaReply($"ControlNR#Вы не можете изменить себе размер меньше 0.9..", Success, true, string.Empty);
-                                return Allowed;
-                            }
-                            if (x > 1.1f || y > 1.1f || z > 1.1f)
-                            {
-                                sender.RaReply($"ControlNR#Вы не можете изменить себе размер больше 1.1..", Success, true, string.Empty);
-                                return Allowed;
-                            }
-                            Success = true;
-
-                            player.Scale = new UnityEngine.Vector3(x, y, z);
-                            sender.RaReply($"ControlNR#Успешно..", Success, true, string.Empty);
-
-                            return Allowed;
+                            return true;
                         }
 
-                        if (player?.GroupName == "d1")
+                        if (player.GroupName.StartsWith("d1"))
                         {
                             if (args[0] == "forceclass")
                             {
-                                Enum.TryParse(args[2], true, out RoleTypeId role);
-                                try
+                                if (log.ForcedTimes >= 1)
                                 {
-                                    if (log.ForcedTimes >= 1)
+                                    Success = false;
+                                    sender.RaReply($"ControlNR#Вы уже использовали все свои попытки..", Success, true, string.Empty);
+                                    return Allowed;
+                                }
+
+                                Enum.TryParse(args[2], true, out RoleTypeId role);
+
+                                if (role.GetTeam() == Team.SCPs)
+                                {
+                                    if (log.ForcedToSCP == true)
                                     {
                                         Success = false;
-                                        sender.RaReply($"ControlNR#Вы уже использовали все свои попытки..", Success, true, string.Empty);
+                                        sender.RaReply($"ControlNR#Вы уже форсались за SCP..", Success, true, string.Empty);
                                         return Allowed;
                                     }
-
-                                    if (args[2].ToLower().StartsWith("scp"))
+                                    if (Player.List.Where(x => x.IsScp)?.Count() == 0)
                                     {
-                                        if (log.ForcedToSCP == true)
-                                        {
-                                            Success = false;
-                                            sender.RaReply($"ControlNR#Вы уже форсались за SCP..", Success, true, string.Empty);
-                                            return Allowed;
-                                        }
-                                        if (Player.List.Where(x => x.IsScp)?.Count() == 0)
-                                        {
-                                            if (Player.List.Where(x => x.IsHuman).Count() >= 6)
-                                            {
-                                                Success = true;
-
-                                                log.cooldownRole = true;
-                                                log.ForcedTimes += 1;
-                                                log.ForcedToSCP = true;
-
-                                                ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
-
-                                                player.Role.Set(role);
-
-                                                sender.RaReply($"ControlNR#Успешно..", Success, true, string.Empty);
-                                                return Allowed;
-                                            }
-
-                                            Success = false;
-                                            sender.RaReply($"ControlNR#Кол-во игроков для спавна SCP меньше необходимого..", Success, true, string.Empty);
-                                            return Allowed;
-                                        }
-
-                                        if (Player.List.Where(x => x.IsHuman).Count() / Player.List.Where(x => x.IsScp)?.Count() <= 10)
+                                        if (Player.List.Where(x => x.IsHuman).Count() >= 6)
                                         {
                                             Success = true;
 
@@ -179,49 +133,71 @@ namespace Control.Patches
 
                                             ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
 
-                                            player.Role.Set(role);
                                             sender.RaReply($"ControlNR#Успешно..", Success, true, string.Empty);
                                             return Allowed;
                                         }
-                                        else
-                                        {
-                                            Success = false;
-                                            sender.RaReply($"ControlNR#Кол-во игроков для спавна SCP меньше необходимого..", Success, true, string.Empty);
-                                            return Allowed;
-                                        }
-                                    }
 
-                                    if (args[2].ToLower().StartsWith("ntf") || args[2].ToLower().StartsWith("chaos"))
-                                    {
-                                        if (Round.ElapsedTime.TotalMinutes <= 3)
-                                        {
-                                            Success = false;
-                                            sender.RaReply($"ControlNR#За МОГ и ХАОС можно форснутся после 3-х минут раунда..", Success, true, string.Empty);
-                                            return Allowed;
-                                        }
-                                    }
-
-                                    if (args[2].ToLower().StartsWith("tutorial") || args[2].ToLower().StartsWith("overwatch"))
-                                    {
                                         Success = false;
-                                        sender.RaReply($"ControlNR#Не-не..", Success, true, string.Empty);
+                                        sender.RaReply($"ControlNR#Кол-во игроков для спавна SCP меньше необходимого..", Success, true, string.Empty);
                                         return Allowed;
                                     }
 
-                                    log.cooldownRole = true;
-                                    log.ForcedTimes += 1;
+                                    if (Player.List.Where(x => x.IsHuman).Count() / Player.List.Where(x => x.IsScp)?.Count() <= 10)
+                                    {
+                                        Success = true;
 
-                                    ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
+                                        log.cooldownRole = true;
+                                        log.ForcedTimes += 1;
+                                        log.ForcedToSCP = true;
 
-                                    player.Role.Set(role);
+                                        ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
 
+                                        sender.RaReply($"ControlNR#Успешно..", Success, true, string.Empty);
+                                        return Allowed;
+                                    }
+                                    else
+                                    {
+                                        Success = false;
+                                        sender.RaReply($"ControlNR#Кол-во игроков для спавна SCP меньше необходимого..", Success, true, string.Empty);
+                                        return Allowed;
+                                    }
+                                }
+
+
+                                if (role.GetTeam() == Team.ChaosInsurgency && role != RoleTypeId.ClassD || role.GetTeam() == Team.FoundationForces && role != RoleTypeId.Scientist)
+                                {
+                                    if (Round.ElapsedTime.TotalMinutes <= 3)
+                                    {
+                                        Success = false;
+                                        sender.RaReply($"ControlNR#За МОГ и ХАОС можно форснутся после 3-х минут раунда..", Success, true, string.Empty);
+                                        return Allowed;
+                                    }
+                                }
+
+                                if (role == RoleTypeId.Tutorial || role == RoleTypeId.Overwatch || role == RoleTypeId.Filmmaker || role == RoleTypeId.None || role == RoleTypeId.CustomRole)
+                                {
+                                    Success = false;
+                                    sender.RaReply($"ControlNR#Не-не..", Success, true, string.Empty);
                                     return Allowed;
                                 }
-                                catch (Exception ex)
+
+                                log.cooldownRole = true;
+                                log.ForcedTimes += 1;
+                                ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
+
+                                player.Role.Set(role);
+
+                                Timing.CallDelayed(120f, () =>
                                 {
-                                    Log.Error(ex);
-                                }
+                                    var ValueChange = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(UserID);
+                                    ValueChange.cooldownRole = false;
+                                    ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(ValueChange);
+                                });
+
+                                Allowed = false;
+                                return Allowed;
                             }
+
                             if (args[0] == "give")
                             {
                                 try
@@ -240,7 +216,7 @@ namespace Control.Patches
                                         return Allowed;
                                     }
 
-                                    Success = true;
+                                    //Success = true;
 
                                     if (Round.ElapsedTime.Minutes < 3)
                                     {
@@ -285,14 +261,27 @@ namespace Control.Patches
 
                                     log.cooldownItem = true;
                                     log.GivedTimes += 1;
-
                                     ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
 
                                     Timing.CallDelayed(120f, () =>
                                     {
-                                        var ValueChange = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(UserID);
-                                        ValueChange.cooldownItem = false;
-                                        ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
+                                        Log.Info($"Catch end cooldown, updating.. SteamID: {UserID}");
+                                        try
+                                        {
+                                            var ValueChange = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(UserID);
+                                            ValueChange.cooldownItem = false;
+
+                                            Log.Info(ValueChange.cooldownItem);
+
+                                            ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(ValueChange);
+
+                                            Log.Info(ValueChange.cooldownItem);
+
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            Log.Error(ex);
+                                        }
                                     });
 
                                     Enum.TryParse(args[2].Substring(0, 2).Replace(".", ""), true, out ItemType item);
@@ -309,55 +298,36 @@ namespace Control.Patches
                             }
                         }
 
-                        if (player?.GroupName == "d2")
+                        if (player.GroupName.StartsWith("d2"))
                         {
                             if (args[0] == "forceclass")
                             {
-                                try
+                                if (log.ForcedTimes >= 3)
                                 {
-                                    if (log.ForcedTimes >= 3)
+                                    Success = false;
+                                    sender.RaReply($"ControlNR#Вы уже использовали все свои попытки..", Success, true, string.Empty);
+                                    return Allowed;
+                                }
+                                if (log.cooldownRole == true)
+                                {
+                                    Success = false;
+                                    sender.RaReply($"ControlNR#Ваша задержка на выдачу роли ещё не прошла..", Success, true, string.Empty);
+                                    return Allowed;
+                                }
+
+                                Enum.TryParse(args[2], true, out RoleTypeId role);
+
+                                if (role.GetTeam() == Team.SCPs)
+                                {
+                                    if (log.ForcedToSCP == true)
                                     {
                                         Success = false;
-                                        sender.RaReply($"ControlNR#Вы уже использовали все свои попытки..", Success, true, string.Empty);
+                                        sender.RaReply($"ControlNR#Вы уже форсались за SCP..", Success, true, string.Empty);
                                         return Allowed;
                                     }
-                                    if (log.cooldownRole == true)
+                                    if (Player.List.Where(x => x.IsScp)?.Count() == 0)
                                     {
-                                        Success = false;
-                                        sender.RaReply($"ControlNR#Ваша задержка на выдачу роли ещё не прошла..", Success, true, string.Empty);
-                                        return Allowed;
-                                    }
-
-                                    if (args[2].ToLower().StartsWith("scp"))
-                                    {
-                                        if (log.ForcedToSCP == true)
-                                        {
-                                            Success = false;
-                                            sender.RaReply($"ControlNR#Вы уже форсались за SCP..", Success, true, string.Empty);
-                                            return Allowed;
-                                        }
-                                        if (Player.List.Where(x => x.IsScp)?.Count() == 0)
-                                        {
-                                            if (Player.List.Where(x => x.IsHuman).Count() >= 6)
-                                            {
-                                                Success = true;
-
-                                                log.cooldownRole = true;
-                                                log.ForcedTimes += 1;
-                                                log.ForcedToSCP = true;
-
-                                                ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
-
-                                                sender.RaReply($"ControlNR#Успешно..", Success, true, string.Empty);
-                                                return Allowed;
-                                            }
-
-                                            Success = false;
-                                            sender.RaReply($"ControlNR#Кол-во игроков для спавна SCP меньше необходимого..", Success, true, string.Empty);
-                                            return Allowed;
-                                        }
-
-                                        if (Player.List.Where(x => x.IsHuman).Count() / Player.List.Where(x => x.IsScp)?.Count() <= 10)
+                                        if (Player.List.Where(x => x.IsHuman).Count() >= 6)
                                         {
                                             Success = true;
 
@@ -370,54 +340,68 @@ namespace Control.Patches
                                             sender.RaReply($"ControlNR#Успешно..", Success, true, string.Empty);
                                             return Allowed;
                                         }
-                                        else
-                                        {
-                                            Success = false;
-                                            sender.RaReply($"ControlNR#Кол-во игроков для спавна SCP меньше необходимого..", Success, true, string.Empty);
-                                            return Allowed;
-                                        }
-                                    }
 
-                                    if (args[2].ToLower().StartsWith("ntf") || args[2].ToLower().StartsWith("chaos"))
-                                    {
-                                        if (Round.ElapsedTime.TotalMinutes <= 3)
-                                        {
-                                            Success = false;
-                                            sender.RaReply($"ControlNR#За МОГ и ХАОС можно форснутся после 3-х минут раунда..", Success, true, string.Empty);
-                                            return Allowed;
-                                        }
-                                    }
-
-                                    if (args[2].ToLower().StartsWith("tutorial") || args[2].ToLower().StartsWith("overwatch"))
-                                    {
                                         Success = false;
-                                        sender.RaReply($"ControlNR#Не-не..", Success, true, string.Empty);
+                                        sender.RaReply($"ControlNR#Кол-во игроков для спавна SCP меньше необходимого..", Success, true, string.Empty);
                                         return Allowed;
                                     }
 
-                                    Enum.TryParse(args[2], true, out RoleTypeId role);
-
-                                    log.cooldownRole = true;
-                                    log.ForcedTimes += 1;
-                                    ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
-
-                                    player.Role.Set(role);
-
-                                    Timing.CallDelayed(120f, () =>
+                                    if (Player.List.Where(x => x.IsHuman).Count() / Player.List.Where(x => x.IsScp)?.Count() <= 10)
                                     {
-                                        var ValueChange = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(UserID);
-                                        ValueChange.cooldownRole = false;
-                                        ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
-                                    });
+                                        Success = true;
 
-                                    Allowed = false;
+                                        log.cooldownRole = true;
+                                        log.ForcedTimes += 1;
+                                        log.ForcedToSCP = true;
+
+                                        ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
+
+                                        sender.RaReply($"ControlNR#Успешно..", Success, true, string.Empty);
+                                        return Allowed;
+                                    }
+                                    else
+                                    {
+                                        Success = false;
+                                        sender.RaReply($"ControlNR#Кол-во игроков для спавна SCP меньше необходимого..", Success, true, string.Empty);
+                                        return Allowed;
+                                    }
+                                }
+
+
+                                if (role.GetTeam() == Team.ChaosInsurgency && role != RoleTypeId.ClassD || role.GetTeam() == Team.FoundationForces && role != RoleTypeId.Scientist)
+                                {
+                                    if (Round.ElapsedTime.TotalMinutes <= 3)
+                                    {
+                                        Success = false;
+                                        sender.RaReply($"ControlNR#За МОГ и ХАОС можно форснутся после 3-х минут раунда..", Success, true, string.Empty);
+                                        return Allowed;
+                                    }
+                                }
+
+                                if (role == RoleTypeId.Tutorial || role == RoleTypeId.Overwatch || role == RoleTypeId.Filmmaker || role == RoleTypeId.None || role == RoleTypeId.CustomRole)
+                                {
+                                    Success = false;
+                                    sender.RaReply($"ControlNR#Не-не..", Success, true, string.Empty);
                                     return Allowed;
                                 }
-                                catch (Exception ex)
+
+                                log.cooldownRole = true;
+                                log.ForcedTimes += 1;
+                                ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
+
+                                player.Role.Set(role);
+
+                                Timing.CallDelayed(120f, () =>
                                 {
-                                    Log.Error(ex);
-                                }
+                                    var ValueChange = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(UserID);
+                                    ValueChange.cooldownRole = false;
+                                    ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(ValueChange);
+                                });
+
+                                Allowed = false;
+                                return Allowed;
                             }
+                        
                             if (args[0] == "give")
                             {
                                 try
@@ -488,7 +472,7 @@ namespace Control.Patches
                                     {
                                         var ValueChange = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(UserID);
                                         ValueChange.cooldownItem = false;
-                                        ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
+                                        ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(ValueChange);
                                     });
 
                                     Enum.TryParse(args[2].Substring(0, 2).Replace(".", ""), true, out ItemType item);
@@ -530,7 +514,7 @@ namespace Control.Patches
                                         {
                                             var ValueChange = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(UserID);
                                             ValueChange.cooldownCall = false;
-                                            ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
+                                            ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(ValueChange);
                                         });
 
                                         // Only one allow in this text file lmao
@@ -546,6 +530,8 @@ namespace Control.Patches
                             // VOTE TO EVENTS
                         }
 
+                        Success = false;
+                        Allowed = false;
                         sender.RaReply($"ControlNR#Вы не можете использовать эту команду..", Success, true, string.Empty);
                         return Allowed;
                     }

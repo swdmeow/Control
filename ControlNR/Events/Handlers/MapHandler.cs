@@ -1,18 +1,10 @@
 ﻿namespace Control.Handlers.Events
 {
-    using Exiled.API.Features;
     using Exiled.API.Enums;
-    using Сontrol;
-    using MEC;
-    using Mirror;
-    using Exiled.CustomRoles.API.Features;
+    using Exiled.API.Features;
+    using Exiled.API.Features.Items;
     using Exiled.Events.EventArgs.Map;
-    using System.Linq;
-    using System.Collections.Generic;
-    using System.Linq.Expressions;
-    using System;
-    using Control.Events;
-    using Steamworks.ServerList;
+    using InventorySystem.Items.Firearms.Ammo;
     using MapEvent = Exiled.Events.Handlers.Map;
 
     internal sealed class MapHandler
@@ -35,11 +27,7 @@
         }
         private void OnSpawningItem(SpawningItemEventArgs ev)
         {
-            if(ev.Pickup.Type == ItemType.Ammo12gauge ||
-               ev.Pickup.Type == ItemType.Ammo44cal ||
-               ev.Pickup.Type == ItemType.Ammo556x45 ||
-               ev.Pickup.Type == ItemType.Ammo762x39 ||
-               ev.Pickup.Type == ItemType.Ammo9x19)
+            if(ev.Pickup.Base is AmmoPickup)
             {
                 ev.IsAllowed = false;
             }

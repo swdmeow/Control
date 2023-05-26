@@ -21,7 +21,7 @@
         public string Description { get; } = "Команда для изменения своего размера..";
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            if (!CommandProcessor.CheckPermissions(((CommandSender)sender), "size", PlayerPermissions.Broadcasting, "ControlNR", false))
+            if(!Exiled.Permissions.Extensions.Permissions.CheckPermission(sender, "ControlNR.size"))
             {
                 response = "У вас нет прав..";
                 return false;
@@ -33,6 +33,20 @@
             {
                 response = $"ControlNR#X, Y или Z - не цифра..";
                 return false;
+            }
+
+            if (player.GroupName == "d1" || player.GroupName == "d2")
+            {
+                if (x < 0.9f || y < 0.9f || z < 0.9f)
+                {
+                    response = $"ControlNR#Вы не можете изменить себе размер меньше 0.9..";
+                    return false;
+                }
+                if (x > 1.1f || y > 1.1f || z > 1.1f)
+                {
+                    response = $"ControlNR#Вы не можете изменить себе размер больше 1.1..";
+                    return false;
+                }
             }
 
             player.Scale = new UnityEngine.Vector3(x, y, z);
