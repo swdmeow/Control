@@ -112,6 +112,13 @@ namespace Control.CustomRoles
                 ev.IsAllowed = false;
                 if (CooldownRevolver <= 0)
                 {
+                    if(ev.Player.Lift != null)
+                    {
+                        PlayerExtensions.ShowCustomHint(ev.Attacker, $"Вы не можете оглушить игрока, так как он находится в лифте..", 2);
+
+                        return;
+                    }
+
                     CooldownRevolver = 180;
 
                     PlayerExtensions.ShowCustomHint(ev.Player, $"Вы были оглушены игроком {ev.Attacker.Nickname}", 2);
