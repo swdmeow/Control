@@ -1,8 +1,4 @@
-﻿using Control.Handlers.Events;
-using Exiled.CustomItems.API.Features;
-using Exiled.CustomRoles.API.Features;
-
-namespace Control.Handlers
+﻿namespace Control.Handlers
 {
     internal sealed class Handler
     {
@@ -14,6 +10,8 @@ namespace Control.Handlers
         private Control.Handlers.Events.Scp914Handler Scp914Handler;
         private Control.Handlers.Events.UnlimitedAmmoHandler UnlimitedAmmoHandler;
         private Control.Handlers.Events.RemoteKeycardHandler RemoteKeycardHandler;
+        private Control.Handlers.Events.WarheadDecontamition WarheadDecontamition;
+
 
         public Handler()
         {
@@ -23,8 +21,10 @@ namespace Control.Handlers
             Scp330Handler = new Control.Handlers.Events.Scp330Handler();
             WarheadMusic = new Control.Handlers.Events.WarheadMusic();
             Scp914Handler = new Control.Handlers.Events.Scp914Handler();
+            // Features
             UnlimitedAmmoHandler = new Control.Handlers.Events.UnlimitedAmmoHandler();
             RemoteKeycardHandler = new Control.Handlers.Events.RemoteKeycardHandler();
+            WarheadDecontamition = new Control.Handlers.Events.WarheadDecontamition();
         }
         public void Dispose()
         {
@@ -36,6 +36,7 @@ namespace Control.Handlers
             Scp914Handler.OnDisabled();
             RemoteKeycardHandler.OnDisabled();
             UnlimitedAmmoHandler.OnDisabled();
+            WarheadDecontamition.OnDisabled();
 
             RemoteKeycardHandler = null;
             UnlimitedAmmoHandler = null;
@@ -44,6 +45,7 @@ namespace Control.Handlers
             MapHandler = null;
             Scp330Handler = null;
             WarheadMusic = null;
+            WarheadDecontamition = null;
         }
     }
 }

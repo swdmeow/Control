@@ -151,10 +151,10 @@ namespace Control.CustomItems
                 {
                     ev.Player.CurrentItem.Destroy();
 
-                    ExplosiveGrenade grenade = (ExplosiveGrenade)Item.Create(ItemType.GrenadeHE);
+                    ExplosiveGrenade grenade = (ExplosiveGrenade)Item.Create(ItemType.GrenadeHE, Server.Host);
 
                     grenade.FuseTime = 0.2f;
-                    grenade.ScpDamageMultiplier = 10.0f;
+                    grenade.ScpDamageMultiplier = 666f;
 
                     grenade.SpawnActive(ev.Player.Position + Vector3.up);
                 }

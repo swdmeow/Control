@@ -95,9 +95,10 @@ namespace Control.Patches
 
                         Success = true;
 
-                        if (args[0] == "size")
+                        if (args[0].ToLower() == "size")
                         {
-                            return true;
+                            Allowed = true;
+                            return Allowed;
                         }
 
                         if (player.GroupName.StartsWith("d1"))
@@ -152,7 +153,17 @@ namespace Control.Patches
 
                                         ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
 
+                                        player.Role.Set(role);
+
                                         sender.RaReply($"ControlNR#Успешно..", Success, true, string.Empty);
+
+                                        Timing.CallDelayed(120f, () =>
+                                        {
+                                            var ValueChange = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(UserID);
+                                            ValueChange.cooldownRole = false;
+                                            ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(ValueChange);
+                                        });
+
                                         return Allowed;
                                     }
                                     else
@@ -223,6 +234,13 @@ namespace Control.Patches
                                         // 0, 1, 2 , 3
                                         switch (args[2].Substring(0, 2))
                                         {
+                                            case "50":
+                                            case "48":
+                                                {
+                                                    Success = false;
+                                                    sender.RaReply($"ControlNR#Этот предмет нельзя выдать..", Success, true, string.Empty);
+                                                    return Allowed;
+                                                }
                                             case "0.":
                                             case "1.":
                                             case "2.":
@@ -265,18 +283,12 @@ namespace Control.Patches
 
                                     Timing.CallDelayed(120f, () =>
                                     {
-                                        Log.Info($"Catch end cooldown, updating.. SteamID: {UserID}");
                                         try
                                         {
                                             var ValueChange = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(UserID);
                                             ValueChange.cooldownItem = false;
 
-                                            Log.Info(ValueChange.cooldownItem);
-
                                             ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(ValueChange);
-
-                                            Log.Info(ValueChange.cooldownItem);
-
                                         }
                                         catch (Exception ex)
                                         {
@@ -335,6 +347,8 @@ namespace Control.Patches
                                             log.ForcedTimes += 1;
                                             log.ForcedToSCP = true;
 
+
+
                                             ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
 
                                             sender.RaReply($"ControlNR#Успешно..", Success, true, string.Empty);
@@ -356,7 +370,17 @@ namespace Control.Patches
 
                                         ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
 
+                                        player.Role.Set(role);
+
                                         sender.RaReply($"ControlNR#Успешно..", Success, true, string.Empty);
+
+                                        Timing.CallDelayed(120f, () =>
+                                        {
+                                            var ValueChange = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(UserID);
+                                            ValueChange.cooldownRole = false;
+                                            ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(ValueChange);
+                                        });
+
                                         return Allowed;
                                     }
                                     else
@@ -427,6 +451,13 @@ namespace Control.Patches
                                         // 0, 1, 2 , 3
                                         switch (args[2].Substring(0, 2))
                                         {
+                                            case "50":
+                                            case "48":
+                                                {
+                                                    Success = false;
+                                                    sender.RaReply($"ControlNR#Этот предмет нельзя выдать..", Success, true, string.Empty);
+                                                    return Allowed;
+                                                }
                                             case "0.":
                                             case "1.":
                                             case "2.":
@@ -496,12 +527,14 @@ namespace Control.Patches
                                         if (log.CallTimes >= 2)
                                         {
                                             Success = false;
+                                            Allowed = false;
                                             sender.RaReply($"ControlNR#Вы уже использовали все свои попытки..", Success, true, string.Empty);
                                             return Allowed;
                                         }
                                         if (log.cooldownCall == true)
                                         {
                                             Success = false;
+                                            Allowed = false;
                                             sender.RaReply($"ControlNR#Ваша задержка на вызов ещё не прошла..", Success, true, string.Empty);
                                             return Allowed;
                                         }

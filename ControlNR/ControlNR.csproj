@@ -135,6 +135,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Users\swd\Desktop\d\UnityEngine.PhysicsModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Users\swd\Desktop\d\UnityEngine.UnityWebRequestModule.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\Extensions.cs" />
@@ -155,6 +159,7 @@
     <Compile Include="CustomRoles\SCP035.cs" />
     <Compile Include="CustomRoles\SCP343.cs" />
     <Compile Include="Events\Handler.cs" />
+    <Compile Include="Events\Handlers\Features\WarheadDecontamition.cs" />
     <Compile Include="Events\Handlers\Features\WarheadMusic.cs" />
     <Compile Include="Events\Handlers\Features\RemoteKeycardHandler.cs" />
     <Compile Include="Events\Handlers\Features\UnlimitedAmmoHandler.cs" />

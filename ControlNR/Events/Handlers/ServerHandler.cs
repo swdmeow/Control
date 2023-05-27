@@ -14,6 +14,7 @@
     using UnityEngine;
     using ServerEvent = Exiled.Events.Handlers.Server;
     using Exiled.API.Features.Roles;
+    using Exiled.API.Features.Pickups;
 
     internal sealed class ServerHandler
     {
@@ -70,11 +71,11 @@
         }
         private void OnWaitingForPlayers()
         {
-            Log.Info("Dropping collections and lists, kill coroutines, disable LobbyLock");
+            Log.Info($"\nEnabling ControlNR.\nVersion: {ControlNR.Singleton.Version}\nAuthor: {ControlNR.Singleton.Author}");
             try
             {
                 Timing.KillCoroutines(WarheadMusic.ChangeColorsCoroutineHandle);
-                Timing.KillCoroutines(WarheadMusic.DecontamitionSequnse);
+                Timing.KillCoroutines(WarheadDecontamition.DecontamitionSequnse);
 
                 // Disable it when exiled add it lmao
                 Scp049Role.TurnedPlayers.Clear();
@@ -89,7 +90,7 @@
                 isWarheadStart = false;
                 isWarheadCassie1Minute = false;
                 PlayerExtensions._hintQueue.Clear();
-
+                
                 ControlNR.Singleton.db.DropCollection("VIPPlayers");
             }
             catch (System.Exception ex)
@@ -140,7 +141,22 @@
             Cassie.Clear();
             Cassie.Message("Огонь по своим включён.. <color=#ffffff00>h F F enabled .g1", true, false, true);
 
-            if (API.Extensions.Dummies.Count() > 0) API.Extensions.StopAudio();
+            foreach (Pickup pickup in Pickup.List)
+            {
+                pickup.Destroy();
+            }
+            foreach (Ragdoll ragdoll in Ragdoll.List)
+            {
+                ragdoll.Destroy();
+            }
+
+            Respawn.ForceWave(SpawnableTeamType.NineTailedFox, false);
+
+            try
+            {
+                API.Extensions.StopAudio();
+            }
+            catch (System.Exception) { }
         }
     }
 }

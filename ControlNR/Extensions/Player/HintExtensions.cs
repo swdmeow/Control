@@ -29,7 +29,29 @@ namespace Control.Extensions
 
                     string Hint = "<b></b>";
 
-                    if (!pl.IsScp && !CustomRole.Get((uint)1).Check(pl))
+                    if (!pl.IsAlive)
+                    {
+                        Hint += "<size=66%>";
+
+                        string SpawningTeam = "";
+                        if(Respawn.NextKnownTeam == Respawning.SpawnableTeamType.ChaosInsurgency)
+                        {
+                            SpawningTeam = "<color=green>ПХ</color>";
+                        } else
+                        {
+                            SpawningTeam = "<color=blue>МОГ</color>";
+                        }
+                        if (!Round.IsLobby) Hint += $"<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>{(Respawn.IsSpawning ? $"Вы заспавнитесь за {SpawningTeam} через" : "Вы заспавнитесь через")}:<br>{(Respawn.TimeUntilSpawnWave.Minutes.ToString().Length == 1 ? "0" + Respawn.TimeUntilSpawnWave.Minutes : Respawn.TimeUntilSpawnWave.Minutes)}:{(Respawn.TimeUntilSpawnWave.Seconds.ToString().Length == 1 ? "0" + Respawn.TimeUntilSpawnWave.Seconds : Respawn.TimeUntilSpawnWave.Seconds)}<br><b><color=#8DFF29>bezname</color> | <color=#00B7EB>NoRules</color></b><br>";
+                        else
+                        {
+                            Hint += $"<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><b><color=#8DFF29>bezname</color> | <color=#00B7EB>NoRules</color></b><br>";
+                        }
+
+                        Hint += "</size>";
+                        pl.ShowHint(Hint, 0.7f);
+                    }
+
+                    if (!pl.IsScp && !CustomRole.Get((uint)1).Check(pl) && pl.IsAlive)
                     {
 
                         Hint += "<size=66%>";

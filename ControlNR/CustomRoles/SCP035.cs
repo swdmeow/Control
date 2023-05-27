@@ -29,6 +29,7 @@ using Mirror;
 using CustomPlayerEffects;
 using System.Text;
 using System.Diagnostics.SymbolStore;
+using Control.Extensions;
 
 namespace Control.CustomRoles
 {
@@ -55,13 +56,16 @@ namespace Control.CustomRoles
 
             if (CustomRole.Get((uint)1).Check(ev.Attacker))
             {
-                if (ev.Player.Role.Team == Team.SCPs)
+                if (ev.Player.Role.Team == Team.SCPs || CustomRole.Get((uint)1).Check(ev.Player))
                 {
                     ev.Amount = 0f;
                     ev.IsAllowed = false;
 
+                    PlayerExtensions.ShowCustomHint(ev.Attacker, "Вы не можете наносить урон SCP объектам..", 2);
+
                     return;
                 }
+
                 ev.DamageHandler.IsFriendlyFire = false;
                 ev.DamageHandler.ForceFullFriendlyFire = true;
                 ev.IsAllowed = true;
@@ -69,10 +73,12 @@ namespace Control.CustomRoles
 
             if (CustomRole.Get((uint)1).Check(ev.Player))
             {
-                if (ev.Attacker.Role.Team == Team.SCPs)
+                if (ev.Attacker.Role.Team == Team.SCPs || CustomRole.Get((uint)1).Check(ev.Attacker))
                 {
                     ev.Amount = 0f;
                     ev.IsAllowed = false;
+
+                    PlayerExtensions.ShowCustomHint(ev.Attacker, "Вы не можете наносить урон SCP-035..", 2);
 
                     return;
                 }

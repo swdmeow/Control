@@ -57,13 +57,19 @@ namespace Control.CustomItems
             RoomType.EzGateB
         };
 
-        public List<(ItemType a, int b)> Types = new()
+        public List<ItemType> Types = new List<ItemType>()
         {
-            new(ItemType.Painkillers, 10),
-            new(ItemType.Coin, 10),
-            new(ItemType.Medkit, 20),
-            new(ItemType.Adrenaline, 30),
-            new(ItemType.Coin, 100),
+            ItemType.Painkillers,
+            ItemType.Coin,
+            ItemType.Medkit,
+            ItemType.Adrenaline,
+            ItemType.Coin,
+            ItemType.KeycardJanitor,
+            ItemType.KeycardO5,
+            ItemType.KeycardZoneManager,
+            ItemType.Flashlight,
+            ItemType.SCP244b,
+            ItemType.SCP500,
         };
         public override void Give(Exiled.API.Features.Player player, bool displayMessage = true)
         {
@@ -78,16 +84,7 @@ namespace Control.CustomItems
         }
         private ItemType RandomType()
         {
-            if (Types.Count == 1)
-                return Types[0].a;
-
-            foreach ((ItemType type, int chance) in Types)
-            {
-                if (Loader.Random.Next(100) <= chance)
-                    return type;
-            }
-
-            return Type;
+            return Types.RandomItem();
         }
         protected override void OnAcquired(Exiled.API.Features.Player player, bool DisplayMessage)
         {
