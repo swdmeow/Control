@@ -33,6 +33,7 @@ namespace XPSystem
             if (!ev.IsAllowed) return;
 
             if (ev.Player == null) return;
+            if (ev.Player == ev.Attacker) return;
 
             Player killer = ev.DamageHandler.Type == DamageType.PocketDimension ? Player.Get(RoleTypeId.Scp106).FirstOrDefault() : ev.Attacker;
             if (killer == null) return;

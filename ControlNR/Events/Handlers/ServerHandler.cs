@@ -34,6 +34,11 @@
             RoleTypeId.Scientist,
             RoleTypeId.FacilityGuard,
         };
+        public static List<SpawnableTeamType> RandomSpawnableTeamType = new List<SpawnableTeamType>()
+        {
+            SpawnableTeamType.NineTailedFox,
+            SpawnableTeamType.ChaosInsurgency,
+        };
         public ServerHandler()
         {
             ServerEvent.WaitingForPlayers += OnWaitingForPlayers;
@@ -105,6 +110,14 @@
                 if(CassieDestroyedLVL >= 3)
                 {
                     Cassie.Message("jam_040_9 pitch_0.43 .G1 . jam_020_9 .G3 . .G5 . pitch_0.3 .g3 . . . pitch_0.2 .g1", false, false, false);
+
+                    return;
+                }
+                if (CassieDestroyedLVL == 2)
+                {
+                    Cassie.Message("pitch_0.09 jam_006_1 .G4 .G6 .G3", false, false, false);
+
+                    CassieDestroyedLVL += 1;
 
                     return;
                 }
@@ -207,9 +220,14 @@
                 ragdoll.Destroy();
             }
 
+            foreach(Player pl in Player.List)
+            {
+                pl.IsGodModeEnabled = false;
+            }
+            
             Timing.CallDelayed(0.1f, () =>
             {
-                Respawn.ForceWave(SpawnableTeamType.NineTailedFox, false);
+                Respawn.ForceWave(RandomSpawnableTeamType.RandomItem(), false);
             });
 
             try

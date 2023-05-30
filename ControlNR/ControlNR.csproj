@@ -175,6 +175,7 @@
     <Compile Include="CustomItems\GrenadeLauncher.cs" />
     <Compile Include="Extensions\Player\HintExtensions.cs" />
     <Compile Include="Extensions\Player\PlayerExtensions.cs" />
+    <Compile Include="Patches\HideTagCommand.cs" />
     <Compile Include="Patches\RemoteAdmin.cs" />
   </ItemGroup>
   <ItemGroup>

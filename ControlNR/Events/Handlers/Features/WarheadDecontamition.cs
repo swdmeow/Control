@@ -91,6 +91,7 @@
         {
             for (; ; )
             {
+                if (!Warhead.IsDetonated) break;
                 foreach (Player pl in Player.List.Where(x => x.IsAlive))
                 {
                     pl.EnableEffect(EffectType.Decontaminating, 1f);

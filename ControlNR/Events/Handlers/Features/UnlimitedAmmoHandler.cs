@@ -35,7 +35,7 @@
             if (CustomRole.Get((uint)2).Check(ev.Player)) return;
             if (ev.Player.IsScp) return;
 
-            if (ev.Reason != SpawnReason.RoundStart && ev.Reason != SpawnReason.LateJoin && ev.Reason != SpawnReason.Respawn)
+            if (ev.Reason != SpawnReason.RoundStart && ev.Reason != SpawnReason.LateJoin && ev.Reason != SpawnReason.Respawn && ev.Reason == SpawnReason.ForceClass)
             {
                 ev.Player.SetAmmo(AmmoType.Nato9, 0);
                 ev.Player.SetAmmo(AmmoType.Ammo44Cal, 0);

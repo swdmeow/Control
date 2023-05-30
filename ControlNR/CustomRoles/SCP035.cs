@@ -134,7 +134,7 @@ namespace Control.CustomRoles
                 bool AllowedToTp = true;
                 Vector3 pos = ev.Player.Position;
 
-                if (ev.DamageHandler.Type == DamageType.Explosion) AllowedToTp = false;
+                if (ev.DamageHandler.Type == DamageType.Explosion || ev.Player.Lift != null) AllowedToTp = false;
 
                 Timing.CallDelayed(0.1f, () =>
                 {

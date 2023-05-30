@@ -21,16 +21,16 @@ namespace XPSystem
         [Description("(You may add your own entries) Role1: Role2: XP player with Role1 gets for killing a person with Role2 ")]
         public Dictionary<RoleTypeId, int> KillXP { get; set; } = new Dictionary<RoleTypeId, int>()
         {
-            [RoleTypeId.Scientist] = 200,
-            [RoleTypeId.ClassD] = 200,
-            [RoleTypeId.FacilityGuard] = 150,
-            [RoleTypeId.NtfPrivate] = 200,
-            [RoleTypeId.NtfSergeant] = 250,
-            [RoleTypeId.NtfCaptain] = 300,
-            [RoleTypeId.ChaosMarauder] = 300,
-            [RoleTypeId.ChaosConscript] = 250,
-            [RoleTypeId.ChaosRepressor] = 200,
-            [RoleTypeId.ChaosRifleman] = 150,
+            [RoleTypeId.Scientist] = 100,
+            [RoleTypeId.ClassD] = 100,
+            [RoleTypeId.FacilityGuard] = 100,
+            [RoleTypeId.NtfPrivate] = 150,
+            [RoleTypeId.NtfSergeant] = 175,
+            [RoleTypeId.NtfCaptain] = 200,
+            [RoleTypeId.ChaosMarauder] = 200,
+            [RoleTypeId.ChaosConscript] = 175,
+            [RoleTypeId.ChaosRepressor] = 150,
+            [RoleTypeId.ChaosRifleman] = 100,
             [RoleTypeId.Scp049] = 500,
             [RoleTypeId.Scp0492] = 100,
             [RoleTypeId.Scp106] = 500,
@@ -46,7 +46,7 @@ namespace XPSystem
         public int XPPerLevel { get; set; } = 1000;
 
         [Description("Сколько опыта нужно после каждого нового уровня.")]
-        public int XPPerNewLevel { get; set; } = 250;
+        public int XPPerNewLevel { get; set; } = 500;
 
         [Description("Show a mini-hint if a player gets XP")]
         public bool ShowAddedXP { get; set; } = true;
@@ -60,8 +60,8 @@ namespace XPSystem
         [Description("(You may add your own entries) How many XP a player gets for escaping")]
         public Dictionary<RoleTypeId, int> EscapeXP { get; set; } = new Dictionary<RoleTypeId, int>()
         {
-            [RoleTypeId.ClassD] = 500,
-            [RoleTypeId.Scientist] = 300
+            [RoleTypeId.ClassD] = 250,
+            [RoleTypeId.Scientist] = 250,
         };
 
         [Description("(You may add your own entries) Level threshold and a badge. %color%. if you get a TAG FAIL in your console, either change your color, or remove special characters like brackets.")]
@@ -75,6 +75,18 @@ namespace XPSystem
             {
                 Color = "orange"
             },
+            [2] = new Badge
+            {
+                Color = "grey"
+            },
+            [3] = new Badge
+            {
+                Color = "white"
+            },
+            [4] = new Badge
+            {
+                Color = "#E354A9"
+            },
             [5] = new Badge
             {
                 Color = "yellow"
@@ -83,17 +95,16 @@ namespace XPSystem
             {
                 Color = "red"
             },
+            [15] = new Badge
+            {
+                Color = "#160810"
+            },
             [50] = new Badge
             {
                 Color = "lime"
             }
         };
-       
-
-        [Description("The structure of the badge displayed in-game. Variables: %lvl% - the level. %badge% earned badge in specified in LevelsBadge. %oldbadge% - base-game badge, like ones specified in config-remoteadmin, or a global badge. can be null.")]
-        public string BadgeStructure { get; set; } = "%badge% | %oldbadge%";
-        [Description("See above, just for people who dont have a badge. If empty, badgestructure will be used instead.")]
-        public string BadgeStructureNoBadge { get; set; } = "%badge%";
+      
         
         [Description("Path the database gets saved to. Requires change on linux.")]
         public string SavePath { get; set; } = Path.Combine(Paths.Configs, @"Players.db");

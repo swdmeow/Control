@@ -2,10 +2,11 @@
   "ExpandedNodes": [
     "",
     "\\ControlNR",
+    "\\ControlNR\\CustomRoles",
     "\\ControlNR\\Events",
     "\\ControlNR\\Events\\Handlers",
     "\\XPSystem"
   ],
-  "SelectedNode": "\\Control.sln",
+  "SelectedNode": "\\ControlNR\\CustomRoles\\SCP035.cs",
   "PreviewInSolutionExplorer": false
 }

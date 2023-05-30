@@ -21,20 +21,16 @@ namespace XPSystem.API
             {
                 if (i != null && i.Contains("\n"))
                 {
-                    Log.Info($"Dontpass, ply {ply.UserId}");
                     return;
                 }
                 if (ply == null || ply.UserId == null)
                 {
-                    Log.Warn("Not updating role: player null");
                     return;
                 }
-                Log.Info($"pass, {ply}");
                 var log = ply.GetLog();
 
                 Badge badge = new Badge()
                 {
-                    Name = $"{log.LVL} уровень",
                     Color = "grey",
                 };
 
@@ -44,30 +40,20 @@ namespace XPSystem.API
                         continue;
                     badge = new Badge()
                     {
-                        Name = $"{log.LVL} уровень",
                         Color = $"{kvp.Value.Color}",
                     };
                     break;
                 }
 
+                string text = ply.Group == null || ply.Group != null && ply.BadgeHidden == true
+                    ? $"{log.LVL} уровень"
+                    : $"{log.LVL} уровень | {ply.Group.BadgeText}";
 
-                bool hasGroup = ply.Group == null || string.IsNullOrEmpty(ply.RankName);
-                Log.Debug($"i is null {i == null}");
-                Log.Debug($"Using i: {hasGroup && !string.IsNullOrEmpty(Main.Instance.Config.BadgeStructureNoBadge)}");
-                string text = hasGroup && !string.IsNullOrEmpty(Main.Instance.Config.BadgeStructureNoBadge)
-                    ? Main.Instance.Config.BadgeStructureNoBadge
-                            .Replace("%lvl%", log.LVL.ToString())
-                            .Replace("%badge%", badge.Name)
-                    : Main.Instance.Config.BadgeStructure
-                        .Replace("%lvl%", log.LVL.ToString())
-                        .Replace("%badge%", badge.Name)
-                        .Replace("%oldbadge%", string.IsNullOrWhiteSpace(i) ? ply.Group?.BadgeText : i);
                 text += "\n";
-                string color = badge.Color;
 
                 Log.Info(text);
                 ply.RankName = text;
-                ply.RankColor = color;
+                ply.RankColor = badge.Color;
             }
             catch(System.Exception er)
             {
