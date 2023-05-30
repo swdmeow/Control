@@ -69,7 +69,7 @@ namespace Control.CustomItems
             CandyKindID.Blue,
             CandyKindID.Red
         };
-        private string[] Events { get; } = new string[] { "teleport", "boom", "ToZombie", "betrayTeam", "speed", "candy", "flash", "size", "slow", "poop" };
+        private string[] Events { get; } = new string[] { "teleport", "boom", "ToZombie", "betrayTeam", "speed", "candy", "flash", "size", "slow", "poop", "sounds" };
         public override SpawnProperties SpawnProperties { get; set; } = null;
         private void OnFlippingCoin(FlippingCoinEventArgs ev)
         {
@@ -81,7 +81,6 @@ namespace Control.CustomItems
 
                 if (needTo == "teleport")
                 {
-
                     ev.Player.EnableEffect(EffectType.Flashed, 1f);
 
                     Timing.CallDelayed(0.1f, () =>
@@ -145,16 +144,16 @@ namespace Control.CustomItems
                     else
                     {
                         ev.Player.Role.Set(PlayerRoles.RoleTypeId.NtfPrivate, PlayerRoles.RoleSpawnFlags.None);
-                    }
+                    } // 1
                 }
                 if (needTo == "boom")
                 {
                     ev.Player.CurrentItem.Destroy();
 
-                    ExplosiveGrenade grenade = (ExplosiveGrenade)Item.Create(ItemType.GrenadeHE, Server.Host);
+                    ExplosiveGrenade grenade = (ExplosiveGrenade)Item.Create(ItemType.GrenadeHE, ev.Player);
 
                     grenade.FuseTime = 0.2f;
-                    grenade.ScpDamageMultiplier = 666f;
+                    grenade.ScpDamageMultiplier = 55;
 
                     grenade.SpawnActive(ev.Player.Position + Vector3.up);
                 }
@@ -197,6 +196,16 @@ namespace Control.CustomItems
                         return;
                     }
                     CustomRole.Get((uint)8).AddRole(ev.Player);
+                }
+                if(needTo == "sounds")
+                {
+                    ev.Player.CurrentItem.Destroy();
+
+                    Map.PlayAmbientSound();
+                    Map.PlayAmbientSound();
+                    Map.PlayAmbientSound();
+                    Map.PlayAmbientSound();
+                    Map.PlayAmbientSound();
                 }
             }
         }

@@ -41,7 +41,6 @@ namespace Control.CustomItems
         {
             Exiled.Events.Handlers.Player.UsingItem -= OnUsingItem;
             Exiled.Events.Handlers.Player.Dying -= OnDying;
-
             base.UnsubscribeEvents();
         }
         private void OnUsingItem(UsingItemEventArgs ev)
@@ -54,7 +53,7 @@ namespace Control.CustomItems
 
         private void OnDying(DyingEventArgs ev)
         {
-            foreach(Item item in ev.Player.Items)
+            foreach (Item item in ev.Player.Items)
             {
                 if (CustomItem.Get((uint)5).Check(item))
                 {
@@ -63,7 +62,7 @@ namespace Control.CustomItems
                     Res.DiedWithSCP500R.Add(ev.Player);
                     Res.RoleDiedWithSCP500R.Add(ev.Player.Role.Type);
 
-                    foreach(StatusEffectBase eff in ev.Player.ActiveEffects)
+                    foreach (StatusEffectBase eff in ev.Player.ActiveEffects)
                     {
                         if (eff.name == "CardiacArrest") continue;
 

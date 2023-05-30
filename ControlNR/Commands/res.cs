@@ -14,6 +14,7 @@
     using CustomPlayerEffects;
     using UnityEngine;
     using MEC;
+    using Exiled.API.Enums;
 
     [CommandHandler(typeof(ClientCommandHandler))]
     public class Res : ICommand
@@ -49,8 +50,29 @@
                         player.Position = Room.Get(Exiled.API.Enums.RoomType.Surface).transform.position + Vector3.up;
                     });
                 }
+                if(player.CurrentRoom.Type == RoomType.HczTestRoom)
+                {
+                    Timing.CallDelayed(0.1f, () =>
+                    {
+                        player.Position = Room.Get(Exiled.API.Enums.RoomType.HczTestRoom).transform.position + Vector3.up;
+                    });
+                }
+                if (player.CurrentRoom.Type == RoomType.HczArmory)
+                {
+                    Timing.CallDelayed(0.1f, () =>
+                    {
+                        player.Position = Room.Get(Exiled.API.Enums.RoomType.HczArmory).transform.position + Vector3.up;
+                    });
+                }
+                if (player.CurrentRoom.Type == RoomType.Hcz106)
+                {
+                    Timing.CallDelayed(0.1f, () =>
+                    {
+                        player.Position = Room.Get(Exiled.API.Enums.RoomType.Hcz106).transform.position + Vector3.up;
+                    });
+                }
 
-                foreach(StatusEffectBase effect in StatusEffectBase)
+                foreach (StatusEffectBase effect in StatusEffectBase)
                 {
                     player.EnableEffect(effect, effect.Duration);
                 }

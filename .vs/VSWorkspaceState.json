@@ -2,15 +2,10 @@
   "ExpandedNodes": [
     "",
     "\\ControlNR",
-    "\\ControlNR\\CustomItems",
     "\\ControlNR\\Events",
     "\\ControlNR\\Events\\Handlers",
-    "\\ControlNR\\Patches",
-    "\\RainbowTags",
-    "\\RainbowTags\\Components",
-    "\\TextTags",
-    "\\TextTags\\RainbowTags"
+    "\\XPSystem"
   ],
-  "SelectedNode": "\\ControlNR\\Events\\Handlers\\ServerHandler.cs",
+  "SelectedNode": "\\Control.sln",
   "PreviewInSolutionExplorer": false
 }

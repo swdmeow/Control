@@ -40,6 +40,12 @@
                 return false;
             }
 
+            if (player.Role.Type == RoleTypeId.Scp0492)
+            {
+                response = "Иди нахуй..";
+                return false;
+            }
+
             RoleTypeId role;
 
             switch(arguments.At(0))

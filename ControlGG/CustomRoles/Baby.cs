@@ -57,15 +57,18 @@ namespace Control.CustomRoles
         {
             player.Scale = new Vector3(0.6f, 0.6f, 0.6f);
 
-            foreach(Item item in player.Items)
+            foreach (Item item in player.Items)
             {
-                if(item is Firearm)
+                if (item is Firearm)
                 {
-                    if(item.Type == ItemType.GunCOM15 || item.Type == ItemType.GunCOM18)
+                    if (item.Type == ItemType.GunCOM15 || item.Type == ItemType.GunCOM18)
                     {
                         continue;
                     }
-                    player.DropItem(item);
+                    player.RemoveItem(item);
+                    player.AddItem(ItemType.GunCOM18);
+
+                    return;
                 }
             }
 
@@ -82,9 +85,9 @@ namespace Control.CustomRoles
         {
             if (CustomRole.Get((uint)8).Check(ev.Player))
             {
-                if(ev.Pickup is FirearmPickup)
+                if (ev.Pickup is FirearmPickup)
                 {
-                    if(ev.Pickup.Type == ItemType.GunCOM15 || ev.Pickup.Type == ItemType.GunCOM18)
+                    if (ev.Pickup.Type == ItemType.GunCOM15 || ev.Pickup.Type == ItemType.GunCOM18)
                     {
                         return;
                     }
@@ -108,6 +111,8 @@ namespace Control.CustomRoles
                 if (ev.Player.CurrentItem.Type == ItemType.GunCOM15 || ev.Player.CurrentItem.Type == ItemType.GunCOM18) return;
 
                 ev.IsAllowed = false;
+                ev.Player.ShowHint("Вы не можете использовать тяжёлое оружие играя за ребёнка..");
+                ev.Player.DropItem(ev.Player.CurrentItem);
             }
         }
         protected override void UnsubscribeEvents()
@@ -191,10 +196,6 @@ namespace Control.CustomRoles
             RoleAdded(player);
             player.UniqueRole = Name;
             player.TryAddCustomRoleFriendlyFire(Name, CustomRoleFFMultiplier);
-            if (string.IsNullOrEmpty(ConsoleMessage))
-            {
-                return;
-            }
             // Delete stringBuilder to not cause console message
         }
     }

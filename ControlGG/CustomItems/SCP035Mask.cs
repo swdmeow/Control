@@ -12,7 +12,6 @@ using Exiled.Loader;
 using InventorySystem.Items.Coin;
 using MEC;
 using Mirror;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.ExceptionServices;
@@ -30,13 +29,47 @@ namespace Control.CustomItems
         public override float Weight { get; set; }
         public override SpawnProperties SpawnProperties { get; set; } = null;
 
-        public List<(ItemType a, int b)> Types = new()
+        private List<RoomType> _rooms = new List<RoomType>()
         {
-            new(ItemType.Painkillers, 10),
-            new(ItemType.Coin, 10),
-            new(ItemType.Medkit, 20),
-            new(ItemType.Adrenaline, 30),
-            new(ItemType.Coin, 100),
+            RoomType.Surface,
+            RoomType.Hcz939,
+            RoomType.Hcz106,
+            RoomType.HczTCross,
+            RoomType.EzCheckpointHallway,
+            RoomType.EzConference,
+            RoomType.EzCrossing,
+            RoomType.LczToilets,
+            RoomType.LczTCross,
+            RoomType.HczArmory,
+            RoomType.LczArmory,
+            RoomType.HczElevatorA,
+            RoomType.LczCafe,
+            RoomType.Lcz330,
+            RoomType.Lcz914,
+            RoomType.LczAirlock,
+            RoomType.LczClassDSpawn,
+            RoomType.LczCheckpointA,
+            RoomType.LczCheckpointB,
+            RoomType.HczHid,
+            RoomType.EzCafeteria,
+            RoomType.EzCheckpointHallway,
+            RoomType.EzGateA,
+            RoomType.EzGateB
+        };
+
+        public List<ItemType> Types = new List<ItemType>()
+        {
+            ItemType.Painkillers,
+            ItemType.Coin,
+            ItemType.Medkit,
+            ItemType.Adrenaline,
+            ItemType.Coin,
+            ItemType.KeycardJanitor,
+            ItemType.KeycardO5,
+            ItemType.KeycardZoneManager,
+            ItemType.Flashlight,
+            ItemType.SCP244b,
+            ItemType.SCP500,
         };
         public override void Give(Exiled.API.Features.Player player, bool displayMessage = true)
         {
@@ -51,16 +84,7 @@ namespace Control.CustomItems
         }
         private ItemType RandomType()
         {
-            if (Types.Count == 1)
-                return Types[0].a;
-
-            foreach ((ItemType type, int chance) in Types)
-            {
-                if (Loader.Random.Next(100) <= chance)
-                    return type;
-            }
-
-            return Type;
+            return Types.RandomItem();
         }
         protected override void OnAcquired(Exiled.API.Features.Player player, bool DisplayMessage)
         {
@@ -81,6 +105,14 @@ namespace Control.CustomItems
 
                 ev.Pickup.Destroy();
             }
+        }
+        protected override void SubscribeEvents()
+        {
+            base.SubscribeEvents();
+        } // 1
+        protected override void UnsubscribeEvents()
+        {
+            base.UnsubscribeEvents();
         }
     }
 }

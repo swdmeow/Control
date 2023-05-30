@@ -48,10 +48,6 @@
                     pl.ShowHint("<size=75%>Вы можете поменять свою игровую роль на другой SCP-объект<br>Используя команду .force [номер SCP]<br>Эта команда действует до 2-х минут раунда</size>", 30);
                 }
             });
-
-            if (HintExtensions.WriteHintCoroutineHandle == null || !HintExtensions.WriteHintCoroutineHandle.Value.IsValid || !HintExtensions.WriteHintCoroutineHandle.Value.IsRunning)
-                HintExtensions.WriteHintCoroutineHandle = Timing.RunCoroutine(HintExtensions.WriteHint());
-
         }
         private void OnRespawningTeam(RespawningTeamEventArgs ev)
         {
@@ -79,7 +75,6 @@
 
                 // Disable it when exiled add it lmao
                 Scp049Role.TurnedPlayers.Clear();
-
 
                 Round.IsLobbyLocked = false;
                 Res.DiedWithSCP500R.Clear();
@@ -150,7 +145,10 @@
                 ragdoll.Destroy();
             }
 
-            Respawn.ForceWave(SpawnableTeamType.NineTailedFox, false);
+            Timing.CallDelayed(0.1f, () =>
+            {
+                Respawn.ForceWave(SpawnableTeamType.NineTailedFox, false);
+            });
 
             try
             {

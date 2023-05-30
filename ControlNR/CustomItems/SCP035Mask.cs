@@ -115,7 +115,7 @@ namespace Control.CustomItems
             Exiled.Events.Handlers.Server.RoundStarted += OnRoundStarted;
 
             base.SubscribeEvents();
-        }
+        } // 1
         protected override void UnsubscribeEvents()
         {
             Exiled.Events.Handlers.Server.RoundStarted -= OnRoundStarted;

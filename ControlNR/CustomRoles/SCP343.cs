@@ -106,6 +106,7 @@ namespace Control.CustomRoles
         private void OnHurting(HurtingEventArgs ev)
         {
             if (ev.Attacker == null) return;
+            if (ev.Attacker == ev.Player) return;
 
             if (CustomRole.Get((uint)2).Check(ev.Attacker))
             {
@@ -119,7 +120,7 @@ namespace Control.CustomRoles
                         return;
                     }
 
-                    CooldownRevolver = 180;
+                    CooldownRevolver = 120;
 
                     PlayerExtensions.ShowCustomHint(ev.Player, $"Вы были оглушены игроком {ev.Attacker.Nickname}", 2);
 
@@ -334,7 +335,7 @@ namespace Control.CustomRoles
                         PlayerExtensions.ShowCustomHint(ev.Player, $"Вы вылечили игрока {pl.Nickname}", 1);
                         PlayerExtensions.ShowCustomHint(pl, $"Вас вылечил SCP-343 ({ev.Player.Nickname})", 1);
 
-                        CooldownPainkillers = 160;
+                        CooldownPainkillers = 60;
                     }
                     else
                     {
@@ -352,7 +353,7 @@ namespace Control.CustomRoles
                             PlayerExtensions.ShowCustomHint(ev.Player, $"Вы вылечили игрока {pl.Nickname}", 1);
                             PlayerExtensions.ShowCustomHint(pl, $"Вас вылечил SCP-343 ({ev.Player.Nickname})", 1);
 
-                            CooldownMedkit = 160;
+                            CooldownMedkit = 120;
                         }
                     }
                     else
@@ -376,7 +377,7 @@ namespace Control.CustomRoles
                         {
                             ragdoll.Owner.Role.Set(ragdoll.Role, Exiled.API.Enums.SpawnReason.Revived, RoleSpawnFlags.None);
                             ragdoll.Owner.Position = ragdoll.Position + Vector3.up;
-                            CooldownSCP500 = 500;
+                            CooldownSCP500 = 444;
                             PlayerExtensions.ShowCustomHint(ev.Player, $"Вы восскресили игрока {ragdoll.Owner.Nickname}..", 1);
                             PlayerExtensions.ShowCustomHint(ragdoll.Owner, $"Вас восскресил игрок {ev.Player.Nickname}..", 1);
 

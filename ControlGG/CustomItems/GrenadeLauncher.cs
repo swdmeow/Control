@@ -1,4 +1,3 @@
-
 using Exiled.API.Enums;
 using Exiled.API.Extensions;
 using Exiled.API.Features;
@@ -10,13 +9,17 @@ using Exiled.API.Interfaces;
 using Exiled.CustomItems.API.Features;
 using Exiled.Events.EventArgs.Player;
 using Exiled.Loader;
-using Hints;
+using InventorySystem.Items.Firearms.Attachments;
+using InventorySystem.Items.Firearms.BasicMessages;
 using MEC;
+using PluginAPI.Enums;
+using PluginAPI.Events;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
+using Utils.Networking;
 
 namespace Control.CustomItems
 {
@@ -37,10 +40,10 @@ namespace Control.CustomItems
             if (!CustomItem.Get((uint)4).Check(ev.Player.CurrentItem)) return;
 
             ev.IsAllowed = false;
-            
+
             var FireItem = ev.Player.CurrentItem as Firearm;
 
-            if(FireItem.Ammo + 1 > 0)
+            if (FireItem.Ammo + 1 > 0)
             {
                 ev.Player.ThrowGrenade(Exiled.API.Enums.ProjectileType.FragGrenade);
                 FireItem.Ammo--;
@@ -62,7 +65,6 @@ namespace Control.CustomItems
             Exiled.Events.Handlers.Player.Shooting -= OnShooting;
             Exiled.Events.Handlers.Player.ReloadingWeapon -= OnReloading;
             Exiled.Events.Handlers.Player.UnloadingWeapon -= OnUnloadingWeapon;
-
             base.UnsubscribeEvents();
         }
 
@@ -70,27 +72,21 @@ namespace Control.CustomItems
         {
             if (!CustomItem.Get((uint)4).Check(ev.Player.CurrentItem)) return;
 
-            if (CooldownIsEnable || ev.Firearm.Ammo >= 1) { ev.IsAllowed = false; return; }
+            ev.IsAllowed = false;
 
+            if (CooldownIsEnable == true || ev.Firearm.Ammo >= 1) return;
+
+            new RequestMessage(ev.Firearm.Serial, RequestType.Reload).SendToAuthenticated();
+
+            ev.Firearm.Ammo = 1;
             CooldownIsEnable = true;
-
-            Firearm firearm = ev.Firearm;
-
-            Timing.CallDelayed(2.3f, () => { firearm.Ammo = 1;  });
-
-            Timing.RunCoroutine(_DelayedCall());
+            Timing.CallDelayed(30f, () => CooldownIsEnable = false);
         }
         private void OnUnloadingWeapon(UnloadingWeaponEventArgs ev)
         {
             if (!CustomItem.Get((uint)4).Check(ev.Player.CurrentItem)) return;
 
             ev.IsAllowed = false;
-        }
-        private IEnumerator<float> _DelayedCall()
-        {
-            yield return Timing.WaitForSeconds(30f);
-
-            CooldownIsEnable = false;
         }
     }
 }

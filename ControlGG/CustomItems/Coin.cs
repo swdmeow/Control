@@ -3,15 +3,19 @@ using Exiled.API.Features;
 using Exiled.API.Features.Attributes;
 using Exiled.API.Features.Items;
 using Exiled.API.Features.Pickups;
+using Exiled.API.Features.Pickups.Projectiles;
 using Exiled.API.Features.Roles;
 using Exiled.API.Features.Spawn;
 using Exiled.CustomItems.API.Features;
 using Exiled.CustomRoles.API.Features;
 using Exiled.Events.EventArgs.Player;
 using Exiled.Loader;
+using Hazards;
 using InventorySystem.Items.Usables.Scp330;
 using MEC;
 using Mirror;
+using PlayerRoles;
+using PlayerRoles.PlayableScps.Scp173;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.ExceptionServices;
@@ -65,7 +69,7 @@ namespace Control.CustomItems
             CandyKindID.Blue,
             CandyKindID.Red
         };
-        private string[] Events { get; } = new string[] { "teleport", "boom", "ToZombie", "betrayTeam", "speed", "candy", "flash", "size" };
+        private string[] Events { get; } = new string[] { "teleport", "boom", "ToZombie", "betrayTeam", "speed", "candy", "flash", "size", "slow", "poop" };
         public override SpawnProperties SpawnProperties { get; set; } = null;
         private void OnFlippingCoin(FlippingCoinEventArgs ev)
         {
@@ -82,7 +86,7 @@ namespace Control.CustomItems
 
                     Timing.CallDelayed(0.1f, () =>
                     {
-                        if (!Warhead.IsDetonated) ev.Player.Position = Room.Get(_rooms.ElementAt(new System.Random().Next(0, _rooms.Count()))).transform.position + Vector3.up;
+                        if (!Warhead.IsDetonated && !Warhead.IsInProgress) ev.Player.Position = Room.Get(_rooms.ElementAt(new System.Random().Next(0, _rooms.Count()))).transform.position + Vector3.up;
 
                         else
                         {
@@ -98,11 +102,34 @@ namespace Control.CustomItems
 
                     ev.Player.EnableEffect(EffectType.MovementBoost, 45);
 
-                    ev.Player.GetEffect(EffectType.MovementBoost).Intensity = 255;
+                    ev.Player.GetEffect(EffectType.MovementBoost).Intensity = 150;
+                }
+                if (needTo == "poop")
+                {
+                    ev.Player.CurrentItem.Destroy();
+
+                    Map.PlaceTantrum(ev.Player.Position);
+                }
+
+                if (needTo == "slow")
+                {
+                    ev.Player.CurrentItem.Destroy();
+
+                    ev.Player.EnableEffect(EffectType.Stained, 45);
+                    ev.Player.EnableEffect(EffectType.SinkHole, 20);
+                    ev.Player.EnableEffect(EffectType.Blinded, 15);
                 }
                 if (needTo == "ToZombie")
                 {
                     ev.Player.CurrentItem.Destroy();
+
+                    if (CustomRole.Get((uint)1).Check(ev.Player))
+                    {
+                        // lmao..
+                        ev.Player.EnableEffect(EffectType.SeveredHands, 1f);
+
+                        return;
+                    }
 
                     ev.Player.Role.Set(PlayerRoles.RoleTypeId.Scp0492);
                 }
@@ -111,23 +138,23 @@ namespace Control.CustomItems
                 {
                     ev.Player.CurrentItem.Destroy();
 
-                    if (ev.Player.Role.Team == PlayerRoles.Team.FoundationForces)
+                    if (ev.Player.Role.Team == PlayerRoles.Team.FoundationForces || ev.Player.Role == RoleTypeId.Scientist)
                     {
                         ev.Player.Role.Set(PlayerRoles.RoleTypeId.ChaosConscript, PlayerRoles.RoleSpawnFlags.None);
                     }
                     else
                     {
                         ev.Player.Role.Set(PlayerRoles.RoleTypeId.NtfPrivate, PlayerRoles.RoleSpawnFlags.None);
-                    }
+                    } // 1
                 }
                 if (needTo == "boom")
                 {
                     ev.Player.CurrentItem.Destroy();
 
-                    ExplosiveGrenade grenade = (ExplosiveGrenade)Item.Create(ItemType.GrenadeHE, ev.Player);
+                    ExplosiveGrenade grenade = (ExplosiveGrenade)Item.Create(ItemType.GrenadeHE, Server.Host);
 
                     grenade.FuseTime = 0.2f;
-                    grenade.ScpDamageMultiplier = 10.0f;
+                    grenade.ScpDamageMultiplier = 666f;
 
                     grenade.SpawnActive(ev.Player.Position + Vector3.up);
                 }
@@ -163,6 +190,12 @@ namespace Control.CustomItems
                 {
                     ev.Player.CurrentItem.Destroy();
 
+                    if (CustomRole.Get((uint)8).Check(ev.Player))
+                    {
+                        Pickup.CreateAndSpawn(ItemType.GrenadeHE, ev.Player.Position, new Quaternion());
+
+                        return;
+                    }
                     CustomRole.Get((uint)8).AddRole(ev.Player);
                 }
             }
@@ -170,31 +203,29 @@ namespace Control.CustomItems
         protected override void SubscribeEvents()
         {
             Exiled.Events.Handlers.Player.FlippingCoin += OnFlippingCoin;
-
             base.SubscribeEvents();
         }
         protected override void UnsubscribeEvents()
         {
             Exiled.Events.Handlers.Player.FlippingCoin -= OnFlippingCoin;
-
             base.UnsubscribeEvents();
         }
 
         public static IEnumerator<float> EveryoneCandy()
         {
             int candy = 0;
-            while (candy <= 10)
+            while (candy <= 15)
             {
                 foreach (Player pl in Player.List.Where(x => x.IsAlive && !x.IsScp))
                 {
+                    if (CustomRole.Get((uint)2).Check(pl)) continue;
+
                     pl.TryAddCandy(_candyID.RandomItem());
 
                     Scp330 bag_candy = (Scp330)Item.Create(ItemType.SCP330);
                     CandyKindID _candyId = _candyID.RandomItem();
                     bag_candy.AddCandy(_candyId);
                     Pickup pickup = bag_candy.CreatePickup(pl.Position);
-
-                    bag_candy.DropCandy(_candyId);
                 }
 
                 candy++;

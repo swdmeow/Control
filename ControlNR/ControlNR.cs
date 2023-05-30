@@ -8,6 +8,7 @@ namespace Ñontrol
     using HarmonyLib;
     using System;
     using MEC;
+    using Control.Extensions;
 
     public class ControlNR : Plugin<Config>
     {
@@ -41,6 +42,9 @@ namespace Ñontrol
 
             if (Control.CustomRoles.SCP343.HintCooldownCoroutineHandle == null || !Control.CustomRoles.SCP343.HintCooldownCoroutineHandle.Value.IsValid || !Control.CustomRoles.SCP343.HintCooldownCoroutineHandle.Value.IsRunning)
                 Control.CustomRoles.SCP343.HintCooldownCoroutineHandle = Timing.RunCoroutine(Control.CustomRoles.SCP343.HintCoroutine());
+
+            if (HintExtensions.WriteHintCoroutineHandle == null || !HintExtensions.WriteHintCoroutineHandle.Value.IsValid || !HintExtensions.WriteHintCoroutineHandle.Value.IsRunning)
+                HintExtensions.WriteHintCoroutineHandle = Timing.RunCoroutine(HintExtensions.WriteHint());
 
             harmony.PatchAll();
             

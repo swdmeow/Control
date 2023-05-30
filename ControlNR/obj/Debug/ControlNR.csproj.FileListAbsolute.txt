@@ -196,7 +196,6 @@ D:\github\Control\ControlNR\Release\ControlNR.pdb
 D:\github\Control\ControlNR\Release\Assembly-CSharp-firstpass.dll
 D:\github\Control\ControlNR\Release\Caress.dll
 D:\github\Control\ControlNR\Release\CommandSystem.Core.dll
-D:\github\Control\ControlNR\Release\LiteDB.dll
 D:\github\Control\ControlNR\Release\Mirror.Components.dll
 D:\github\Control\ControlNR\Release\Mirror.dll
 D:\github\Control\ControlNR\Release\Mono.Posix.dll
@@ -258,3 +257,5 @@ D:\github\Control\ControlNR\Release\Exiled.Updater.dll
 D:\github\Control\ControlNR\Release\Exiled.API.dll
 D:\github\Control\ControlNR\Release\Exiled.Loader.dll
 D:\github\Control\ControlNR\Release\YamlDotNet.dll
+D:\github\Control\ControlNR\Release\0Harmony.dll
+D:\github\Control\ControlNR\Release\LiteDB.dll

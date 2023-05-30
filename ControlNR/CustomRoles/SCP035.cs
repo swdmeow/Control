@@ -48,6 +48,7 @@ namespace Control.CustomRoles
 
         private void OnHurting(HurtingEventArgs ev)
         {
+
             if (ev.Attacker == null) return;
             if (CustomRole.Get((uint)2).Check(ev.Player) || CustomRole.Get((uint)2).Check(ev.Attacker)) return;
 
@@ -122,19 +123,22 @@ namespace Control.CustomRoles
                 ev.Attacker.DisplayNickname = ev.Player.Nickname;
 
                 ev.Attacker.DisableAllEffects();
-                foreach (StatusEffectBase effect in ev.Player.ActiveEffects)
+                if (ev.Player.ActiveEffects.Count() != 0)
                 {
-                    ev.Attacker.EnableEffect(effect, effect.TimeLeft);
+                    foreach (StatusEffectBase effect in ev.Player.ActiveEffects)
+                    {
+                        ev.Attacker.EnableEffect(effect, effect.TimeLeft);
+                    }
                 }
 
                 bool AllowedToTp = true;
                 Vector3 pos = ev.Player.Position;
 
                 if (ev.DamageHandler.Type == DamageType.Explosion) AllowedToTp = false;
-                
+
                 Timing.CallDelayed(0.1f, () =>
                 {
-                    if(AllowedToTp == true) ev.Attacker.Teleport(pos);
+                    if (AllowedToTp == true) ev.Attacker.Teleport(pos);
                 });
             }
         }

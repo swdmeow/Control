@@ -59,6 +59,12 @@ namespace Control.Patches
 
                 if (player != null)
                 {
+                    if (args[0].ToLower() == "hidetag")
+                    {
+                        sender.Respond("Зачем..");
+                        return false;
+                    }
+
                     if (player.GroupName.StartsWith("d1") || player.GroupName.StartsWith("d2"))
                     {
                         string UserID = player.UserId;
@@ -145,6 +151,12 @@ namespace Control.Patches
 
                                     if (Player.List.Where(x => x.IsHuman).Count() / Player.List.Where(x => x.IsScp)?.Count() <= 10)
                                     {
+                                        if (Player.List.Where(x => x.Role == role).FirstOrDefault() != null)
+                                        {
+                                            sender.RaReply($"ControlNR#Данный SCP уже есть в раунде..", Success, true, string.Empty);
+                                            return false;
+                                        }
+
                                         Success = true;
 
                                         log.cooldownRole = true;
@@ -362,6 +374,12 @@ namespace Control.Patches
 
                                     if (Player.List.Where(x => x.IsHuman).Count() / Player.List.Where(x => x.IsScp)?.Count() <= 10)
                                     {
+                                        if (Player.List.Where(x => x.Role == role).FirstOrDefault() != null)
+                                        {
+                                            sender.RaReply($"ControlNR#Данный SCP уже есть в раунде..", Success, true, string.Empty);
+                                            return false;
+                                        }
+
                                         Success = true;
 
                                         log.cooldownRole = true;
@@ -454,6 +472,7 @@ namespace Control.Patches
                                             case "50":
                                             case "48":
                                                 {
+                                                    Log.Info($"Catch give event (VIP+). Item {args[2].Substring(0, 2)}. Allowed = false");
                                                     Success = false;
                                                     sender.RaReply($"ControlNR#Этот предмет нельзя выдать..", Success, true, string.Empty);
                                                     return Allowed;
@@ -469,10 +488,12 @@ namespace Control.Patches
                                             case "33":
                                             case "35":
                                                 {
+                                                    Log.Info($"Catch give event (VIP+). Item {args[2].Substring(0, 2)}. Allowed = true");
                                                     break;
                                                 }
                                             default:
                                                 {
+                                                    Log.Info($"Catch give event (VIP+). Item {args[2].Substring(0, 2)}. Allowed = false");
                                                     Success = false;
                                                     sender.RaReply($"ControlNR#Этот предмет нельзя выдать до 3-ех минут раунда..", Success, true, string.Empty);
                                                     return Allowed;
