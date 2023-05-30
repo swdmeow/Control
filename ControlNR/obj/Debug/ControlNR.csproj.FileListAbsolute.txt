@@ -259,3 +259,5 @@ D:\github\Control\ControlNR\Release\Exiled.Loader.dll
 D:\github\Control\ControlNR\Release\YamlDotNet.dll
 D:\github\Control\ControlNR\Release\0Harmony.dll
 D:\github\Control\ControlNR\Release\LiteDB.dll
+D:\github\Control\ControlNR\Release\MapEditorReborn.dll
+D:\github\Control\ControlNR\Release\UnityEngine.AssetBundleModule.dll

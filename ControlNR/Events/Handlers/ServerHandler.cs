@@ -15,6 +15,9 @@
     using ServerEvent = Exiled.Events.Handlers.Server;
     using Exiled.API.Features.Roles;
     using Exiled.API.Features.Pickups;
+    using Mirror;
+    using System.Data;
+    using System.Collections.Generic;
 
     internal sealed class ServerHandler
     {
@@ -23,6 +26,14 @@
         private bool isWarheadCassie1Minute = false;
         private bool isWarheadStart = false;
         public static int CassieDestroyedLVL = 0;
+        public static bool TickRoundEndDisable = false;
+
+        public static List<RoleTypeId> RandomRoles = new List<RoleTypeId>()
+        {
+            RoleTypeId.ClassD,
+            RoleTypeId.Scientist,
+            RoleTypeId.FacilityGuard,
+        };
         public ServerHandler()
         {
             ServerEvent.WaitingForPlayers += OnWaitingForPlayers;
@@ -43,9 +54,45 @@
         {
             Timing.CallDelayed(0.1f, () =>
             {
-                foreach (Player pl in Player.List.Where(x => x.IsScp))
+                foreach (Player pl in Player.List.Where(x => x.IsScp && x.Role.Type != RoleTypeId.Scp079))
                 {
-                    pl.ShowHint("<size=75%>Вы можете поменять свою игровую роль на другой SCP-объект<br>Используя команду .force [номер SCP]<br>Эта команда действует до 2-х минут раунда</size>", 30);
+                    pl.ShowHint("<size=75%>Вы можете поменять свою игровую роль на другой SCP-объект<br>Используя команду .force [номер SCP]<br>Эта команда действует до 2-х минут раунда</size>", 30f);
+                }
+
+                // 079 remove
+
+                Player player = Player.List.Where(x => x.Role == RoleTypeId.Scp079).FirstOrDefault();
+
+                if (player != null)
+                {
+                    player.Role.Is(out Scp079Role scp079Role);
+
+                    scp079Role.LoseSignal(30f);
+
+                    player.ShowHint("<br>У вас есть 30 секунд на перевод на другой SCP-объект (через команду .force).\nВ ином случае вы будуете переведены в другой SCP/человека автоматически", 30f);
+
+                    Timing.CallDelayed(30f, () =>
+                    {
+                        if(player.Role.Type == RoleTypeId.Scp079)
+                        {
+                            if (Player.List.Where(x => x.IsScp).Count() == 5)
+                            {
+                                player.Role.Set(RandomRoles.RandomItem(), Exiled.API.Enums.SpawnReason.LateJoin);
+                            } else
+                            {
+                                if (Player.List.Where(x => x.Role == RoleTypeId.Scp173).FirstOrDefault() == null) player.Role.Set(RoleTypeId.Scp173, Exiled.API.Enums.SpawnReason.LateJoin);
+                                else if (Player.List.Where(x => x.Role == RoleTypeId.Scp049).FirstOrDefault() == null) player.Role.Set(RoleTypeId.Scp049, Exiled.API.Enums.SpawnReason.LateJoin);
+                                else if(Player.List.Where(x => x.Role == RoleTypeId.Scp939).FirstOrDefault() == null) player.Role.Set(RoleTypeId.Scp939, Exiled.API.Enums.SpawnReason.LateJoin);
+                                else if(Player.List.Where(x => x.Role == RoleTypeId.Scp106).FirstOrDefault() == null) player.Role.Set(RoleTypeId.Scp106, Exiled.API.Enums.SpawnReason.LateJoin);
+                                else if(Player.List.Where(x => x.Role == RoleTypeId.Scp096).FirstOrDefault() == null) player.Role.Set(RoleTypeId.Scp096, Exiled.API.Enums.SpawnReason.LateJoin);
+                                else
+                                {
+                                    player.Role.Set(RandomRoles.RandomItem(), Exiled.API.Enums.SpawnReason.LateJoin);
+                                }
+                            }
+                        }
+                        TickRoundEndDisable = true;
+                    });
                 }
             });
         }
@@ -87,6 +134,16 @@
                 PlayerExtensions._hintQueue.Clear();
                 
                 ControlNR.Singleton.db.DropCollection("VIPPlayers");
+
+                Room Lcz330 = Room.Get(Exiled.API.Enums.RoomType.Lcz330);
+
+                Log.Info("Spawning schematic..");
+                MapEditorReborn.API.Features.ObjectSpawner.SpawnSchematic("maska", Lcz330.Position, Lcz330.transform.rotation);
+
+                if (Lcz330)
+                {
+                    NetworkBehaviour.Destroy(Lcz330.gameObject);
+                }
             }
             catch (System.Exception ex)
             {
@@ -118,16 +175,21 @@
                 //Cassie.Message("Детонация альфа-боеголовки будет запущена через 1 минуту.. <color=#ffffff00>h Alpha warhead detonation will be started in t minute 1 minute ");
             }
 
-            bool mtf = Player.List.Where(p => (p.Role.Team == Team.FoundationForces || p.Role == RoleTypeId.Scientist) && !CustomRole.Get((uint)1).Check(p)).Count() > 0;
-            bool chaos = Player.List.Where(p => (p.Role.Team == Team.ChaosInsurgency || p.Role == RoleTypeId.ClassD) && !CustomRole.Get((uint)1).Check(p) && !CustomRole.Get((uint)2).Check(p)).Count() > 0;
-            bool scps = Player.List.Where(p => p.Role.Team == Team.SCPs || CustomRole.Get((uint)1).Check(p)).Count() > 0;
+            if (TickRoundEndDisable != true)
+            {
+                bool mtf = Player.List.Where(p => (p.Role.Team == Team.FoundationForces || p.Role == RoleTypeId.Scientist) && !CustomRole.Get((uint)1).Check(p)).Count() > 0;
+                bool chaos = Player.List.Where(p => (p.Role.Team == Team.ChaosInsurgency || p.Role == RoleTypeId.ClassD) && !CustomRole.Get((uint)1).Check(p) && !CustomRole.Get((uint)2).Check(p)).Count() > 0;
+                bool scps = Player.List.Where(p => p.Role.Team == Team.SCPs || CustomRole.Get((uint)1).Check(p)).Count() > 0;
 
-            if (!mtf && chaos && !scps) { ev.IsRoundEnded = true; Log.Info("1.2 (Chaos): Any team left only"); }
-            else if (mtf && !chaos && !scps) { ev.IsRoundEnded = true; Log.Info("1.3 (MTF): Any team left only"); }
-            else if (!mtf && !chaos && scps) { ev.IsRoundEnded = true; Log.Info("1.4 (SCPs): Any team left only"); }
+                if (!mtf && chaos && !scps) { ev.IsRoundEnded = true; Log.Info("1.2 (Chaos): Any team left only"); }
+                else if (mtf && !chaos && !scps) { ev.IsRoundEnded = true; Log.Info("1.3 (MTF): Any team left only"); }
+                else if (!mtf && !chaos && scps) { ev.IsRoundEnded = true; Log.Info("1.4 (SCPs): Any team left only"); }
 
-            else if ((chaos || mtf) && scps) { ev.IsRoundEnded = false; Log.Debug("2: SCPs and MTF || CHAOS || CLASSD"); }
-            else if (mtf && chaos) { ev.IsRoundEnded = false; Log.Debug("3: Chaos & MTF"); }
+                else if ((chaos || mtf) && scps) { ev.IsRoundEnded = false; Log.Debug("2: SCPs and MTF || CHAOS || CLASSD"); }
+                else if (mtf && chaos) { ev.IsRoundEnded = false; Log.Debug("3: Chaos & MTF"); }
+            }
+
+            if(TickRoundEndDisable == true) TickRoundEndDisable = false;
         }
         private void OnRoundEnded(RoundEndedEventArgs ev)
         {

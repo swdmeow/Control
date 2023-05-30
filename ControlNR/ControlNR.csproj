@@ -98,6 +98,10 @@
     <Reference Include="LiteDB">
       <HintPath>C:\Users\swd\AppData\Roaming\EXILED\Plugins\dependencies\LiteDB.dll</HintPath>
     </Reference>
+    <Reference Include="MapEditorReborn, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Users\swd\Desktop\d\MapEditorReborn.dll</HintPath>
+    </Reference>
     <Reference Include="Mirror, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>C:\Users\swd\Desktop\d\Mirror.dll</HintPath>
     </Reference>

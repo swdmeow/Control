@@ -18,13 +18,14 @@
         public string Command { get; } = "force";
         public string[] Aliases { get; } = new string[] { };
         public string Description { get; } = "Команда для перевода в другой класс SCP..";
+
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
             Player player = Player.Get(sender);
 
-            if (arguments.At(0) == null || !int.TryParse(arguments.At(0), out int _x))
+            if (arguments.At(0) == null || !int.TryParse(arguments.At(0), out int _x) && arguments.At(0) != "human")
             {
-                response = "Использование .force [номер SCP]";
+                response = "Использование .force [номер SCP/human]";
                 return false;
             }
 
@@ -48,7 +49,7 @@
 
             RoleTypeId role;
 
-            switch(arguments.At(0))
+            switch (arguments.At(0))
             {
                 case "173":
                     role = RoleTypeId.Scp173;
@@ -66,7 +67,12 @@
                     role = RoleTypeId.Scp106;
                     break;
                 case "079":
-                    role = RoleTypeId.Scp079;
+                    {
+                        response = "За данный SCP нельзя перевестись..";
+                        return false;
+                    }
+                case "human":
+                    role = RoleTypeId.None;
                     break;
                 default:
                     response = "Неверный номер SCP объекта...";
@@ -79,9 +85,20 @@
                 return false;
             }
 
-            player.Role.Set(role, Exiled.API.Enums.SpawnReason.ForceClass, RoleSpawnFlags.All);
+            if (role != RoleTypeId.None)
+            {
+                player.Role.Set(role, Exiled.API.Enums.SpawnReason.ForceClass, RoleSpawnFlags.All);
+            } else
+            {
+                if(Player.List.Count() < 6)
+                {
+                    response = "Кол-во игроков для перевода в человека не хватает..";
+                    return false;
+                }
+                player.Role.Set(Control.Handlers.Events.ServerHandler.RandomRoles.RandomItem(), Exiled.API.Enums.SpawnReason.ForceClass, RoleSpawnFlags.All);
+            }
 
-
+            player.ShowHint("", 0.1f);
             response = "Успешно!";
             return true;
         }
