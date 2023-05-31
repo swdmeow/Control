@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using CustomPlayerEffects;
 using Exiled.API.Features;
 using Exiled.API.Features.Items;
 using Exiled.CustomRoles.API.Features;
 using Interactables.Interobjects.DoorUtils;
+using MapEditorReborn.Commands.UtilityCommands;
 using MEC;
 
 namespace Control.Extensions
@@ -13,6 +15,7 @@ namespace Control.Extensions
     public static class HintExtensions
     {
         public static CoroutineHandle? WriteHintCoroutineHandle = null;
+        public static List<(Player, string, int)> XPHintQueue = new List<(Player, string, int)>();
         public static IEnumerator<float> WriteHint()
         {
             for (; ; )
@@ -53,12 +56,31 @@ namespace Control.Extensions
 
                     if (!pl.IsScp && !CustomRole.Get((uint)1).Check(pl) && pl.IsAlive)
                     {
+                        try
+                        {
+                            bool HasXP = false;
+                            if (XPHintQueue.Where(x => x.Item1 == pl) != null) HasXP = true;
 
-                        Hint += "<size=66%>";
-                        Hint += $"<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>{((Round.IsLobby || !pl.IsAlive) ? "" : $"👥 {pl.CurrentSpectatingPlayers.Count()}")}<br>{(Round.IsLobby ? "" : $"{(Round.ElapsedTime.Hours.ToString().Length == 1 ? "0" + Round.ElapsedTime.Hours : Round.ElapsedTime.Hours)}:{(Round.ElapsedTime.Minutes.ToString().Length == 1 ? "0" + Round.ElapsedTime.Minutes : Round.ElapsedTime.Minutes)}:{(Round.ElapsedTime.Seconds.ToString().Length == 1 ? "0" + Round.ElapsedTime.Seconds : Round.ElapsedTime.Seconds)}")}<br><b><color=#8DFF29>bezname</color> | <color=#00B7EB>NoRules</color></b><br>";
+                            Hint += "<size=66%>";
+                            Hint += $"<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>{(HasXP ? XPHintQueue.Where(x => x.Item1 == pl).FirstOrDefault().Item2 : "")}<br>{((Round.IsLobby || !pl.IsAlive) ? "" : $"👥 {pl.CurrentSpectatingPlayers.Count()}")}<br>{(Round.IsLobby ? "" : $"{(Round.ElapsedTime.Hours.ToString().Length == 1 ? "0" + Round.ElapsedTime.Hours : Round.ElapsedTime.Hours)}:{(Round.ElapsedTime.Minutes.ToString().Length == 1 ? "0" + Round.ElapsedTime.Minutes : Round.ElapsedTime.Minutes)}:{(Round.ElapsedTime.Seconds.ToString().Length == 1 ? "0" + Round.ElapsedTime.Seconds : Round.ElapsedTime.Seconds)}")}<br><b><color=#8DFF29>bezname</color> | <color=#00B7EB>NoRules</color></b><br>";
 
-                        Hint += "</size>";
-                        pl.ShowHint(Hint, 0.7f);
+                            if (HasXP)
+                            {
+                                var x = XPHintQueue.Where(x => x.Item1 == pl).FirstOrDefault();
+
+                                if (x.Item3 <= 0)
+                                {
+                                    XPHintQueue.Remove(x);
+                                }
+                            }
+
+                            Hint += "</size>";
+                            pl.ShowHint(Hint, 0.7f);
+                        }
+                        catch (System.Exception ex)
+                        {
+                            Log.Error(ex);
+                        }
                     }
 
                     if (pl.IsScp || CustomRole.Get((uint)1).Check(pl))
@@ -75,6 +97,8 @@ namespace Control.Extensions
                         Hint += "</size></color>";
                         pl.ShowHint(Hint, 0.7f);
                     }
+
+                    if(XPHintQueue.Count != 0) XPHintQueue = XPHintQueue.Select(s => { s.Item3--; return s; }).ToList();
                 }
                 yield return Timing.WaitForSeconds(0.5f);
             }

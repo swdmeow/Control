@@ -3,9 +3,8 @@ using Exiled.API.Enums;
 using Exiled.API.Features;
 using System.Linq;
 using MEC;
-using XPSystem.API;
 
-namespace XPSystem
+namespace Control.Handlers.Events
 {
     using System.Collections.Generic;
     using Exiled.API.Extensions;
@@ -16,10 +15,30 @@ namespace XPSystem
     using PlayerRoles;
     using Exiled.CustomRoles;
     using Exiled.CustomRoles.API.Features;
-    using Org.BouncyCastle.Asn1.Mozilla;
+   
+    using ServerEvent = Exiled.Events.Handlers.Server;
+    using PlayerEvent = Exiled.Events.Handlers.Player;
+    using Control.Handlers.Events.API;
+    using Сontrol;
 
-    public class EventHandlers
+    public class XPHandler
     {
+        public XPHandler()
+        {
+            PlayerEvent.Verified += OnJoined;
+            PlayerEvent.Dying += OnKill;
+            ServerEvent.RoundEnded += OnRoundEnd;
+            PlayerEvent.Escaping += OnEscape;
+            ServerEvent.ReloadedRA += ReloadedRA;
+        }
+        public void OnDisabled()
+        {
+            PlayerEvent.Verified -= OnJoined;
+            PlayerEvent.Dying -= OnKill;
+            ServerEvent.RoundEnded -= OnRoundEnd;
+            PlayerEvent.Escaping -= OnEscape;
+            ServerEvent.ReloadedRA -= ReloadedRA;
+        }
         public void OnJoined(VerifiedEventArgs ev)
         {
             ev.Player.GetLog();
@@ -45,11 +64,11 @@ namespace XPSystem
             Player killer = ev.DamageHandler.Type == DamageType.PocketDimension ? Player.Get(RoleTypeId.Scp106).FirstOrDefault() : ev.Attacker;
             if (killer == null) return;
 
-            if (Main.Instance.Config.KillXP.TryGetValue(ev.Player.Role.Type, out var PlayerKillXP))
+            if (ControlNR.Singleton.Config.XPSystem.KillXP.TryGetValue(ev.Player.Role.Type, out var PlayerKillXP))
             {
                 var log = killer.GetLog();
 
-                log.AddXP(PlayerKillXP, Main.GetTranslation($"kill{ev.Player.Role.Type.ToString()}"));
+                log.AddXP(PlayerKillXP);
                 log.UpdateLog();
             } else
             {
@@ -63,14 +82,14 @@ namespace XPSystem
 
             if (CustomRole.Get((uint)1).Check(ev.Player) || CustomRole.Get((uint)2).Check(ev.Player)) return;
 
-            if (!Main.Instance.Config.EscapeXP.TryGetValue(ev.Player.Role, out int xp))
+            if (!ControlNR.Singleton.Config.XPSystem.EscapeXP.TryGetValue(ev.Player.Role, out int xp))
             {
                 Log.Warn($"No escape XP for {ev.Player.Role}");
                 return;
             }
 
             var log = ev.Player.GetLog();
-            log.AddXP(xp, Main.GetTranslation("escape"));
+            log.AddXP(xp);
             log.UpdateLog();
         }
 
@@ -100,7 +119,7 @@ namespace XPSystem
                 var log = player.GetLog();
                 if (log is null)
                     return;
-                log.AddXP(Main.Instance.Config.TeamWinXP, Main.GetTranslation("teamwin"));
+                log.AddXP(ControlNR.Singleton.Config.XPSystem.TeamWinXP);
                 log.UpdateLog();
             }
         }

@@ -93,7 +93,7 @@ namespace Control.CustomItems
 
             ev.Firearm.Ammo = 1;
             CooldownIsEnable = true;
-            Timing.CallDelayed(30f, () => CooldownIsEnable = false) ;
+            Timing.CallDelayed(30f, () => CooldownIsEnable = false);
         }
         private void OnUnloadingWeapon(UnloadingWeaponEventArgs ev)
         {

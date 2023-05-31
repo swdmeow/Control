@@ -21,7 +21,6 @@
     using Control;
     using Exiled.API.Features.Items;
     using Сontrol;
-    using XPSystem.API.Serialization;
     using Respawning;
     using Control.Commands;
     using Respawning.NamingRules;

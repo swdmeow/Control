@@ -11,8 +11,6 @@ namespace XPSystem.API
 
     public static class Extensions
     {
-        public static CoroutineHandle? HintCoroutineHandle = null;
-        private static Config _cfg => Main.Instance.Config;
         public static PlayerLog GetLog(this Player ply)
         {
             PlayerLog toInsert = null;
@@ -52,15 +50,16 @@ namespace XPSystem.API
                 log.XP -= lvlsGained * Main.Instance.Config.XPPerLevel;
                 if (Main.Instance.Config.ShowAddedLVL && ply != null)
                 {
-                    ply.ShowHint(Main.Instance.Config.AddedLVLHint
-                        .Replace("%level%", log.LVL.ToString()));
+                    Control.Extensions.HintExtensions.XPHintQueue.Add((ply, Main.Instance.Config.AddedLVLHint
+                        .Replace("%level%", log.LVL.ToString()), 3));
                 }
 
                 ply.RankName = "";
             }
             else if (Main.Instance.Config.ShowAddedXP && ply != null)
             {
-                ply.ShowHint(message == null ? $"+ <color=green>{amount}</color> XP" : message.Replace("%amount%", amount.ToString()));
+                string msg = message == null ? $"+ <color=green>{amount}</color> XP" : message.Replace("%amount%", amount.ToString());
+                Control.Extensions.HintExtensions.XPHintQueue.Add((ply, msg, 3));
             }
             log.UpdateLog();
         }

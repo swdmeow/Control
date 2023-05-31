@@ -130,6 +130,12 @@
       <HintPath>C:\Users\swd\Desktop\d\YamlDotNet.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ControlNR\ControlNR.csproj">
+      <Project>{560da2c9-e7a1-42c5-bbd4-5b3c28591593}</Project>
+      <Name>ControlNR</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
          Other similar extension points exist, see Microsoft.Common.targets.

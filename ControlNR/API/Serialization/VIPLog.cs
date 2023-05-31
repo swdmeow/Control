@@ -1,10 +1,10 @@
 ﻿using System;
 using LiteDB;
 
-namespace XPSystem.API.Serialization
+namespace Control.API.Serialization
 {
     [Serializable]
-    public class PlayerLog
+    public class VIPLog
     {
         public bool cooldownRole { get; set; } = false;
         public bool cooldownItem { get; set; } = false;

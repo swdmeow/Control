@@ -54,7 +54,7 @@
                 {
                     Timing.CallDelayed(0.1f, () =>
                     {
-                        player.Position = Room.Get(Exiled.API.Enums.RoomType.HczTestRoom).transform.position + Vector3.up;
+                        player.Position = Room.Get(Exiled.API.Enums.RoomType.HczTestRoom).transform.position + new Vector3(0, 1, 5);
                     });
                 }
                 if (player.CurrentRoom.Type == RoomType.HczArmory)

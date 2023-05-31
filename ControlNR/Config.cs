@@ -4,6 +4,7 @@ namespace Сontrol
     using Exiled.API.Interfaces;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using Control.Configs;
 
     public sealed class Config : IConfig
     {
@@ -12,5 +13,8 @@ namespace Сontrol
 
         [Description("Включен ли дебаг-мод?")]
         public bool Debug { get; set; } = false;
+
+        [Description("Конфиг встроенного плагина XPSystem..")]
+        public XPSystem XPSystem { get; set; } = new XPSystem();
     }
 }

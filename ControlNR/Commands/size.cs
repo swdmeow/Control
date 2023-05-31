@@ -35,7 +35,7 @@
                 return false;
             }
 
-            if (player.GroupName == "d1" || player.GroupName == "d2")
+            if (player.GroupName.StartsWith("d1") || player.GroupName.StartsWith("d2"))
             {
                 if (x < 0.9f || y < 0.9f || z < 0.9f)
                 {

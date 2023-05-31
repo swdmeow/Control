@@ -147,7 +147,7 @@
   <ItemGroup>
     <Compile Include="API\Extensions.cs" />
     <Compile Include="API\FakeConnection.cs" />
-    <Compile Include="API\Serialization\PlayerLog.cs" />
+    <Compile Include="API\Serialization\VIPLog.cs" />
     <Compile Include="Commands\size.cs" />
     <Compile Include="Commands\kill.cs" />
     <Compile Include="Commands\force.cs" />
@@ -155,7 +155,7 @@
     <Compile Include="Commands\CustomRoleController.cs" />
     <Compile Include="Commands\res.cs" />
     <Compile Include="ControlNR.cs" />
-    <Compile Include="Configs\Plugin.cs" />
+    <Compile Include="Config.cs" />
     <Compile Include="CustomItems\Coin.cs" />
     <Compile Include="CustomItems\SCP035Mask.cs" />
     <Compile Include="CustomItems\SCP500R.cs" />
@@ -167,6 +167,16 @@
     <Compile Include="Events\Handlers\Features\WarheadMusic.cs" />
     <Compile Include="Events\Handlers\Features\RemoteKeycardHandler.cs" />
     <Compile Include="Events\Handlers\Features\UnlimitedAmmoHandler.cs" />
+    <Compile Include="Events\Handlers\Features\XPSystem\API\API.cs" />
+    <Compile Include="Events\Handlers\Features\XPSystem\API\Extensions.cs" />
+    <Compile Include="Events\Handlers\Features\XPSystem\API\Features\Badge.cs" />
+    <Compile Include="Events\Handlers\Features\XPSystem\API\Serialization\PlayerLog.cs" />
+    <Compile Include="Events\Handlers\Features\XPSystem\Commands\leaderboard.cs" />
+    <Compile Include="Events\Handlers\Features\XPSystem\Commands\set.cs" />
+    <Compile Include="Events\Handlers\Features\XPSystem\Commands\xp.cs" />
+    <Compile Include="Configs\XPSystem.cs" />
+    <Compile Include="Events\Handlers\Features\XPSystem\XPHandler.cs" />
+    <Compile Include="Events\Handlers\Features\XPSystem\Patches\RankChangePatch.cs" />
     <Compile Include="Events\Handlers\Scp914Handler.cs" />
     <Compile Include="Events\Handlers\MapHandler.cs" />
     <Compile Include="Events\Handlers\Scp330Handler.cs" />
@@ -175,7 +185,6 @@
     <Compile Include="CustomItems\GrenadeLauncher.cs" />
     <Compile Include="Extensions\Player\HintExtensions.cs" />
     <Compile Include="Extensions\Player\PlayerExtensions.cs" />
-    <Compile Include="Patches\HideTagCommand.cs" />
     <Compile Include="Patches\RemoteAdmin.cs" />
   </ItemGroup>
   <ItemGroup>

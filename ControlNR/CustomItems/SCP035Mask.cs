@@ -1,4 +1,5 @@
-﻿using Exiled.API.Enums;
+﻿using Control.Handlers.Events;
+using Exiled.API.Enums;
 using Exiled.API.Features;
 using Exiled.API.Features.Attributes;
 using Exiled.API.Features.Items;
@@ -29,45 +30,14 @@ namespace Control.CustomItems
         public override float Weight { get; set; }
         public override SpawnProperties SpawnProperties { get; set; } = null;
 
-        private List<RoomType> _rooms = new List<RoomType>()
-        {
-            RoomType.Surface,
-            RoomType.Hcz939,
-            RoomType.Hcz106,
-            RoomType.HczTCross,
-            RoomType.EzCheckpointHallway,
-            RoomType.EzConference,
-            RoomType.EzCrossing,
-            RoomType.LczToilets,
-            RoomType.LczTCross,
-            RoomType.HczArmory,
-            RoomType.LczArmory,
-            RoomType.HczElevatorA,
-            RoomType.LczCafe,
-            RoomType.Lcz330,
-            RoomType.Lcz914,
-            RoomType.LczAirlock,
-            RoomType.LczClassDSpawn,
-            RoomType.LczCheckpointA,
-            RoomType.LczCheckpointB,
-            RoomType.HczHid,
-            RoomType.EzCafeteria,
-            RoomType.EzCheckpointHallway,
-            RoomType.EzGateA,
-            RoomType.EzGateB
-        };
-
         public List<ItemType> Types = new List<ItemType>()
         {
             ItemType.Painkillers,
-            ItemType.Coin,
             ItemType.Medkit,
             ItemType.Adrenaline,
-            ItemType.Coin,
             ItemType.KeycardJanitor,
             ItemType.KeycardO5,
             ItemType.KeycardZoneManager,
-            ItemType.Flashlight,
             ItemType.SCP244b,
             ItemType.SCP500,
         };
@@ -92,7 +62,9 @@ namespace Control.CustomItems
         }
         private void OnRoundStarted()
         {
-            CustomItem.Get((uint)3).Spawn(Room.Get(_rooms.RandomItem()).transform.position + Vector3.up);
+            CustomItem.Get((uint)3).Spawn(ServerHandler.Room035.AttachedBlocks.Where(x => x.name == "Cube (48)").ToList().FirstOrDefault().transform.position + Vector3.up);
+
+            Log.Info(ServerHandler.Room035.AttachedBlocks.Where(x => x.name == "Cube (48)").ToList().FirstOrDefault().transform.position + Vector3.up);
         }
         protected override void OnPickingUp(PickingUpItemEventArgs ev)
         {

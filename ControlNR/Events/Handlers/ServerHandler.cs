@@ -18,6 +18,11 @@
     using Mirror;
     using System.Data;
     using System.Collections.Generic;
+    using MapEditorReborn.API.Features;
+    using MapEditorReborn.API.Features.Objects;
+    using Exiled.CustomItems.API.Features;
+    //using Exiled.API.Enums;
+    using Utils.NonAllocLINQ;
 
     internal sealed class ServerHandler
     {
@@ -27,6 +32,9 @@
         private bool isWarheadStart = false;
         public static int CassieDestroyedLVL = 0;
         public static bool TickRoundEndDisable = false;
+
+        public static SchematicObject Room035;
+
 
         public static List<RoleTypeId> RandomRoles = new List<RoleTypeId>()
         {
@@ -64,7 +72,7 @@
                     pl.ShowHint("<size=75%>Вы можете поменять свою игровую роль на другой SCP-объект<br>Используя команду .force [номер SCP]<br>Эта команда действует до 2-х минут раунда</size>", 30f);
                 }
 
-                // 079 remove
+                // 079 remove 1
 
                 Player player = Player.List.Where(x => x.Role == RoleTypeId.Scp079).FirstOrDefault();
 
@@ -78,7 +86,7 @@
 
                     Timing.CallDelayed(30f, () =>
                     {
-                        if(player.Role.Type == RoleTypeId.Scp079)
+                        if (player.Role.Type == RoleTypeId.Scp079)
                         {
                             if (Player.List.Where(x => x.IsScp).Count() == 5)
                             {
@@ -87,17 +95,29 @@
                             {
                                 if (Player.List.Where(x => x.Role == RoleTypeId.Scp173).FirstOrDefault() == null) player.Role.Set(RoleTypeId.Scp173, Exiled.API.Enums.SpawnReason.LateJoin);
                                 else if (Player.List.Where(x => x.Role == RoleTypeId.Scp049).FirstOrDefault() == null) player.Role.Set(RoleTypeId.Scp049, Exiled.API.Enums.SpawnReason.LateJoin);
-                                else if(Player.List.Where(x => x.Role == RoleTypeId.Scp939).FirstOrDefault() == null) player.Role.Set(RoleTypeId.Scp939, Exiled.API.Enums.SpawnReason.LateJoin);
-                                else if(Player.List.Where(x => x.Role == RoleTypeId.Scp106).FirstOrDefault() == null) player.Role.Set(RoleTypeId.Scp106, Exiled.API.Enums.SpawnReason.LateJoin);
-                                else if(Player.List.Where(x => x.Role == RoleTypeId.Scp096).FirstOrDefault() == null) player.Role.Set(RoleTypeId.Scp096, Exiled.API.Enums.SpawnReason.LateJoin);
+                                else if (Player.List.Where(x => x.Role == RoleTypeId.Scp939).FirstOrDefault() == null) player.Role.Set(RoleTypeId.Scp939, Exiled.API.Enums.SpawnReason.LateJoin);
+                                else if (Player.List.Where(x => x.Role == RoleTypeId.Scp106).FirstOrDefault() == null) player.Role.Set(RoleTypeId.Scp106, Exiled.API.Enums.SpawnReason.LateJoin);
+                                else if (Player.List.Where(x => x.Role == RoleTypeId.Scp096).FirstOrDefault() == null) player.Role.Set(RoleTypeId.Scp096, Exiled.API.Enums.SpawnReason.LateJoin);
                                 else
                                 {
                                     player.Role.Set(RandomRoles.RandomItem(), Exiled.API.Enums.SpawnReason.LateJoin);
                                 }
                             }
                         }
+
+                        foreach (Door door in Door.List.Where(x => x.Type == Exiled.API.Enums.DoorType.Scp079First || x.Type == Exiled.API.Enums.DoorType.Scp079Second))
+                        {
+                            door.IsOpen = true;
+                        }
+
                         TickRoundEndDisable = true;
                     });
+                } else
+                {
+                    foreach(Door door in Door.List.Where(x => x.Type == Exiled.API.Enums.DoorType.Scp079First || x.Type == Exiled.API.Enums.DoorType.Scp079Second))
+                    {
+                        door.IsOpen = true;
+                    }
                 }
             });
         }
@@ -107,7 +127,7 @@
 
             if (ev.NextKnownTeam == SpawnableTeamType.ChaosInsurgency && ev.IsAllowed)
             {
-                if(CassieDestroyedLVL >= 3)
+                if (CassieDestroyedLVL >= 3)
                 {
                     Cassie.Message("jam_040_9 pitch_0.43 .G1 . jam_020_9 .G3 . .G5 . pitch_0.3 .g3 . . . pitch_0.2 .g1", false, false, false);
 
@@ -145,14 +165,15 @@
                 isWarheadStart = false;
                 isWarheadCassie1Minute = false;
                 PlayerExtensions._hintQueue.Clear();
-                
+
                 ControlNR.Singleton.db.DropCollection("VIPPlayers");
 
                 Room Lcz330 = Room.Get(Exiled.API.Enums.RoomType.Lcz330);
 
                 Log.Info("Spawning schematic..");
-                MapEditorReborn.API.Features.ObjectSpawner.SpawnSchematic("maska", Lcz330.Position, Lcz330.transform.rotation);
-
+                Room035 = MapEditorReborn.API.Features.ObjectSpawner.SpawnSchematic("maska", Lcz330.Position, Lcz330.transform.rotation);
+                
+                // YeahDoor
                 if (Lcz330)
                 {
                     NetworkBehaviour.Destroy(Lcz330.gameObject);
@@ -181,11 +202,14 @@
             {
                 isWarheadStart = true;
 
-                if (Warhead.IsInProgress == false) Warhead.Start();
+                if (Warhead.IsInProgress == false)
+                {
+                    Warhead.Controller.InstantPrepare();
+                    Warhead.Controller.StartDetonation(true, false, (Player.List.Count() == 0 ? Server.Host.ReferenceHub : Player.List.ToList().RandomItem().ReferenceHub));
+                }
+                Warhead.IsLocked = true; 
 
-                Timing.CallDelayed(0.1f, () => { Warhead.IsLocked = true; });
-
-                //Cassie.Message("Детонация альфа-боеголовки будет запущена через 1 минуту.. <color=#ffffff00>h Alpha warhead detonation will be started in t minute 1 minute ");
+                //Cassie.Message("Детонация альфа-боеголовки будт запущена через 1 минуту.. <color=#ffffff00>h Alpha warhead detonation will be started in t minute 1 minute ");
             }
 
             if (TickRoundEndDisable != true)
@@ -232,7 +256,7 @@
 
             try
             {
-                API.Extensions.StopAudio();
+                Control.API.Extensions.StopAudio();
             }
             catch (System.Exception) { }
         }

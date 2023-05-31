@@ -69,7 +69,7 @@ namespace Control.CustomItems
             CandyKindID.Blue,
             CandyKindID.Red
         };
-        private string[] Events { get; } = new string[] { "teleport", "boom", "ToZombie", "betrayTeam", "speed", "candy", "flash", "size", "slow", "poop", "sounds" };
+        private string[] Events { get; } = new string[] { "teleport", "boom", "ToZombie", "betrayTeam", "speed", "candy", "flash", "size", "slow", "poop", "kick" };
         public override SpawnProperties SpawnProperties { get; set; } = null;
         private void OnFlippingCoin(FlippingCoinEventArgs ev)
         {
@@ -197,15 +197,12 @@ namespace Control.CustomItems
                     }
                     CustomRole.Get((uint)8).AddRole(ev.Player);
                 }
-                if(needTo == "sounds")
+                if(needTo == "kick")
                 {
                     ev.Player.CurrentItem.Destroy();
 
-                    Map.PlayAmbientSound();
-                    Map.PlayAmbientSound();
-                    Map.PlayAmbientSound();
-                    Map.PlayAmbientSound();
-                    Map.PlayAmbientSound();
+                    ev.Player.Kick("Испепелён с сервера с помощью волшебной монетки.");
+                    Map.Broadcast(new Exiled.API.Features.Broadcast($"{ev.Player.Nickname} испепелён с сервера с помощью волшебной монетки", 5));
                 }
             }
         }

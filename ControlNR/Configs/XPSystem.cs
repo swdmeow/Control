@@ -3,20 +3,15 @@ using Exiled.API.Interfaces;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using Badge = XPSystem.API.Features.Badge;
+using Badge = Control.Handlers.Events.API.Features.Badge;
 
-namespace XPSystem
+namespace Control.Configs
 {
     using Exiled.API.Enums;
     using PlayerRoles;
 
-    public class Config : IConfig
+    public sealed class XPSystem
     {
-        [Description("Enable plugin?")]
-        public bool IsEnabled { get; set; } = true;
-
-        [Description("Show debug messages?")] 
-        public bool Debug { get; set; } = false;
 
         [Description("(You may add your own entries) Role1: Role2: XP player with Role1 gets for killing a person with Role2 ")]
         public Dictionary<RoleTypeId, int> KillXP { get; set; } = new Dictionary<RoleTypeId, int>()

@@ -21,7 +21,6 @@
     using Control;
     using Exiled.API.Features.Items;
     using Сontrol;
-    using XPSystem.API.Serialization;
     using Respawning;
     using Control.Commands;
     using Respawning.NamingRules;
@@ -86,8 +85,6 @@
         {
             for (; ; )
             {
-                if (!Warhead.IsInProgress) break;
-
                 foreach (Room room in Room.List)
                 {
                     room.Color = Colors.ElementAt(new System.Random().Next(0, Colors.Count()));

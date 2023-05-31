@@ -48,7 +48,9 @@
             Player.Dying += handlers.OnKill;
             Server.RoundEnded += handlers.OnRoundEnd;
             Player.Escaping += handlers.OnEscape;
-            
+            Server.ReloadedRA += handlers.ReloadedRA;
+
+
             LoadTranslations();
 
             _harmony.PatchAll();
@@ -62,7 +64,8 @@
             Player.Dying -= handlers.OnKill;
             Server.RoundEnded -= handlers.OnRoundEnd;
             Player.Escaping -= handlers.OnEscape;
-            
+            Server.ReloadedRA -= handlers.ReloadedRA;
+
             _harmony.UnpatchAll(_harmony.Id);
             
             handlers = null;
@@ -76,7 +79,7 @@
 
         public static string GetTranslation(string key)
         {
-            if (Instance.Config.Debug)
+            if (Instance.Config.Debug) // 1
             {
                 Log.Debug("looking for key: " + key);
                 Log.Debug($"Found key: {Instance.Translations.ContainsKey(key)}");

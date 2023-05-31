@@ -9,7 +9,6 @@ using System.Text;
 using System.Threading.Tasks;
 using LiteDB;
 using Сontrol;
-using XPSystem.API.Serialization;
 using MEC;
 using PlayerRoles;
 using CommandSystem;
@@ -22,6 +21,7 @@ using UnityStandardAssets.Effects;
 using Exiled.Events.EventArgs.Player;
 using Utf8Json.Formatters;
 using Respawning;
+using Control.API.Serialization;
 
 namespace Control.Patches
 {
@@ -70,11 +70,11 @@ namespace Control.Patches
                         string UserID = player.UserId;
 
                         Allowed = false;
-                        var log = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(player.UserId);
+                        var log = ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers")?.FindById(player.UserId);
 
                         if (log == null)
                         {
-                            ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Insert(new PlayerLog()
+                            ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers").Insert(new VIPLog()
                             {
                                 ID = player.UserId,
                                 cooldownRole = false,
@@ -138,7 +138,7 @@ namespace Control.Patches
                                             log.ForcedTimes += 1;
                                             log.ForcedToSCP = true;
 
-                                            ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
+                                            ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers").Update(log);
 
                                             sender.RaReply($"ControlNR#Успешно..", Success, true, string.Empty);
                                             return Allowed;
@@ -163,7 +163,7 @@ namespace Control.Patches
                                         log.ForcedTimes += 1;
                                         log.ForcedToSCP = true;
 
-                                        ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
+                                        ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers").Update(log);
 
                                         player.Role.Set(role);
 
@@ -171,9 +171,9 @@ namespace Control.Patches
 
                                         Timing.CallDelayed(120f, () =>
                                         {
-                                            var ValueChange = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(UserID);
+                                            var ValueChange = ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers")?.FindById(UserID);
                                             ValueChange.cooldownRole = false;
-                                            ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(ValueChange);
+                                            ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers").Update(ValueChange);
                                         });
 
                                         return Allowed;
@@ -206,15 +206,15 @@ namespace Control.Patches
 
                                 log.cooldownRole = true;
                                 log.ForcedTimes += 1;
-                                ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
+                                ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers").Update(log);
 
                                 player.Role.Set(role);
 
                                 Timing.CallDelayed(120f, () =>
                                 {
-                                    var ValueChange = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(UserID);
+                                    var ValueChange = ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers")?.FindById(UserID);
                                     ValueChange.cooldownRole = false;
-                                    ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(ValueChange);
+                                    ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers").Update(ValueChange);
                                 });
 
                                 Allowed = false;
@@ -246,13 +246,6 @@ namespace Control.Patches
                                         // 0, 1, 2 , 3
                                         switch (args[2].Substring(0, 2))
                                         {
-                                            case "50":
-                                            case "48":
-                                                {
-                                                    Success = false;
-                                                    sender.RaReply($"ControlNR#Этот предмет нельзя выдать..", Success, true, string.Empty);
-                                                    return Allowed;
-                                                }
                                             case "0.":
                                             case "1.":
                                             case "2.":
@@ -275,6 +268,17 @@ namespace Control.Patches
                                         }
                                     }
 
+                                    Enum.TryParse(args[2].Substring(0, 2).Replace(".", ""), true, out ItemType item);
+
+                                    if (item == ItemType.GunCom45 || item == ItemType.Jailbird)
+                                    {
+                                        Log.Info($"Catch give event (VIP+). Item {args[2].Substring(0, 2)}. Allowed = false");
+                                        Success = false;
+                                        Allowed = false;
+                                        sender.RaReply($"ControlNR#Этот предмет нельзя выдать..", Success, true, string.Empty);
+                                        return Allowed;
+                                    }
+
                                     if (log.GivedTimes >= 2)
                                     {
                                         Success = false;
@@ -291,24 +295,22 @@ namespace Control.Patches
 
                                     log.cooldownItem = true;
                                     log.GivedTimes += 1;
-                                    ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
+                                    ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers").Update(log);
 
                                     Timing.CallDelayed(120f, () =>
                                     {
                                         try
                                         {
-                                            var ValueChange = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(UserID);
+                                            var ValueChange = ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers")?.FindById(UserID);
                                             ValueChange.cooldownItem = false;
 
-                                            ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(ValueChange);
+                                            ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers").Update(ValueChange);
                                         }
                                         catch (Exception ex)
                                         {
                                             Log.Error(ex);
                                         }
                                     });
-
-                                    Enum.TryParse(args[2].Substring(0, 2).Replace(".", ""), true, out ItemType item);
 
                                     player.AddItem(item, 1);
 
@@ -361,7 +363,7 @@ namespace Control.Patches
 
 
 
-                                            ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
+                                            ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers").Update(log);
 
                                             sender.RaReply($"ControlNR#Успешно..", Success, true, string.Empty);
                                             return Allowed;
@@ -386,7 +388,7 @@ namespace Control.Patches
                                         log.ForcedTimes += 1;
                                         log.ForcedToSCP = true;
 
-                                        ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
+                                        ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers").Update(log);
 
                                         player.Role.Set(role);
 
@@ -394,9 +396,9 @@ namespace Control.Patches
 
                                         Timing.CallDelayed(120f, () =>
                                         {
-                                            var ValueChange = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(UserID);
+                                            var ValueChange = ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers")?.FindById(UserID);
                                             ValueChange.cooldownRole = false;
-                                            ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(ValueChange);
+                                            ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers").Update(ValueChange);
                                         });
 
                                         return Allowed;
@@ -429,15 +431,15 @@ namespace Control.Patches
 
                                 log.cooldownRole = true;
                                 log.ForcedTimes += 1;
-                                ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
+                                ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers").Update(log);
 
                                 player.Role.Set(role);
 
                                 Timing.CallDelayed(120f, () =>
                                 {
-                                    var ValueChange = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(UserID);
+                                    var ValueChange = ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers")?.FindById(UserID);
                                     ValueChange.cooldownRole = false;
-                                    ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(ValueChange);
+                                    ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers").Update(ValueChange);
                                 });
 
                                 Allowed = false;
@@ -467,16 +469,9 @@ namespace Control.Patches
                                     if (Round.ElapsedTime.Minutes < 3)
                                     {
                                         // 0, 1, 2 , 3
+                                        Log.Info(args[2].Substring(0, 2));
                                         switch (args[2].Substring(0, 2))
                                         {
-                                            case "50":
-                                            case "48":
-                                                {
-                                                    Log.Info($"Catch give event (VIP+). Item {args[2].Substring(0, 2)}. Allowed = false");
-                                                    Success = false;
-                                                    sender.RaReply($"ControlNR#Этот предмет нельзя выдать..", Success, true, string.Empty);
-                                                    return Allowed;
-                                                }
                                             case "0.":
                                             case "1.":
                                             case "2.":
@@ -486,7 +481,7 @@ namespace Control.Patches
                                             case "17":
                                             case "34":
                                             case "33":
-                                            case "35":
+                                            case "35.":
                                                 {
                                                     Log.Info($"Catch give event (VIP+). Item {args[2].Substring(0, 2)}. Allowed = true");
                                                     break;
@@ -499,6 +494,17 @@ namespace Control.Patches
                                                     return Allowed;
                                                 }
                                         }
+                                    }
+
+                                    Enum.TryParse(args[2].Substring(0, 2).Replace(".", ""), true, out ItemType item);
+
+                                    if(item == ItemType.GunCom45 || item == ItemType.Jailbird)
+                                    {
+                                        Log.Info($"Catch give event (VIP+). Item {args[2].Substring(0, 2)}. Allowed = false");
+                                        Success = false;
+                                        Allowed = false;
+                                        sender.RaReply($"ControlNR#Этот предмет нельзя выдать..", Success, true, string.Empty);
+                                        return Allowed;
                                     }
 
                                     if (log.GivedTimes >= 5)
@@ -518,16 +524,14 @@ namespace Control.Patches
                                     log.cooldownItem = true;
                                     log.GivedTimes += 1;
 
-                                    ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
+                                    ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers").Update(log);
 
                                     Timing.CallDelayed(120f, () =>
                                     {
-                                        var ValueChange = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(UserID);
+                                        var ValueChange = ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers")?.FindById(UserID);
                                         ValueChange.cooldownItem = false;
-                                        ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(ValueChange);
+                                        ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers").Update(ValueChange);
                                     });
-
-                                    Enum.TryParse(args[2].Substring(0, 2).Replace(".", ""), true, out ItemType item);
 
                                     player.AddItem(item, 1);
 
@@ -562,13 +566,13 @@ namespace Control.Patches
 
                                         log.cooldownCall = true;
                                         log.CallTimes += 1;
-                                        ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(log);
+                                        ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers").Update(log);
 
                                         Timing.CallDelayed(120f, () =>
                                         {
-                                            var ValueChange = ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers")?.FindById(UserID);
+                                            var ValueChange = ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers")?.FindById(UserID);
                                             ValueChange.cooldownCall = false;
-                                            ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Update(ValueChange);
+                                            ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers").Update(ValueChange);
                                         });
 
                                         // Only one allow in this text file lmao

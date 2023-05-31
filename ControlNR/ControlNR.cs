@@ -22,12 +22,14 @@ namespace Ñontrol
         private Control.Handlers.Handler Handler;
 
         public LiteDatabase db;
+        public LiteDatabase XPdb;
         public override void OnEnabled()
         {
             if (!Directory.Exists(Path.Combine(Paths.Configs, "ControlNR"))) Directory.CreateDirectory(Path.Combine(Paths.Configs, "ControlNR"));
             if (!Directory.Exists(Path.Combine(Paths.Configs, "ControlNR/Music"))) Directory.CreateDirectory(Path.Combine(Paths.Configs, "ControlNR/Music"));
 
             db = new LiteDatabase(Path.Combine(Paths.Configs, @"ControlNR/LimitDonator.db"));
+            XPdb = new LiteDatabase(Path.Combine(Paths.Configs, @"ControlNR/XPUser.db"));
             Singleton = this;
 
             harmony = new Harmony($"ControlNR - {DateTime.Now.Ticks}");
@@ -57,6 +59,9 @@ namespace Ñontrol
 
             db.Dispose();
             db = null;
+
+            XPdb.Dispose();
+            XPdb = null;
 
             Handler.Dispose();
             Handler = null;

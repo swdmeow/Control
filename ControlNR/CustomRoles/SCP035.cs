@@ -105,6 +105,7 @@ namespace Control.CustomRoles
             Exiled.API.Features.Roles.Scp096Role.TurnedPlayers.Remove(player);
             Exiled.API.Features.Roles.Scp049Role.TurnedPlayers.Remove(player);
 
+            CustomItem.Get((uint)3).Spawn(player.Position);
             player.DisplayNickname = null;
             Cassie.Message("SCP-035<b></b> был устранён.. <color=#ffffff00>h scp 0 3 5 has been terminated", false, false, true);
         }

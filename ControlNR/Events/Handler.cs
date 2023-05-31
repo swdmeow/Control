@@ -11,6 +11,8 @@
         private Control.Handlers.Events.UnlimitedAmmoHandler UnlimitedAmmoHandler;
         private Control.Handlers.Events.RemoteKeycardHandler RemoteKeycardHandler;
         private Control.Handlers.Events.WarheadDecontamition WarheadDecontamition;
+        private Control.Handlers.Events.XPHandler XPHandler;
+
 
 
         public Handler()
@@ -25,6 +27,7 @@
             UnlimitedAmmoHandler = new Control.Handlers.Events.UnlimitedAmmoHandler();
             RemoteKeycardHandler = new Control.Handlers.Events.RemoteKeycardHandler();
             WarheadDecontamition = new Control.Handlers.Events.WarheadDecontamition();
+            XPHandler = new Control.Handlers.Events.XPHandler();
         }
         public void Dispose()
         {
@@ -36,9 +39,11 @@
             Scp914Handler.OnDisabled();
             RemoteKeycardHandler.OnDisabled();
             UnlimitedAmmoHandler.OnDisabled();
+            XPHandler.OnDisabled();
             WarheadDecontamition.OnDisabled();
 
             RemoteKeycardHandler = null;
+            XPHandler = null;
             UnlimitedAmmoHandler = null;
             PlayerHandler = null;
             ServerHandler = null;

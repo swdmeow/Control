@@ -10,11 +10,11 @@
     using MEC;
     using Control;
     using Control.Extensions;
-    using XPSystem.API.Serialization;
     using Control.Commands;
     using Exiled.API.Features.Roles;
     using PlayerEvent = Exiled.Events.Handlers.Player;
     using Exiled.Loader;
+    using Control.API.Serialization;
 
     internal sealed class PlayerHandler
     {
@@ -52,7 +52,7 @@
                 if (ev.Player.GroupName.StartsWith("d1") || ev.Player.GroupName.StartsWith("d2"))
                 {
                     // Add player to DB;
-                    ControlNR.Singleton.db.GetCollection<PlayerLog>("VIPPlayers").Insert(new PlayerLog()
+                    ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers").Insert(new VIPLog()
                     {
                         ID = ev.Player.UserId,
                         cooldownRole = false,
