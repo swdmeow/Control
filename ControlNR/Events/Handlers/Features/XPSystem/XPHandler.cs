@@ -72,7 +72,7 @@ namespace Control.Handlers.Events
                 log.UpdateLog();
             } else
             {
-                Log.Warn("PlayerKillXP == null");
+                Log.Warn($"PlayerKillXP == null ({ev.Player.Role.Type})") ;
             }
         }
 

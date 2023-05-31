@@ -15,7 +15,7 @@ namespace Ñontrol
         public static ControlNR Singleton;
         public override string Name => "ControlNR";
         public override string Author => "swd";
-        public override System.Version Version => new System.Version(2, 1, 0);
+        public override System.Version Version => new System.Version(2, 2, 0);
 
         private Harmony harmony;
 

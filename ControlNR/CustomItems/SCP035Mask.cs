@@ -70,11 +70,12 @@ namespace Control.CustomItems
         {
             if (CustomItem.Get((uint)3).Check(ev.Pickup))
             {
-                if (CustomRole.Get((uint)1).Check(ev.Player) || CustomRole.Get((uint)1).Check(ev.Player))
+                if (CustomRole.Get((uint)1).Check(ev.Player) || CustomRole.Get((uint)2).Check(ev.Player))
                 {
                     ev.IsAllowed = false;
                     return;
                 }
+
                 CustomRole.Get((uint)1).AddRole(ev.Player);
 
                 ev.IsAllowed = false;
