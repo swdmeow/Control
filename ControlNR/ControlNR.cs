@@ -48,6 +48,9 @@ namespace Ñontrol
             if (HintExtensions.WriteHintCoroutineHandle == null || !HintExtensions.WriteHintCoroutineHandle.Value.IsValid || !HintExtensions.WriteHintCoroutineHandle.Value.IsRunning)
                 HintExtensions.WriteHintCoroutineHandle = Timing.RunCoroutine(HintExtensions.WriteHint());
 
+            if (ClearMapExtensions.ClearMapCoroutineHandle == null || !ClearMapExtensions.ClearMapCoroutineHandle.Value.IsValid || !ClearMapExtensions.ClearMapCoroutineHandle.Value.IsRunning)
+                ClearMapExtensions.ClearMapCoroutineHandle = Timing.RunCoroutine(ClearMapExtensions.ClearMap());
+
             harmony.PatchAll();
             
             base.OnEnabled();

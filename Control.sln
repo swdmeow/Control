@@ -19,8 +19,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RainbowTags", "RainbowTags\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControlGG", "ControlGG\ControlGG.csproj", "{47B7A9F6-6591-4291-A517-DFD86BB68FF1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XPSystem", "XPSystem\XPSystem.csproj", "{A5B39664-F1FE-4729-A724-2E33070750E6}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UltimateAFK", "UltimateAFK\UltimateAFK.csproj", "{DB1D5965-0887-454C-8836-AE59C30B74D6}"
 EndProject
 Global

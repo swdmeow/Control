@@ -225,8 +225,8 @@ namespace Control.CustomRoles
             }
 
             Log.Debug(Name + ": Setting player info");
-            player.CustomInfo = player.CustomName + "\n" + CustomInfo;
-            player.InfoArea &= ~(PlayerInfoArea.Nickname | PlayerInfoArea.Role);
+            player.CustomInfo = CustomInfo;
+            //player.InfoArea &= ~(PlayerInfoArea.Nickname | PlayerInfoArea.Role);
             if (CustomAbilities != null)
             {
                 foreach (CustomAbility item2 in CustomAbilities!)
