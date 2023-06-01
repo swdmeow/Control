@@ -183,6 +183,7 @@
     <Compile Include="Events\Handlers\ServerHandler.cs" />
     <Compile Include="Events\Handlers\PlayerHandler.cs" />
     <Compile Include="CustomItems\GrenadeLauncher.cs" />
+    <Compile Include="Extensions\Player\ClearMapExtensions.cs" />
     <Compile Include="Extensions\Player\HintExtensions.cs" />
     <Compile Include="Extensions\Player\PlayerExtensions.cs" />
     <Compile Include="Patches\RemoteAdmin.cs" />

@@ -7,7 +7,9 @@ using Badge = Control.Handlers.Events.API.Features.Badge;
 namespace Control.Handlers.Events.API
 {
     using System.Linq;
+    using Exiled.API.Extensions;
     using MEC;
+    using PlayerRoles;
     using Сontrol;
 
     public static class Extensions
@@ -52,14 +54,15 @@ namespace Control.Handlers.Events.API
                 if (ControlNR.Singleton.Config.XPSystem.ShowAddedLVL && ply != null)
                 {
                     Control.Extensions.HintExtensions.XPHintQueue.Add((ply, ControlNR.Singleton.Config.XPSystem.AddedLVLHint
-                        .Replace("%level%", log.LVL.ToString()), 6));
+                        .Replace("%level%", log.LVL.ToString()), 12f));
                 }
 
                 ply.RankName = "";
             }
+            
             else if (ControlNR.Singleton.Config.XPSystem.ShowAddedXP && ply != null)
             {
-                Control.Extensions.HintExtensions.XPHintQueue.Add((ply, $"+ <color=green>{amount}</color> XP", 6));
+                Control.Extensions.HintExtensions.XPHintQueue.Add((ply, $"+ <color=green>{amount}</color> XP", 12f));
             }
             log.UpdateLog();
         }

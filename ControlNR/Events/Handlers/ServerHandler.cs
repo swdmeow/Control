@@ -153,8 +153,11 @@
                 Timing.KillCoroutines(WarheadMusic.ChangeColorsCoroutineHandle);
                 Timing.KillCoroutines(WarheadDecontamition.DecontamitionSequnse);
 
-                // Disable it when exiled add it lmao
-                Scp049Role.TurnedPlayers.Clear();
+                if (ControlNR.Singleton.Config.FullRoundRestart)
+                {
+                    Log.Info("Setting NextRoundAction to full restart.");
+                    ServerStatic.StopNextRound = ServerStatic.NextRoundAction.Restart;
+                }
 
                 Round.IsLobbyLocked = false;
                 Res.DiedWithSCP500R.Clear();

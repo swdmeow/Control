@@ -13,7 +13,7 @@
             if (i != null && !i.Contains("\n"))
             {
                 Log.Info(i);
-                Timing.CallDelayed(1f, () =>
+                Timing.CallDelayed(0.5f, () =>
                 {
                     API.UpdateBadge(Player.Get(__instance._hub), i);
                 });

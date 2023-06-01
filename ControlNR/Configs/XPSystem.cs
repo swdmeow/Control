@@ -64,8 +64,9 @@ namespace Control.Configs
         {
             [0] = new Badge
             {
+                Name = "Первопроходец",
                 Color = "cyan"
-            },
+            },  
             [1] = new Badge
             {
                 Color = "orange"
@@ -99,27 +100,9 @@ namespace Control.Configs
                 Color = "lime"
             }
         };
-      
-        
-        [Description("Path the database gets saved to. Requires change on linux.")]
-        public string SavePath { get; set; } = Path.Combine(Paths.Configs, @"Players.db");
-
-        [Description("Path the text file for translations get saved to. Requires change on linux.")]
-        public string SavePathTranslations { get; set; } = Path.Combine(Paths.Configs, @"xp-translations.yml");
+     
         
         [Description("Override colors for people who already have a rank")]
         public bool OverrideColor { get; set; } = false;
-        
-        [Description("Size of hints.")]
-        public byte HintSize { get; set; } = 100;
-        
-        [Description("Spacing of the in (horizontal offset)")]
-        public short HintSpace { get; set; } = 0;
-        
-        [Description("Vertical offset of hints.")]
-        public byte VOffest { get; set; } = 0;
-        
-        [Description("Duration of hints.")]
-        public float HintDuration { get; set; } = 3;
     }
 }

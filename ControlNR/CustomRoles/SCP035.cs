@@ -119,7 +119,7 @@ namespace Control.CustomRoles
         {
             if (ev.Attacker != null && CustomRole.Get((uint)1).Check(ev.Attacker))
             {
-                MirrorExtensions.ChangeAppearance(ev.Attacker, ev.Player.Role, 0);
+                MirrorExtensions.ChangeAppearance(ev.Attacker, ev.Player.Role, false, 0);
 
                 ev.Attacker.DisplayNickname = ev.Player.Nickname;
 

@@ -14,6 +14,9 @@ namespace Сontrol
         [Description("Включен ли дебаг-мод?")]
         public bool Debug { get; set; } = false;
 
+        [Description("Включен ли полный рестарт после конца каждого раунда?")]
+        public bool FullRoundRestart { get; set; } = true;
+
         [Description("Конфиг встроенного плагина XPSystem..")]
         public XPSystem XPSystem { get; set; } = new XPSystem();
     }

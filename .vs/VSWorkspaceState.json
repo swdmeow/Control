@@ -5,8 +5,9 @@
     "\\ControlNR\\CustomRoles",
     "\\ControlNR\\Events",
     "\\ControlNR\\Events\\Handlers",
+    "\\ControlNR\\Events\\Handlers\\Features",
     "\\XPSystem"
   ],
-  "SelectedNode": "\\ControlNR\\CustomRoles\\SCP035.cs",
+  "SelectedNode": "\\ControlNR\\Events\\Handlers\\Features\\WarheadMusic.cs",
   "PreviewInSolutionExplorer": false
 }

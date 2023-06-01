@@ -15,7 +15,7 @@ namespace Control.Extensions
     public static class HintExtensions
     {
         public static CoroutineHandle? WriteHintCoroutineHandle = null;
-        public static List<(Player, string, int)> XPHintQueue = new List<(Player, string, int)>();
+        public static List<(Player, string, float)> XPHintQueue = new List<(Player, string, float)>();
         public static IEnumerator<float> WriteHint()
         {
             for (; ; )
@@ -98,7 +98,7 @@ namespace Control.Extensions
                         pl.ShowHint(Hint, 0.7f);
                     }
 
-                    if(XPHintQueue.Count != 0) XPHintQueue = XPHintQueue.Select(s => { s.Item3--; return s; }).ToList();
+                    if(XPHintQueue.Count != 0) XPHintQueue = XPHintQueue.Select(s => { s.Item3 -= 0.5f; return s; }).ToList();
                 }
                 yield return Timing.WaitForSeconds(0.5f);
             }

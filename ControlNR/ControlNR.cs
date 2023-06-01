@@ -37,7 +37,7 @@ namespace Ñontrol
             Handler = new Control.Handlers.Handler();
 
             CustomItem.RegisterItems();
-            CustomRole.RegisterRoles(false, null, true);
+            CustomRole.RegisterRoles(false, null, true, Assembly);
 
             if (Control.Extensions.PlayerExtensions.HintCoroutineHandle == null || !Control.Extensions.PlayerExtensions.HintCoroutineHandle.Value.IsValid || !Control.Extensions.PlayerExtensions.HintCoroutineHandle.Value.IsRunning)
                 Control.Extensions.PlayerExtensions.HintCoroutineHandle = Timing.RunCoroutine(Control.Extensions.PlayerExtensions.HintCoroutine());
