@@ -20,6 +20,7 @@ namespace Control.Handlers.Events
     using PlayerEvent = Exiled.Events.Handlers.Player;
     using Control.Handlers.Events.API;
     using Сontrol;
+    using Control.Handlers.Events.API.Serialization;
 
     public class XPHandler
     {
@@ -95,7 +96,6 @@ namespace Control.Handlers.Events
 
         public void OnRoundEnd(RoundEndedEventArgs ev)
         {
-
             Side team;
             switch (ev.LeadingTeam)
             {

@@ -5,9 +5,8 @@
     "\\ControlNR\\CustomRoles",
     "\\ControlNR\\Events",
     "\\ControlNR\\Events\\Handlers",
-    "\\ControlNR\\Events\\Handlers\\Features",
-    "\\XPSystem"
+    "\\ControlNR\\Events\\Handlers\\Features"
   ],
-  "SelectedNode": "\\ControlNR\\Events\\Handlers\\Features\\WarheadMusic.cs",
+  "SelectedNode": "\\ControlNR\\Events\\Handlers\\PlayerHandler.cs",
   "PreviewInSolutionExplorer": false
 }
