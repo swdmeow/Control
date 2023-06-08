@@ -35,11 +35,14 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Commands\clear.cs" />
+    <Compile Include="Commands\cuff.cs" />
     <Compile Include="Commands\MaxHealth.cs" />
     <Compile Include="Commands\radio.cs" />
     <Compile Include="Commands\CustomItemController.cs" />
     <Compile Include="Commands\CustomRoleController.cs" />
     <Compile Include="Commands\res.cs" />
+    <Compile Include="Commands\tesla.cs" />
     <Compile Include="ControlGG.cs" />
     <Compile Include="Configs\Plugin.cs" />
     <Compile Include="CustomItems\Coin.cs" />
@@ -48,7 +51,9 @@
     <Compile Include="CustomItems\SCP500R.cs" />
     <Compile Include="CustomRoles\Baby.cs" />
     <Compile Include="CustomRoles\SCP035.cs" />
-    <Compile Include="Events\PlayerHandler.cs" />
+    <Compile Include="Events\Handler.cs" />
+    <Compile Include="Events\Handlers\ServerHandler.cs" />
+    <Compile Include="Events\Handlers\PlayerHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp-firstpass">

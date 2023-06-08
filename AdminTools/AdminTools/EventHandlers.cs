@@ -344,11 +344,6 @@ namespace AdminTools
 
 		public void OnTriggerTesla(TriggeringTeslaEventArgs ev)
 		{
-			if (Tesla.TeslaBoolean == false)
-			{
-				ev.IsAllowed = false;
-			}
-
             if (ev.Player.IsGodModeEnabled)
 				ev.IsAllowed = false;
 		}

@@ -11,24 +11,11 @@ using PlayerRoles;
 using Exiled.Events.EventArgs.Scp096;
 using Exiled.API.Features;
 using MEC;
-using System.Threading.Tasks;
-using System.Threading;
 using Exiled.API.Enums;
-using PlayerRoles.FirstPersonControl;
-using static Respawning.RespawnEffectsController;
-using Exiled.Events.EventArgs.Scp173;
 using Utils.NonAllocLINQ;
-using System;
-using System.Reflection;
 using Exiled.API.Extensions;
-using Exiled.API.Features.Pools;
-using Exiled.API.Interfaces;
 using Exiled.CustomItems.API.Features;
-using Exiled.Loader;
-using Mirror;
 using CustomPlayerEffects;
-using System.Text;
-using System.Diagnostics.SymbolStore;
 
 namespace Control.CustomRoles
 {
@@ -49,9 +36,10 @@ namespace Control.CustomRoles
         {
 
             if (ev.Attacker == null) return;
-            if (CustomRole.Get((uint)2).Check(ev.Player) || CustomRole.Get((uint)2).Check(ev.Attacker)) return;
-
+            if (ev.Player == null) return;
             if (ev.Attacker == ev.Player) return;
+
+            if (CustomRole.Get((uint)2).Check(ev.Player) || CustomRole.Get((uint)2).Check(ev.Attacker)) return;
 
 
             if (CustomRole.Get((uint)1).Check(ev.Attacker))
@@ -60,8 +48,6 @@ namespace Control.CustomRoles
                 {
                     ev.Amount = 0f;
                     ev.IsAllowed = false;
-
-                    ev.Attacker.ShowHint("Вы не можете наносить урон SCP объектам..", 2);
 
                     return;
                 }
@@ -77,8 +63,6 @@ namespace Control.CustomRoles
                 {
                     ev.Amount = 0f;
                     ev.IsAllowed = false;
-
-                    ev.Attacker.ShowHint("Вы не можете наносить урон SCP-035..", 2);
 
                     return;
                 }
@@ -104,6 +88,7 @@ namespace Control.CustomRoles
             Exiled.API.Features.Roles.Scp096Role.TurnedPlayers.Remove(player);
             Exiled.API.Features.Roles.Scp049Role.TurnedPlayers.Remove(player);
 
+            CustomItem.Get((uint)3).Spawn(player.Position);
             player.DisplayNickname = null;
             Cassie.Message("SCP-035<b></b> был устранён.. <color=#ffffff00>h scp 0 3 5 has been terminated", false, false, true);
         }
@@ -117,20 +102,23 @@ namespace Control.CustomRoles
         {
             if (ev.Attacker != null && CustomRole.Get((uint)1).Check(ev.Attacker))
             {
-                MirrorExtensions.ChangeAppearance(ev.Attacker, ev.Player.Role, 0);
+                MirrorExtensions.ChangeAppearance(ev.Attacker, ev.Player.Role, false, 0);
 
                 ev.Attacker.DisplayNickname = ev.Player.Nickname;
 
                 ev.Attacker.DisableAllEffects();
-                foreach (StatusEffectBase effect in ev.Player.ActiveEffects)
+                if (ev.Player.ActiveEffects.Count() != 0)
                 {
-                    ev.Attacker.EnableEffect(effect, effect.TimeLeft);
+                    foreach (StatusEffectBase effect in ev.Player.ActiveEffects)
+                    {
+                        ev.Attacker.EnableEffect(effect, effect.TimeLeft);
+                    }
                 }
 
                 bool AllowedToTp = true;
                 Vector3 pos = ev.Player.Position;
 
-                if (ev.DamageHandler.Type == DamageType.Explosion) AllowedToTp = false;
+                if (ev.DamageHandler.Type == DamageType.Explosion || ev.Player.Lift != null) AllowedToTp = false;
 
                 Timing.CallDelayed(0.1f, () =>
                 {
@@ -220,8 +208,8 @@ namespace Control.CustomRoles
             }
 
             Log.Debug(Name + ": Setting player info");
-            player.CustomInfo = player.CustomName + "\n" + CustomInfo;
-            player.InfoArea &= ~(PlayerInfoArea.Nickname | PlayerInfoArea.Role);
+            player.CustomInfo = CustomInfo;
+            //player.InfoArea &= ~(PlayerInfoArea.Nickname | PlayerInfoArea.Role);
             if (CustomAbilities != null)
             {
                 foreach (CustomAbility item2 in CustomAbilities!)

@@ -9,7 +9,6 @@
         private EventHandlers eventHandlers;
 
         public override string Name { get; } = "RainbowTags";
-        public override Version RequiredExiledVersion { get; } = new Version(5, 0, 0);
         public override string Author { get; } = "swd";
 
         public override void OnEnabled()

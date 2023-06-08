@@ -18,13 +18,14 @@
         public string Description { get; } = "Команда для выдачи кастомных ролей.. [ID роли, ID игрока]";
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            if (!CommandProcessor.CheckPermissions(((CommandSender)sender), "CustomRole", PlayerPermissions.ForceclassWithoutRestrictions, "ControlGG", false))
+            if (!Exiled.Permissions.Extensions.Permissions.CheckPermission(sender, "ControlGG.CustomRole"))
             {
                 response = "У вас нет прав..";
                 return false;
             }
+            string[] args = arguments.ToString().Trim().Split(QueryProcessor.SpaceArray, 512);
 
-            if (arguments.At(0) == null || arguments.At(1) == null)
+            if (args[0] == null || args[1] == null)
             {
                 response = $"Ну где же... аргументы, ну где же аргументы?";
                 return false;

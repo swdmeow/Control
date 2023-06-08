@@ -3,43 +3,36 @@ namespace Ñontrol
     using Exiled.API.Features;
     using Exiled.CustomItems.API.Features;
     using Exiled.CustomRoles.API.Features;
-    using System.IO;
-    using System;
-    using MEC;
-    using Control.Events;
 
-    public class ControlNR : Plugin<Config>
+    public class ControlGG : Plugin<Config>
     {
-        public static ControlNR Singleton;
+        public static ControlGG Singleton;
         public override string Name => "ControlGG";
         public override string Author => "swd";
-        public override System.Version Version => new System.Version(1, 0, 0);
+        public override System.Version Version => new System.Version(1, 2, 0);
 
-        private Control.Events.PlayerHandler PlayerHandler;
+        private Control.Handlers.Handler Handler;
         public override void OnEnabled()
         {
             Singleton = this;
+            Handler = new Control.Handlers.Handler();
 
-            PlayerHandler = new Control.Events.PlayerHandler();
-
-            PlayerHandler.OnEnabled();
+            Log.Info($"Enabling {Name},\nAuthor: {Author}\nVersion: {Version}");
 
             CustomItem.RegisterItems();
-            CustomRole.RegisterRoles(false, null, true);
+            CustomRole.RegisterRoles(false, null, true, Assembly);
 
             base.OnEnabled();
         }
-        public override void OnReloaded() { }
         public override void OnDisabled()
         {
-            PlayerHandler.OnDisabled();
+            Handler.Dispose();
 
             CustomItem.UnregisterItems();
             CustomRole.UnregisterRoles();
 
-            PlayerHandler = null;
-
             Singleton = null;
+            Handler = null;
 
             base.OnDisabled();
         }

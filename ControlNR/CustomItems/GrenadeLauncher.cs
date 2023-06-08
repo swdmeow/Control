@@ -39,9 +39,14 @@ namespace Control.CustomItems
         {
             FirearmPickup pickup;
 
-            if (Loader.Random.Next(100) > 50) pickup = CustomItem.Get((uint)4).Spawn(Room.Get(RoomType.LczArmory).transform.position + Vector3.up) as FirearmPickup;
-            else pickup = CustomItem.Get((uint)4).Spawn(Room.Get(RoomType.HczArmory).transform.position + Vector3.up) as FirearmPickup;
-
+            if (Loader.Random.Next(100) > 50)
+            {
+                pickup = CustomItem.Get((uint)4).Spawn(Room.Get(RoomType.LczArmory).transform.position + Vector3.up) as FirearmPickup;
+            }
+            else
+            {
+                pickup = CustomItem.Get((uint)4).Spawn(Room.Get(RoomType.HczArmory).transform.position + Vector3.up) as FirearmPickup;
+            }
             Timing.CallDelayed(0.1f, () => { pickup.Ammo = 1; });
         }
 
@@ -52,7 +57,7 @@ namespace Control.CustomItems
             ev.IsAllowed = false;
 
             var FireItem = ev.Player.CurrentItem as Firearm;
-           
+
             if (FireItem.Ammo + 1 > 0)
             {
                 ev.Player.ThrowGrenade(Exiled.API.Enums.ProjectileType.FragGrenade);

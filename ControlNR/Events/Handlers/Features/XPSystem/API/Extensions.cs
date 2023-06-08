@@ -50,7 +50,7 @@ namespace Control.Handlers.Events.API
             if (lvlsGained > 0)
             {
                 log.LVL += lvlsGained;
-                log.XP -= lvlsGained * ControlNR.Singleton.Config.XPSystem.XPPerLevel;
+                log.XP -= lvlsGained * XPPerLevel;
                 if (ControlNR.Singleton.Config.XPSystem.ShowAddedLVL && ply != null)
                 {
                     Control.Extensions.HintExtensions.XPHintQueue.Add((ply, ControlNR.Singleton.Config.XPSystem.AddedLVLHint

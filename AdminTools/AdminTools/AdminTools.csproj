@@ -39,7 +39,6 @@
     <Compile Include="Commands\cd-chambers\cd-chambers.cs" />
     <Compile Include="Commands\d-rename\d-rename.cs" />
     <Compile Include="Commands\SCP096Engaged\SCP096Engaged.cs" />
-    <Compile Include="Commands\tesla\tesla.cs" />
     <Compile Include="Commands\Ahp\Ahp.cs" />
     <Compile Include="Commands\Ball\Ball.cs" />
     <Compile Include="Commands\BreakDoors\BreakDoors.cs" />

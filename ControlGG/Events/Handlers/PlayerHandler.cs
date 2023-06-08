@@ -1,4 +1,4 @@
-﻿namespace Control.Events
+﻿namespace Control.Handlers.Events
 {
     using Exiled.API.Enums;
     using Exiled.API.Features;
@@ -32,21 +32,41 @@
 
     internal sealed class PlayerHandler
     {
-        public void OnEnabled()
+        public PlayerHandler()
         {
             Player.UsingRadioBattery += OnUsingRadioBattery;
+            Player.TriggeringTesla += OnTriggeringTesla;
+            Player.Handcuffing += OnHandcuffing;
+
         }
         public void OnDisabled()
         {
             Player.UsingRadioBattery -= OnUsingRadioBattery;
+            Player.TriggeringTesla -= OnTriggeringTesla;
+            Player.Handcuffing -= OnHandcuffing;
         }
         private void OnUsingRadioBattery(UsingRadioBatteryEventArgs ev)
         {
-            if(radio.BooleanRadio == true)
+            if (radio.BooleanRadio == true)
             {
                 ev.Drain = 0f;
                 ev.Radio.BatteryLevel = 100;
             }
-        } 
+        }
+        private void OnTriggeringTesla(TriggeringTeslaEventArgs ev)
+        {
+            if (Tesla.TeslaBoolean == true || Tesla.IgnoredTeams.Contains(ev.Player.Role.Team))
+            {
+                ev.IsInHurtingRange = false;
+                ev.IsAllowed = false;
+            }
+        }
+        private void OnHandcuffing(HandcuffingEventArgs ev)
+        {
+            if(Cuff.IgnoredCuffPlayers.Contains(ev.Player))
+            {
+                ev.IsAllowed = false;
+            }
+        }
     }
 }

@@ -32,6 +32,7 @@ namespace Control.Configs
             [RoleTypeId.Scp173] = 500,
             [RoleTypeId.Scp096] = 500,
             [RoleTypeId.Scp939] = 500,
+            [RoleTypeId.NtfSpecialist] = 125,
         };
 
         [Description("How many XP should a player get if their team wins.")]
@@ -65,39 +66,39 @@ namespace Control.Configs
             [0] = new Badge
             {
                 Name = "Первопроходец",
-                Color = "cyan"
+                Color = "silver"
             },  
             [1] = new Badge
             {
-                Color = "orange"
+                Color = "crimson"
             },
             [2] = new Badge
             {
-                Color = "grey"
+                Color = "aqua"
             },
             [3] = new Badge
             {
-                Color = "white"
+                Color = "orange"
             },
             [4] = new Badge
             {
-                Color = "#E354A9"
+                Color = "lime"
             },
             [5] = new Badge
             {
-                Color = "yellow"
+                Color = "silver"
             },
             [10] = new Badge
             {
-                Color = "red"
+                Color = "emerald"
             },
             [15] = new Badge
             {
-                Color = "#160810"
+                Color = "green"
             },
             [50] = new Badge
             {
-                Color = "lime"
+                Color = "yellow"
             }
         };
      

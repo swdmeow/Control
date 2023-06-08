@@ -19,7 +19,7 @@
         public string Description { get; } = "Команда для включения бесконечной рации..";
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            if (!CommandProcessor.CheckPermissions(((CommandSender)sender), "CustomRole", PlayerPermissions.ForceclassWithoutRestrictions, "ControlGG", false))
+            if (!Exiled.Permissions.Extensions.Permissions.CheckPermission(sender, "ControlGG.Radio"))
             {
                 response = "У вас нет прав..";
                 return false;
@@ -30,10 +30,12 @@
                 case "enable":
                     BooleanRadio = true;
                     response = "Бесконечная батарея - включена.";
+                    Log.Info("Catch radio command. Enabling infinity radio.");
                     break;
                 case "disable":
                     BooleanRadio = false;
                     response = "Бесконечная батарея - выключена.";
+                    Log.Info("Catch radio command. Disabling infinity radio.");
                     break;
                 default:
                     response = "Использование: radio (enable / disable)";

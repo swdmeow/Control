@@ -2,11 +2,13 @@
   "ExpandedNodes": [
     "",
     "\\ControlNR",
-    "\\ControlNR\\CustomRoles",
+    "\\ControlNR\\API",
+    "\\ControlNR\\API\\Serialization",
     "\\ControlNR\\Events",
     "\\ControlNR\\Events\\Handlers",
-    "\\ControlNR\\Events\\Handlers\\Features"
+    "\\ControlNR\\Extensions",
+    "\\ControlNR\\Extensions\\Player"
   ],
-  "SelectedNode": "\\ControlNR\\Events\\Handlers\\PlayerHandler.cs",
+  "SelectedNode": "\\ControlNR\\ControlNR.cs",
   "PreviewInSolutionExplorer": false
 }

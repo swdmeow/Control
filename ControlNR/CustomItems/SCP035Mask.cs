@@ -39,7 +39,7 @@ namespace Control.CustomItems
             ItemType.KeycardO5,
             ItemType.KeycardZoneManager,
             ItemType.SCP244b,
-            ItemType.SCP500,
+            ItemType.AntiSCP207,
         };
         public override void Give(Exiled.API.Features.Player player, bool displayMessage = true)
         {

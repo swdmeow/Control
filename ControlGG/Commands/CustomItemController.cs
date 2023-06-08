@@ -18,13 +18,15 @@
         public string Description { get; } = "Команда для выдачи кастомных предметов.. [ID предмета, ID игрока]";
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            if (!CommandProcessor.CheckPermissions(((CommandSender)sender), "CustomRole", PlayerPermissions.ForceclassWithoutRestrictions, "ControlGG", false))
+            if (!Exiled.Permissions.Extensions.Permissions.CheckPermission(sender, "ControlGG.CustomItem"))
             {
                 response = "У вас нет прав..";
                 return false;
             }
 
-            if (arguments.At(0) == null || arguments.At(1) == null)
+            string[] args = arguments.ToString().Trim().Split(QueryProcessor.SpaceArray, 512);
+
+            if (args[0] == null || args[1] == null)
             {
                 response = $"Ну где же... аргументы, ну где же аргументы?";
                 return false;

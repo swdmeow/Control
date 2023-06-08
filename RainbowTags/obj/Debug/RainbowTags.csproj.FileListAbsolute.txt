@@ -66,3 +66,5 @@ D:\github\Control\RainbowTags\Release\RainbowTags.dll
 D:\github\Control\RainbowTags\Release\RainbowTags.pdb
 D:\github\Control\RainbowTags\obj\Debug\RainbowTags.dll
 D:\github\Control\RainbowTags\obj\Debug\RainbowTags.pdb
+D:\github\Control\RainbowTags\Release\0Harmony.dll
+D:\github\Control\RainbowTags\Release\SemanticVersioning.dll

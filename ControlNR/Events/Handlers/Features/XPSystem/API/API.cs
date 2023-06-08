@@ -4,6 +4,7 @@
     using System.Runtime.InteropServices;
     using Control.Handlers.Events.API.Serialization;
     using Exiled.API.Features;
+    using Exiled.Loader.Features;
     using Сontrol;
     using Badge = Features.Badge;
 
@@ -43,6 +44,11 @@
                         Color = $"{kvp.Value.Color}",
                     };
                     break;
+                }
+
+                if (!ply.IsNorthwoodStaff && ply.Group == null)
+                {
+                    ply.BadgeHidden = false;
                 }
 
                 string text = ply.Group == null || ply.Group != null && ply.BadgeHidden == true

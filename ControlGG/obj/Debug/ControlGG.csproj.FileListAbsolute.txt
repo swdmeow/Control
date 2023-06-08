@@ -68,3 +68,4 @@ D:\github\Control\ControlGG\Release\Unity.Timeline.dll
 D:\github\Control\ControlGG\Release\Unity.Burst.Unsafe.dll
 D:\github\Control\ControlGG\Release\UnityEngine.DirectorModule.dll
 D:\github\Control\ControlGG\Release\YamlDotNet.dll
+D:\github\Control\ControlGG\Release\SemanticVersioning.dll

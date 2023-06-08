@@ -50,9 +50,10 @@ namespace Control.CustomRoles
         {
 
             if (ev.Attacker == null) return;
-            if (CustomRole.Get((uint)2).Check(ev.Player) || CustomRole.Get((uint)2).Check(ev.Attacker)) return;
-
+            if (ev.Player == null) return;
             if (ev.Attacker == ev.Player) return;
+
+            if (CustomRole.Get((uint)2).Check(ev.Player) || CustomRole.Get((uint)2).Check(ev.Attacker)) return;
 
 
             if (CustomRole.Get((uint)1).Check(ev.Attacker))
@@ -105,6 +106,7 @@ namespace Control.CustomRoles
             Exiled.API.Features.Roles.Scp096Role.TurnedPlayers.Remove(player);
             Exiled.API.Features.Roles.Scp049Role.TurnedPlayers.Remove(player);
 
+
             CustomItem.Get((uint)3).Spawn(player.Position);
             player.DisplayNickname = null;
             Cassie.Message("SCP-035<b></b> был устранён.. <color=#ffffff00>h scp 0 3 5 has been terminated", false, false, true);
@@ -132,6 +134,8 @@ namespace Control.CustomRoles
                     }
                 }
 
+                ev.Attacker.MaxHealth += 5;
+
                 bool AllowedToTp = true;
                 Vector3 pos = ev.Player.Position;
 
@@ -151,6 +155,17 @@ namespace Control.CustomRoles
             Exiled.Events.Handlers.Player.EnteringPocketDimension += OnEnteringPocketDimension;
             Exiled.Events.Handlers.Player.Hurting += OnHurting;
             Exiled.Events.Handlers.Player.Escaping += OnEscaping;
+            Exiled.Events.Handlers.Player.ReceivingEffect += OnReceivingEffect;
+
+        }
+        private void OnReceivingEffect(ReceivingEffectEventArgs ev)
+        {
+            if (!CustomRole.Get((uint)1).Check(ev.Player)) return;
+
+            if (ev.Effect.name == "Cardiac Arrest")
+            {
+                ev.IsAllowed = false;
+            }
         }
         private void OnEscaping(EscapingEventArgs ev)
         {
@@ -170,6 +185,7 @@ namespace Control.CustomRoles
             Exiled.Events.Handlers.Player.Dying -= OnDying;
             Exiled.Events.Handlers.Player.EnteringPocketDimension -= OnEnteringPocketDimension;
             Exiled.Events.Handlers.Player.Hurting -= OnHurting;
+            Exiled.Events.Handlers.Player.ReceivingEffect -= OnReceivingEffect;
         }
         private void OnInternalChangingRole(ChangingRoleEventArgs ev)
         {

@@ -19,12 +19,19 @@
     {
         public string Command { get; } = "MaxHealth";
         public string[] Aliases { get; } = new string[] { };
-        public string Description { get; } = "Команда для установки максимального кол-ва хп..";
+        public string Description { get; } = "Команда для установки максимального кол-ва хп.. ";
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            if (!CommandProcessor.CheckPermissions(((CommandSender)sender), "MaxHealth", PlayerPermissions.PlayersManagement, "ControlNR", false))
+            if (!Exiled.Permissions.Extensions.Permissions.CheckPermission(sender, "ControlGG.MaxHealth"))
             {
                 response = "У вас нет прав..";
+                return false;
+            }
+            string[] args = arguments.ToString().Trim().Split(QueryProcessor.SpaceArray, 512);
+
+            if (args[0] == null || args[1] == null)
+            {
+                response = $"Использование: [ID игрока] [ХП]..";
                 return false;
             }
 

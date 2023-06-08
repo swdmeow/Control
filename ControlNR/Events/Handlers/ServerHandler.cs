@@ -208,7 +208,8 @@
                 if (Warhead.IsInProgress == false)
                 {
                     Warhead.Controller.InstantPrepare();
-                    Warhead.Controller.StartDetonation(true, false, (Player.List.Count() == 0 ? Server.Host.ReferenceHub : Player.List.ToList().RandomItem().ReferenceHub));
+                    Warhead.DetonationTimer = 120;
+                    Warhead.Start();
                 }
                 Warhead.IsLocked = true; 
 
@@ -221,9 +222,9 @@
                 bool chaos = Player.List.Where(p => (p.Role.Team == Team.ChaosInsurgency || p.Role == RoleTypeId.ClassD) && !CustomRole.Get((uint)1).Check(p) && !CustomRole.Get((uint)2).Check(p)).Count() > 0;
                 bool scps = Player.List.Where(p => p.Role.Team == Team.SCPs || CustomRole.Get((uint)1).Check(p)).Count() > 0;
 
-                if (!mtf && chaos && !scps) { ev.IsRoundEnded = true; Log.Info("1.2 (Chaos): Any team left only"); }
-                else if (mtf && !chaos && !scps) { ev.IsRoundEnded = true; Log.Info("1.3 (MTF): Any team left only"); }
-                else if (!mtf && !chaos && scps) { ev.IsRoundEnded = true; Log.Info("1.4 (SCPs): Any team left only"); }
+                if (!mtf && chaos && !scps) { ev.IsRoundEnded = true; Log.Info("1.2 (Chaos): Any team left only"); ev.LeadingTeam = Exiled.API.Enums.LeadingTeam.ChaosInsurgency; }
+                else if (mtf && !chaos && !scps) { ev.IsRoundEnded = true; Log.Info("1.3 (MTF): Any team left only"); ev.LeadingTeam = Exiled.API.Enums.LeadingTeam.FacilityForces; }
+                else if (!mtf && !chaos && scps) { ev.IsRoundEnded = true; Log.Info("1.4 (SCPs): Any team left only"); ev.LeadingTeam = Exiled.API.Enums.LeadingTeam.Anomalies; }
 
                 else if ((chaos || mtf) && scps) { ev.IsRoundEnded = false; Log.Debug("2: SCPs and MTF || CHAOS || CLASSD"); }
                 else if (mtf && chaos) { ev.IsRoundEnded = false; Log.Debug("3: Chaos & MTF"); }
@@ -236,7 +237,7 @@
             Server.FriendlyFire = true;
 
             Cassie.Clear();
-            Cassie.Message("Огонь по своим включён.. <color=#ffffff00>h F F enabled .g1", true, false, true);
+            Cassie.Message("Огонь по своим включён.. <color=#ffffff00>h pitch_1 F F enabled .g1", true, false, true);
 
             foreach (Pickup pickup in Pickup.List)
             {

@@ -13,8 +13,6 @@
         private Control.Handlers.Events.WarheadDecontamition WarheadDecontamition;
         private Control.Handlers.Events.XPHandler XPHandler;
 
-
-
         public Handler()
         {
             PlayerHandler = new Control.Handlers.Events.PlayerHandler();

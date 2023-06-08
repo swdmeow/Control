@@ -69,7 +69,7 @@ namespace Control.CustomItems
             CandyKindID.Blue,
             CandyKindID.Red
         };
-        private string[] Events { get; } = new string[] { "teleport", "boom", "ToZombie", "betrayTeam", "speed", "candy", "flash", "size", "slow", "poop" };
+        private string[] Events { get; } = new string[] { "teleport", "boom", "ToZombie", "betrayTeam", "speed", "candy", "flash", "size", "slow", "poop", "kick" };
         public override SpawnProperties SpawnProperties { get; set; } = null;
         private void OnFlippingCoin(FlippingCoinEventArgs ev)
         {
@@ -81,7 +81,6 @@ namespace Control.CustomItems
 
                 if (needTo == "teleport")
                 {
-
                     ev.Player.EnableEffect(EffectType.Flashed, 1f);
 
                     Timing.CallDelayed(0.1f, () =>
@@ -151,10 +150,10 @@ namespace Control.CustomItems
                 {
                     ev.Player.CurrentItem.Destroy();
 
-                    ExplosiveGrenade grenade = (ExplosiveGrenade)Item.Create(ItemType.GrenadeHE, Server.Host);
+                    ExplosiveGrenade grenade = (ExplosiveGrenade)Item.Create(ItemType.GrenadeHE, ev.Player);
 
                     grenade.FuseTime = 0.2f;
-                    grenade.ScpDamageMultiplier = 666f;
+                    grenade.ScpDamageMultiplier = 55;
 
                     grenade.SpawnActive(ev.Player.Position + Vector3.up);
                 }
@@ -198,11 +197,35 @@ namespace Control.CustomItems
                     }
                     CustomRole.Get((uint)8).AddRole(ev.Player);
                 }
+                if (needTo == "kick")
+                {
+                    ev.Player.CurrentItem.Destroy();
+
+                    ev.Player.Kick("Испепелён с сервера с помощью волшебной монетки.");
+                    Map.Broadcast(new Exiled.API.Features.Broadcast($"{ev.Player.Nickname} испепелён с сервера с помощью волшебной монетки", 5));
+                }
+            }
+        }
+        private void OnRoundStarted()
+        {
+            CustomItem.Get((uint)7).Spawn(Room.List.ElementAt(new System.Random().Next(0, Room.List.Count())).transform.position + Vector3.up);
+
+            foreach (Pickup _pickup in Pickup.List)
+            {
+                if (_pickup.Type == ItemType.Coin)
+                {
+                    CustomItem.Get((uint)7).Spawn(_pickup.Position + Vector3.up);
+
+                    _pickup.Destroy();
+
+                    return;
+                }
             }
         }
         protected override void SubscribeEvents()
         {
             Exiled.Events.Handlers.Player.FlippingCoin += OnFlippingCoin;
+
             base.SubscribeEvents();
         }
         protected override void UnsubscribeEvents()

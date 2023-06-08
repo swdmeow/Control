@@ -35,10 +35,12 @@
             PlayerEvent.Verified -= OnVerified;
             PlayerEvent.UsingRadioBattery -= OnUsingRadioBatteryEventArgs;
             PlayerEvent.TriggeringTesla -= OnTriggeringTesla;
-            PlayerEvent.Escaping += OnEscaping;
+            PlayerEvent.Escaping -= OnEscaping;
         }
         private void OnEscaping(EscapingEventArgs ev)
         {
+            Log.Info(ev.Player.Role);
+
             if (ev.IsAllowed) return;
 
             if (!ev.Player.IsCuffed) return;
