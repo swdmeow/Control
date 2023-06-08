@@ -38,7 +38,7 @@ namespace XPSystem.Commands
             {
                 log.LVL = lvl;
                 log.XP = 0;
-                ControlNR.Singleton.XPdb.GetCollection<PlayerLog>("Players").Update(log);
+                log.UpdateLog();
                 response = $"{arguments.At(0)}'s LVL is now {log.LVL}";
                 return true;
             }
