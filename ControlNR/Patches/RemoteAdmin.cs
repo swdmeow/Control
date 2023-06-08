@@ -147,7 +147,7 @@ namespace Control.Patches
                                     log.ForcedTimes += 1;
                                     log.ForcedToSCP = true;
 
-                                    ControlNR.Singleton.XPdb.GetCollection<VIPLog>("VIPPlayers")?.Update(log);
+                                    ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers")?.Update(log);
 
                                     sender.RaReply($"ControlNR#Успешно..", Success, true, string.Empty);
                                     return Allowed;
@@ -172,7 +172,7 @@ namespace Control.Patches
                                 log.ForcedTimes += 1;
                                 log.ForcedToSCP = true;
 
-                                ControlNR.Singleton.XPdb.GetCollection<VIPLog>("VIPPlayers")?.Update(log);
+                                ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers")?.Update(log);
 
                                 player.Role.Set(role);
 
@@ -182,7 +182,7 @@ namespace Control.Patches
                                 {
                                     var ValueChange = ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers")?.FindById(UserID);
                                     ValueChange.cooldownRole = false;
-                                    ControlNR.Singleton.XPdb.GetCollection<VIPLog>("VIPPlayers")?.Update(ValueChange);
+                                    ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers")?.Update(ValueChange);
                                 });
 
                                 return Allowed;
@@ -195,7 +195,7 @@ namespace Control.Patches
                             }
                         }
 
-                        if (role.GetTeam() == Team.ChaosInsurgency && role != RoleTypeId.ClassD || role.GetTeam() == Team.FoundationForces && role != RoleTypeId.Scientist)
+                        if (role.GetTeam() == Team.ChaosInsurgency || role.GetTeam() == Team.FoundationForces && role != RoleTypeId.FacilityGuard)
                         {
                             if (Round.ElapsedTime.TotalMinutes <= 3)
                             {
@@ -214,7 +214,7 @@ namespace Control.Patches
 
                         log.cooldownRole = true;
                         log.ForcedTimes += 1;
-                        ControlNR.Singleton.XPdb.GetCollection<VIPLog>("VIPPlayers")?.Update(log);
+                        ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers")?.Update(log);
 
                         player.Role.Set(role);
 
@@ -222,7 +222,7 @@ namespace Control.Patches
                         {
                             var ValueChange = ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers")?.FindById(UserID);
                             ValueChange.cooldownRole = false;
-                            ControlNR.Singleton.XPdb.GetCollection<VIPLog>("VIPPlayers")?.Update(ValueChange);
+                            ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers")?.Update(ValueChange);
                         });
 
                         Allowed = false;
@@ -281,7 +281,7 @@ namespace Control.Patches
                             }
                         }
 
-                        if(!Enum.TryParse(itemID, true, out ItemType item))
+                        if (!Enum.TryParse(itemID, true, out ItemType item))
                         {
                             Success = false;
                             Allowed = false;
@@ -310,15 +310,17 @@ namespace Control.Patches
                             return Allowed;
                         }
 
+
                         log.cooldownItem = true;
                         log.GivedTimes += 1;
-                        ControlNR.Singleton.XPdb.GetCollection<VIPLog>("VIPPlayers")?.Update(log);
+
+                        ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers")?.Update(log);
 
                         Timing.CallDelayed(120f, () =>
                         {
                             var ValueChange = ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers")?.FindById(UserID);
                             ValueChange.cooldownItem = false;
-                            ControlNR.Singleton.XPdb.GetCollection<VIPLog>("VIPPlayers")?.Update(ValueChange);
+                            ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers")?.Update(ValueChange);
                         });
 
                         player.AddItem(item, 1);
@@ -356,13 +358,13 @@ namespace Control.Patches
                                 }
                                 log.cooldownCall = true;
                                 log.CallTimes += 1;
-                                ControlNR.Singleton.XPdb.GetCollection<VIPLog>("VIPPlayers")?.Update(log);
+                                ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers")?.Update(log);
 
                                 Timing.CallDelayed(120f, () =>
                                 {
                                     var ValueChange = ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers")?.FindById(UserID);
                                     ValueChange.cooldownCall = false;
-                                    ControlNR.Singleton.XPdb.GetCollection<VIPLog>("VIPPlayers")?.Update(ValueChange);
+                                    ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers")?.Update(ValueChange);
                                 });
 
                                 Respawn.ForceWave(team, true);

@@ -98,17 +98,6 @@
             {
                 ev.Items.Add(ItemType.KeycardJanitor);
             }
-
-            if(ev.Items.Count >= 8)
-            {
-                if (ev.Player.GroupName.StartsWith("d2"))
-                {
-                    Timing.CallDelayed(0.1f, () => CustomItem.Get((uint)7).Give(ev.Player));
-                } else
-                {
-                    if (Loader.Random.Next(100) > 77) Timing.CallDelayed(0.1f, () => CustomItem.Get((uint)7).Give(ev.Player));
-                }
-            }
         }
         private void OnLeft(LeftEventArgs ev)
         {

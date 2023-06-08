@@ -159,6 +159,18 @@
                     ServerStatic.StopNextRound = ServerStatic.NextRoundAction.Restart;
                 }
 
+                if (ControlNR.Singleton.Config.RoomLootSpawn)
+                {
+                    Log.Info("Spawning loot in rooms..");
+
+                    foreach(Door door in Door.List.Where(x => x.Type == Exiled.API.Enums.DoorType.LczArmory || x.Type == Exiled.API.Enums.DoorType.HczArmory))
+                    {
+                        door.IsOpen = true;
+
+                        door.IsOpen = false;
+                    }
+                }
+
                 Round.IsLobbyLocked = false;
                 Res.DiedWithSCP500R.Clear();
                 Res.RoleDiedWithSCP500R.Clear();

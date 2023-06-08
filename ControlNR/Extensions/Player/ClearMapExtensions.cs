@@ -21,7 +21,7 @@ namespace Control.Extensions
         {
             for (; ; )
             {
-                yield return Timing.WaitForSeconds(360.5f);
+                yield return Timing.WaitForSeconds(360.6f);
 
                 if (Round.IsLobby) continue;
 
