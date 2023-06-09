@@ -16,6 +16,12 @@
     using Exiled.Loader;
     using Control.API.Serialization;
     using RemoteAdmin.Communication;
+    using PlayerRoles.PlayableScps.HumeShield;
+    using Utils.Networking;
+    using Exiled.API.Extensions;
+    using InventorySystem.Items.Firearms;
+    using RelativePositioning;
+    using UnityEngine;
 
     internal sealed class PlayerHandler
     {
@@ -52,23 +58,9 @@
         {
             Timing.CallDelayed(0.1f, () =>
             {
-                // 76561199014366139@steam - topar
-             
                 if (ev.Player.GroupName.StartsWith("d1") || ev.Player.GroupName.StartsWith("d2"))
                 {
-                    // Add player to DB;
-                    ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers").Insert(new VIPLog()
-                    {
-                        ID = ev.Player.UserId,
-                        cooldownRole = false,
-                        cooldownItem = false,
-                        cooldownCall = false,
-                        cooldownVote = false,
-                        ForcedToSCP = false,
-                        GivedTimes = 0,
-                        ForcedTimes = 0,
-                        CallTimes = 0,
-                    });
+                    ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers").Insert(new VIPLog());
                 }
             });
         }
@@ -80,13 +72,10 @@
         private void OnUsingRadioBatteryEventArgs(UsingRadioBatteryEventArgs ev) => ev.Drain = 0f;
         private void OnChangingRole(ChangingRoleEventArgs ev)
         {
-            if (ev.Player.IsScp) return;
-
             if (ev.NewRole == RoleTypeId.NtfPrivate && ev.Items.Contains(ItemType.KeycardNTFOfficer))
             {
                 ev.Items.Remove(ItemType.KeycardNTFOfficer);
                 ev.Items.Add(ItemType.KeycardNTFLieutenant);
-
             }
             if (ev.NewRole == RoleTypeId.FacilityGuard && ev.Items.Contains(ItemType.KeycardGuard))
             {
@@ -97,26 +86,10 @@
             if (ev.NewRole == RoleTypeId.ClassD)
             {
                 ev.Items.Add(ItemType.KeycardJanitor);
-            }
+            } 
         }
         private void OnLeft(LeftEventArgs ev)
         {
-            if (Res.DiedWithSCP500R.Contains(ev.Player))
-            {
-                Res.DiedWithSCP500R.Remove(ev.Player);
-                Res.RoleDiedWithSCP500R.Clear();
-            }
-
-            if (Scp173Role.TurnedPlayers.Contains(ev.Player))
-            {
-                Scp173Role.TurnedPlayers.Remove(ev.Player);
-            }
-
-            if (Scp096Role.TurnedPlayers.Contains(ev.Player))
-            {
-                Scp096Role.TurnedPlayers.Remove(ev.Player);
-            }
-
             ev.Player.IsOverwatchEnabled = false;
         }
     }

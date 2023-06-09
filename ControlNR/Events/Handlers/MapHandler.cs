@@ -11,16 +11,12 @@
     {
         public MapHandler()
         {
-            MapEvent.PlacingBlood += OnPlacingBlood;
-            MapEvent.PlacingBulletHole += OnPlacingBulletHole;
             MapEvent.SpawningItem += OnSpawningItem;
             MapEvent.AnnouncingScpTermination += OnAnnouncingScpTermination;
             MapEvent.AnnouncingNtfEntrance += OnAnnouncingNtfEntrance;
         }
         public void OnDisabled()
         {
-            MapEvent.PlacingBlood -= OnPlacingBlood;
-            MapEvent.PlacingBulletHole -= OnPlacingBulletHole;
             MapEvent.SpawningItem -= OnSpawningItem;
             MapEvent.AnnouncingScpTermination -= OnAnnouncingScpTermination;
             MapEvent.AnnouncingNtfEntrance -= OnAnnouncingNtfEntrance;
@@ -64,14 +60,6 @@
 
                 return;
             }
-        }
-        private void OnPlacingBulletHole(PlacingBulletHole ev)
-        {
-            ev.IsAllowed = false;
-        }
-        private void OnPlacingBlood(PlacingBloodEventArgs ev)
-        {
-            ev.IsAllowed = false;
         }
     }
 }

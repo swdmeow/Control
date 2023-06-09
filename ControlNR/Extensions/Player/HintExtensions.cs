@@ -22,6 +22,7 @@ namespace Control.Extensions
         {
             for (; ; )
             {
+
                 foreach (Player pl in Player.List)
                 {
                     if (pl.CurrentHint != null)

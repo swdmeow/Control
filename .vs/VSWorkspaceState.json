@@ -7,8 +7,9 @@
     "\\ControlNR\\Events",
     "\\ControlNR\\Events\\Handlers",
     "\\ControlNR\\Extensions",
-    "\\ControlNR\\Extensions\\Player"
+    "\\ControlNR\\Extensions\\Player",
+    "\\ControlNR\\Patches"
   ],
-  "SelectedNode": "\\ControlNR\\ControlNR.cs",
+  "SelectedNode": "\\ControlNR\\Patches\\RemoteAdmin.cs",
   "PreviewInSolutionExplorer": false
 }

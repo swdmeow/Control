@@ -262,3 +262,4 @@ D:\github\Control\ControlNR\Release\LiteDB.dll
 D:\github\Control\ControlNR\Release\MapEditorReborn.dll
 D:\github\Control\ControlNR\Release\UnityEngine.AssetBundleModule.dll
 D:\github\Control\ControlNR\Release\SemanticVersioning.dll
+D:\github\Control\ControlNR\Release\Newtonsoft.Json.dll

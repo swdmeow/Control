@@ -77,7 +77,7 @@
         }
         private void OnStaring(StartingEventArgs ev)
         {
-            Control.API.Extensions.PlayAudio($"{new System.Random().Next(1, Directory.GetFiles(Path.Combine(Paths.Configs, "ControlNR/Music/")).Length + 1)}.ogg", 50, true, "da.mp9");
+            Control.API.Extensions.PlayAudio($"{UnityEngine.Random.Range(1, Directory.GetFiles(Path.Combine(Paths.Configs, "ControlNR/Music/")).Length + 1)}.ogg", 50, true, "da.mp9");
 
             ChangeColorsCoroutineHandle = Timing.RunCoroutine(ChangeColors());
         }
@@ -87,7 +87,7 @@
             {
                 foreach (Room room in Room.List)
                 {
-                    room.Color = Colors.ElementAt(new System.Random().Next(0, Colors.Count()));
+                    room.Color = Colors.RandomItem();
                 }
 
                 yield return Timing.WaitForSeconds(1.1f);

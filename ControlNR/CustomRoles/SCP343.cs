@@ -97,7 +97,7 @@ namespace Control.CustomRoles
             if (!CustomRole.Get((uint)2).Check(ev.Player)) return;
 
             var PlayersList = Exiled.API.Features.Player.List.Where(x => x != ev.Player).Where(x => x.IsAlive);
-            Player pl = PlayersList.ElementAt(new System.Random().Next(0, PlayersList.Count()));
+            Player pl = PlayersList.ElementAt(UnityEngine.Random.Range(0, PlayersList.Count()));
 
             ev.Player.Position = pl.Position;
 
@@ -130,7 +130,7 @@ namespace Control.CustomRoles
                     PlayerExtensions.ShowCustomHint(ev.Attacker, $"Вы оглушили игрока {ev.Player.Nickname}", 2);
 
                     ev.Player.IsGodModeEnabled = true;
-                    Exiled.API.Features.Ragdoll ragdoll = Exiled.API.Features.Ragdoll.CreateAndSpawn(ev.Player.Role, ev.Player.Nickname, "наелся и спит..", ev.Player.Position, new Quaternion(0, 0, 0, 0), ev.Player);
+                    Exiled.API.Features.Ragdoll ragdoll = Exiled.API.Features.Ragdoll.CreateAndSpawn(ev.Player.Role, ev.Player.Nickname, "наелся и спит..", ev.Player.Position, Quaternion.Euler(Vector3.zero), ev.Player);
 
                     // Yeah, without it, this shit don't work..
                     Timing.CallDelayed(0.1f, () => ev.Player.Position = new Vector3(-1000, -1000, -1000));
@@ -190,7 +190,7 @@ namespace Control.CustomRoles
                 {
                     ev.Pickup?.Destroy();
 
-                    Pickup.CreateAndSpawn(ItemType.Medkit, ev.Player.Position, new Quaternion(0f, 0f, 0f, 0f));
+                    Pickup.CreateAndSpawn(ItemType.Medkit, ev.Player.Position, Quaternion.Euler(Vector3.zero));
 
                     ev.IsAllowed = false;
 
@@ -206,7 +206,7 @@ namespace Control.CustomRoles
                 {
                     ev.Pickup?.Destroy();
 
-                    Pickup.CreateAndSpawn(ItemType.SCP500, ev.Player.Position, new Quaternion(0f, 0f, 0f, 0f));
+                    Pickup.CreateAndSpawn(ItemType.SCP500, ev.Player.Position, Quaternion.Euler(Vector3.zero));
 
                     ev.IsAllowed = false;
 
@@ -217,7 +217,7 @@ namespace Control.CustomRoles
                 {
                     ev.Pickup?.Destroy();
 
-                    Pickup.CreateAndSpawn(ItemType.MicroHID, ev.Player.Position, new Quaternion(0f, 0f, 0f, 0f));
+                    Pickup.CreateAndSpawn(ItemType.MicroHID, ev.Player.Position, Quaternion.Euler(Vector3.zero));
 
                     ev.IsAllowed = false;
 

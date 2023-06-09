@@ -120,6 +120,9 @@
     <Reference Include="Mono.WebBrowser">
       <HintPath>C:\Users\swd\Desktop\d\Mono.WebBrowser.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>C:\Users\swd\Desktop\d\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="PluginAPI, Version=12.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Users\swd\Desktop\d\PluginAPI.dll</HintPath>
@@ -131,7 +134,12 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine.AudioModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Users\swd\Desktop\d\UnityEngine.AudioModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\..\programms\Steam\steamapps\common\SCP Secret Laboratory Dedicated Server\SCPSL_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
@@ -186,6 +194,7 @@
     <Compile Include="Extensions\Player\ClearMapExtensions.cs" />
     <Compile Include="Extensions\Player\HintExtensions.cs" />
     <Compile Include="Extensions\Player\PlayerExtensions.cs" />
+    <Compile Include="Extensions\Webhook\WebhookExtensions.cs" />
     <Compile Include="Patches\RemoteAdmin.cs" />
   </ItemGroup>
   <ItemGroup>

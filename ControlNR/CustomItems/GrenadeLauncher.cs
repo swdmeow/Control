@@ -39,7 +39,7 @@ namespace Control.CustomItems
         {
             FirearmPickup pickup;
 
-            if (Loader.Random.Next(100) > 50)
+            if (UnityEngine.Random.Range(0, 100) > 50)
             {
                 pickup = CustomItem.Get((uint)4).Spawn(Room.Get(RoomType.LczArmory).transform.position + Vector3.up) as FirearmPickup;
             }

@@ -12,7 +12,7 @@
     using PlayerRoles;
     using Control.Extensions;
     using CustomPlayerEffects;
-
+    // ClientCommandHandler
     [CommandHandler(typeof(ClientCommandHandler))]
     public class kill : ICommand
     {

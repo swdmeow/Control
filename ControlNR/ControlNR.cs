@@ -9,6 +9,8 @@ namespace Ñontrol
     using System;
     using MEC;
     using Control.Extensions;
+    using CommandSystem.Commands.RemoteAdmin;
+    using System.Net;
 
     public class ControlNR : Plugin<Config>
     {

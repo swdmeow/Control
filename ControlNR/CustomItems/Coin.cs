@@ -75,9 +75,7 @@ namespace Control.CustomItems
         {
             if (CustomItem.Get((uint)7).Check(ev.Player.CurrentItem))
             {
-                var rand = new System.Random();
-
-                string needTo = Events.ElementAt(rand.Next(0, Events.Count()));
+                string needTo = Events.ElementAt(UnityEngine.Random.Range(0, Events.Count()));
 
                 if (needTo == "teleport")
                 {
@@ -85,7 +83,7 @@ namespace Control.CustomItems
 
                     Timing.CallDelayed(0.1f, () =>
                     {
-                        if (!Warhead.IsDetonated && !Warhead.IsInProgress) ev.Player.Position = Room.Get(_rooms.ElementAt(new System.Random().Next(0, _rooms.Count()))).transform.position + Vector3.up;
+                        if (!Warhead.IsDetonated && !Warhead.IsInProgress) ev.Player.Position = Room.Get(_rooms.RandomItem()).transform.position + Vector3.up;
 
                         else
                         {
@@ -124,7 +122,6 @@ namespace Control.CustomItems
 
                     if(CustomRole.Get((uint)1).Check(ev.Player))
                     {
-                        // lmao..
                         ev.Player.EnableEffect(EffectType.SeveredHands, 1f);
 
                         return;
@@ -144,7 +141,7 @@ namespace Control.CustomItems
                     else
                     {
                         ev.Player.Role.Set(PlayerRoles.RoleTypeId.NtfPrivate, PlayerRoles.RoleSpawnFlags.None);
-                    } // 1
+                    }
                 }
                 if (needTo == "boom")
                 {
@@ -161,10 +158,7 @@ namespace Control.CustomItems
                 {
                     ev.Player.CurrentItem.Destroy();
 
-                    foreach (Player pl in Player.List)
-                    {
-                        pl.Broadcast(new Exiled.API.Features.Broadcast($"{ev.Player.Nickname} запустил конфетную вечеринку.."));
-                    }
+                    Map.Broadcast(3, $"{ev.Player.Nickname} запустил конфетную вечеринку..");
 
                     Timing.RunCoroutine(EveryoneCandy());
                 }
@@ -191,7 +185,7 @@ namespace Control.CustomItems
 
                     if(CustomRole.Get((uint)8).Check(ev.Player))
                     {
-                        Pickup.CreateAndSpawn(ItemType.GrenadeHE, ev.Player.Position, new Quaternion());
+                        Pickup.CreateAndSpawn(ItemType.GrenadeHE, ev.Player.Position, Quaternion.Euler(Vector3.zero));
 
                         return;
                     }
@@ -202,13 +196,13 @@ namespace Control.CustomItems
                     ev.Player.CurrentItem.Destroy();
 
                     ev.Player.Kick("Испепелён с сервера с помощью волшебной монетки.");
-                    Map.Broadcast(new Exiled.API.Features.Broadcast($"{ev.Player.Nickname} испепелён с сервера с помощью волшебной монетки", 5));
+                    Map.Broadcast(5, $"{ev.Player.Nickname} испепелён с сервера с помощью волшебной монетки");
                 }
             }
         }
         private void OnRoundStarted()
         {
-            CustomItem.Get((uint)7).Spawn(Room.List.ElementAt(new System.Random().Next(0, Room.List.Count())).transform.position + Vector3.up);
+            CustomItem.Get((uint)7).Spawn(Room.Get(_rooms.RandomItem()).transform.position + Vector3.up);
             
             foreach(Pickup _pickup in Pickup.List)
             {

@@ -20,9 +20,7 @@
         }
         private void InteractingScp330(InteractingScp330EventArgs ev)
         {
-            var rand = new System.Random();
-
-            if(rand.Next(0, 10) >= 9)
+            if(UnityEngine.Random.Range(0, 10) >= 9)
             {
                 ev.Candy = CandyKindID.Pink;
             }

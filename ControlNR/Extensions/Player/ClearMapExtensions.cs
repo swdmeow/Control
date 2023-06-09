@@ -7,7 +7,9 @@ using Exiled.API.Enums;
 using Exiled.API.Features;
 using Exiled.API.Features.Items;
 using Exiled.API.Features.Pickups;
+using Exiled.API.Features.Pickups.Projectiles;
 using Exiled.CustomRoles.API.Features;
+using Exiled.Events.EventArgs.Map;
 using Interactables.Interobjects.DoorUtils;
 using MapEditorReborn.Commands.UtilityCommands;
 using MEC;
@@ -32,7 +34,6 @@ namespace Control.Extensions
                         ragdoll.Destroy();
                     }
                 }
-
 
                 if (Pickup.List.Count() > 350)
                 {
