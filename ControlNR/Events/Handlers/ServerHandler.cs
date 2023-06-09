@@ -85,7 +85,7 @@
                 {
                     player.Role.Is(out Scp079Role scp079Role);
 
-                    scp079Role.LoseSignal(30f);
+                    scp079Role.LoseSignal(666f);
 
                     player.ShowHint("<br>У вас есть 30 секунд на перевод на другой SCP-объект (через команду .force).\nВ ином случае вы будуете переведены в другой SCP/человека автоматически", 30f);
 
@@ -93,36 +93,23 @@
                     {
                         if (player.Role.Type == RoleTypeId.Scp079)
                         {
-                            if (Player.List.Where(x => x.IsScp).Count() == 5)
+                            if (Player.List.Where(x => x.Role == RoleTypeId.Scp173).FirstOrDefault() == null) player.Role.Set(RoleTypeId.Scp173, Exiled.API.Enums.SpawnReason.LateJoin);
+                            else if (Player.List.Where(x => x.Role == RoleTypeId.Scp049).FirstOrDefault() == null) player.Role.Set(RoleTypeId.Scp049, Exiled.API.Enums.SpawnReason.LateJoin);
+                            else if (Player.List.Where(x => x.Role == RoleTypeId.Scp939).FirstOrDefault() == null) player.Role.Set(RoleTypeId.Scp939, Exiled.API.Enums.SpawnReason.LateJoin);
+                            else if (Player.List.Where(x => x.Role == RoleTypeId.Scp106).FirstOrDefault() == null) player.Role.Set(RoleTypeId.Scp106, Exiled.API.Enums.SpawnReason.LateJoin);
+                            else if (Player.List.Where(x => x.Role == RoleTypeId.Scp096).FirstOrDefault() == null) player.Role.Set(RoleTypeId.Scp096, Exiled.API.Enums.SpawnReason.LateJoin);
+                            else
                             {
                                 player.Role.Set(RandomRoles.RandomItem(), Exiled.API.Enums.SpawnReason.LateJoin);
-                            } else
-                            {
-                                if (Player.List.Where(x => x.Role == RoleTypeId.Scp173).FirstOrDefault() == null) player.Role.Set(RoleTypeId.Scp173, Exiled.API.Enums.SpawnReason.LateJoin);
-                                else if (Player.List.Where(x => x.Role == RoleTypeId.Scp049).FirstOrDefault() == null) player.Role.Set(RoleTypeId.Scp049, Exiled.API.Enums.SpawnReason.LateJoin);
-                                else if (Player.List.Where(x => x.Role == RoleTypeId.Scp939).FirstOrDefault() == null) player.Role.Set(RoleTypeId.Scp939, Exiled.API.Enums.SpawnReason.LateJoin);
-                                else if (Player.List.Where(x => x.Role == RoleTypeId.Scp106).FirstOrDefault() == null) player.Role.Set(RoleTypeId.Scp106, Exiled.API.Enums.SpawnReason.LateJoin);
-                                else if (Player.List.Where(x => x.Role == RoleTypeId.Scp096).FirstOrDefault() == null) player.Role.Set(RoleTypeId.Scp096, Exiled.API.Enums.SpawnReason.LateJoin);
-                                else
-                                {
-                                    player.Role.Set(RandomRoles.RandomItem(), Exiled.API.Enums.SpawnReason.LateJoin);
-                                }
                             }
-                        }
-
-                        foreach (Door door in Door.List.Where(x => x.Type == Exiled.API.Enums.DoorType.Scp079First || x.Type == Exiled.API.Enums.DoorType.Scp079Second))
-                        {
-                            door.IsOpen = true;
                         }
 
                         TickRoundEndDisable = true;
                     });
-                } else
+                }
+                foreach (Door door in Door.List.Where(x => x.Type == Exiled.API.Enums.DoorType.Scp079First || x.Type == Exiled.API.Enums.DoorType.Scp079Second))
                 {
-                    foreach(Door door in Door.List.Where(x => x.Type == Exiled.API.Enums.DoorType.Scp079First || x.Type == Exiled.API.Enums.DoorType.Scp079Second))
-                    {
-                        door.IsOpen = true;
-                    }
+                    door.IsOpen = true;
                 }
             });
         }

@@ -24,6 +24,7 @@ using Respawning;
 using Control.API.Serialization;
 using Control.Handlers.Events.API.Serialization;
 using Microsoft.SqlServer.Server;
+using Control;
 
 namespace Control.Patches
 {
@@ -71,21 +72,9 @@ namespace Control.Patches
 
                     if (log == null)
                     {
-                        ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers").Insert(new VIPLog()
-                        {
-                            ID = player.UserId,
-                            cooldownRole = false,
-                            cooldownItem = false,
-                            cooldownCall = false,
-                            cooldownVote = false,
-                            ForcedToSCP = false,
-                            GivedTimes = 0,
-                            ForcedTimes = 0,
-                            CallTimes = 0,
-                        });
+                        ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers").Insert(new VIPLog());
 
-                        Success = false;
-                        sender.RaReply($"ControlNR#¬ы занесены в базу данных, повторите попытку..", Success, true, string.Empty);
+                        sender.RaReply($"ControlNR#¬ы занесены в базу данных, повторите попытку..", false, true, string.Empty);
                         return Allowed;
                     }
 

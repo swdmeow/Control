@@ -47,10 +47,10 @@ namespace Control.Extensions
                         {
                             SpawningTeam = "<color=blue>МОГ</color>";
                         }
-                        if (!Round.IsLobby) Hint += $"<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>{(Respawn.IsSpawning ? $"Вы заспавнитесь за {SpawningTeam} через" : "Вы заспавнитесь через")}:<br>{(Respawn.TimeUntilSpawnWave.Minutes.ToString().Length == 1 ? "0" + Respawn.TimeUntilSpawnWave.Minutes : Respawn.TimeUntilSpawnWave.Minutes)}:{(Respawn.TimeUntilSpawnWave.Seconds.ToString().Length == 1 ? "0" + Respawn.TimeUntilSpawnWave.Seconds : Respawn.TimeUntilSpawnWave.Seconds)}<br><b><color=#8DFF29>bezname</color> | <color=#00B7EB>NoRules</color></b><br>";
+                        if (!Round.IsLobby) Hint += $"<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>{(Respawn.IsSpawning ? $"Вы заспавнитесь за {SpawningTeam} через" : "Вы заспавнитесь через")}:<br>{(Respawn.TimeUntilSpawnWave.Minutes.ToString().Length == 1 ? "0" + Respawn.TimeUntilSpawnWave.Minutes : Respawn.TimeUntilSpawnWave.Minutes)}:{(Respawn.TimeUntilSpawnWave.Seconds.ToString().Length == 1 ? "0" + Respawn.TimeUntilSpawnWave.Seconds : Respawn.TimeUntilSpawnWave.Seconds)}<br>";
                         else
                         {
-                            Hint += $"<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><b><color=#8DFF29>bezname</color> | <color=#00B7EB>NoRules</color></b><br>";
+                            Hint += $"<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>";
                         }
 
                         Hint += "</size>";
@@ -65,7 +65,7 @@ namespace Control.Extensions
                             if (XPHintQueue.Where(x => x.Item1 == pl) != null) HasXP = true;
 
                             Hint += "<size=66%>";
-                            Hint += $"<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>{(HasXP ? XPHintQueue.Where(x => x.Item1 == pl).FirstOrDefault().Item2 : "")}<br>{((Round.IsLobby || !pl.IsAlive) ? "" : $"👥 {pl.CurrentSpectatingPlayers.Count()}")}<br>{(Round.IsLobby ? "" : $"{(Round.ElapsedTime.Hours.ToString().Length == 1 ? "0" + Round.ElapsedTime.Hours : Round.ElapsedTime.Hours)}:{(Round.ElapsedTime.Minutes.ToString().Length == 1 ? "0" + Round.ElapsedTime.Minutes : Round.ElapsedTime.Minutes)}:{(Round.ElapsedTime.Seconds.ToString().Length == 1 ? "0" + Round.ElapsedTime.Seconds : Round.ElapsedTime.Seconds)}")}<br><b><color=#8DFF29>bezname</color> | <color=#00B7EB>NoRules</color></b><br>";
+                            Hint += $"<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>{(HasXP ? XPHintQueue.Where(x => x.Item1 == pl).FirstOrDefault().Item2 : "")}<br>{((Round.IsLobby || !pl.IsAlive) ? "" : $"👥 {pl.CurrentSpectatingPlayers.Count()}")}<br>{(Round.IsLobby ? "" : $"{(Round.ElapsedTime.Hours.ToString().Length == 1 ? "0" + Round.ElapsedTime.Hours : Round.ElapsedTime.Hours)}:{(Round.ElapsedTime.Minutes.ToString().Length == 1 ? "0" + Round.ElapsedTime.Minutes : Round.ElapsedTime.Minutes)}:{(Round.ElapsedTime.Seconds.ToString().Length == 1 ? "0" + Round.ElapsedTime.Seconds : Round.ElapsedTime.Seconds)}")}<br>";
 
                             if (HasXP)
                             {
@@ -93,7 +93,7 @@ namespace Control.Extensions
 
                         Hint += "<size=59%><pos=75%>";
 
-                        Hint += $"{(HasXP ? XPHintQueue.Where(x => x.Item1 == pl).FirstOrDefault().Item2 : "")}<br><pos=75%>👥 {pl.CurrentSpectatingPlayers.Count()}<br><pos=75%><b><color=#8DFF29>bezname</color> | <color=#00B7EB>NoRules</color></b></size><br>";
+                        Hint += $"{(HasXP ? XPHintQueue.Where(x => x.Item1 == pl).FirstOrDefault().Item2 : "")}<br><pos=75%>👥 {pl.CurrentSpectatingPlayers.Count()}<br></size><br>";
 
                         foreach (Player AddTarget in Player.List.Where(x => x.IsScp || CustomRole.Get((uint)1).Check(x)))
                         {
