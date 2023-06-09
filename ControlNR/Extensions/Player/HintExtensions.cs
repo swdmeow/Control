@@ -47,10 +47,10 @@ namespace Control.Extensions
                         {
                             SpawningTeam = "<color=blue>МОГ</color>";
                         }
-                        if (!Round.IsLobby) Hint += $"<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>{(Respawn.IsSpawning ? $"Вы заспавнитесь за {SpawningTeam} через" : "Вы заспавнитесь через")}:<br>{(Respawn.TimeUntilSpawnWave.Minutes.ToString().Length == 1 ? "0" + Respawn.TimeUntilSpawnWave.Minutes : Respawn.TimeUntilSpawnWave.Minutes)}:{(Respawn.TimeUntilSpawnWave.Seconds.ToString().Length == 1 ? "0" + Respawn.TimeUntilSpawnWave.Seconds : Respawn.TimeUntilSpawnWave.Seconds)}<br>";
+                        if (!Round.IsLobby) Hint += $"<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>{(Respawn.IsSpawning ? $"Вы заспавнитесь за {SpawningTeam} через" : "Вы заспавнитесь через")}:<br>{(Respawn.TimeUntilSpawnWave.Minutes.ToString().Length == 1 ? "0" + Respawn.TimeUntilSpawnWave.Minutes : Respawn.TimeUntilSpawnWave.Minutes)}:{(Respawn.TimeUntilSpawnWave.Seconds.ToString().Length == 1 ? "0" + Respawn.TimeUntilSpawnWave.Seconds : Respawn.TimeUntilSpawnWave.Seconds)}<br><b><color=#fdf0d5>РУССКИЙ</color> <color=#003049>SCP:SL</color> <color=#780000>СЕРВЕР</color> - <color=#669bbc>БЕЗ ПРАВИЛ</color></b><br>";
                         else
                         {
-                            Hint += $"<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>";
+                            Hint += $"<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><b><color=#fdf0d5>РУССКИЙ</color> <color=#003049>SCP:SL</color> <color=#780000>СЕРВЕР</color> - <color=#669bbc>БЕЗ ПРАВИЛ</color></b><br>";
                         }
 
                         Hint += "</size>";
@@ -65,7 +65,7 @@ namespace Control.Extensions
                             if (XPHintQueue.Where(x => x.Item1 == pl) != null) HasXP = true;
 
                             Hint += "<size=66%>";
-                            Hint += $"<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>{(HasXP ? XPHintQueue.Where(x => x.Item1 == pl).FirstOrDefault().Item2 : "")}<br>{((Round.IsLobby || !pl.IsAlive) ? "" : $"👥 {pl.CurrentSpectatingPlayers.Count()}")}<br>{(Round.IsLobby ? "" : $"{(Round.ElapsedTime.Hours.ToString().Length == 1 ? "0" + Round.ElapsedTime.Hours : Round.ElapsedTime.Hours)}:{(Round.ElapsedTime.Minutes.ToString().Length == 1 ? "0" + Round.ElapsedTime.Minutes : Round.ElapsedTime.Minutes)}:{(Round.ElapsedTime.Seconds.ToString().Length == 1 ? "0" + Round.ElapsedTime.Seconds : Round.ElapsedTime.Seconds)}")}<br>";
+                            Hint += $"<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>{(HasXP ? XPHintQueue.Where(x => x.Item1 == pl).FirstOrDefault().Item2 : "")}<br>{((Round.IsLobby || !pl.IsAlive) ? "" : $"👥 {pl.CurrentSpectatingPlayers.Count()}")}<br>{(Round.IsLobby ? "" : $"{(Round.ElapsedTime.Hours.ToString().Length == 1 ? "0" + Round.ElapsedTime.Hours : Round.ElapsedTime.Hours)}:{(Round.ElapsedTime.Minutes.ToString().Length == 1 ? "0" + Round.ElapsedTime.Minutes : Round.ElapsedTime.Minutes)}:{(Round.ElapsedTime.Seconds.ToString().Length == 1 ? "0" + Round.ElapsedTime.Seconds : Round.ElapsedTime.Seconds)}")}<br><b><color=#fdf0d5>РУССКИЙ</color> <color=#003049>SCP:SL</color> <color=#780000>СЕРВЕР</color> - <color=#669bbc>БЕЗ ПРАВИЛ</color></b><br>";
 
                             if (HasXP)
                             {
@@ -91,13 +91,13 @@ namespace Control.Extensions
                         bool HasXP = false;
                         if (XPHintQueue.Where(x => x.Item1 == pl) != null) HasXP = true;
 
-                        Hint += "<size=59%><pos=75%>";
+                        Hint += "<size=59%><pos=65%>";
 
-                        Hint += $"{(HasXP ? XPHintQueue.Where(x => x.Item1 == pl).FirstOrDefault().Item2 : "")}<br><pos=75%>👥 {pl.CurrentSpectatingPlayers.Count()}<br></size><br>";
+                        Hint += $"{(HasXP ? XPHintQueue.Where(x => x.Item1 == pl).FirstOrDefault().Item2 : "")}<br><pos=65%>👥 {pl.CurrentSpectatingPlayers.Count()}<br><pos=65%><b><color=#fdf0d5>РУССКИЙ</color> <color=#003049>SCP:SL</color> <color=#780000>СЕРВЕР</color></b><br>";
 
                         foreach (Player AddTarget in Player.List.Where(x => x.IsScp || CustomRole.Get((uint)1).Check(x)))
                         {
-                            Hint += $"<size=75%><pos=75%><color=red>{(AddTarget.IsScp ? AddTarget.Role.Name : "SCP-035")} - {(AddTarget.HumeShieldStat.CurValue > 0 ? $"</color><color=#3A3679>{Math.Ceiling(AddTarget.Health + AddTarget.HumeShieldStat.CurValue)}</color>" : $"</color><color=red>{(AddTarget.Health == 0 ? Generator.List.Where(x => x.IsEngaged).Count() : Math.Ceiling(AddTarget.Health))}</color>")}/{(AddTarget.HumeShieldStat.CurValue > 0 ? $"</color><color=#3A3679>{Math.Ceiling(AddTarget.MaxHealth + AddTarget.HumeShieldStat.MaxValue)}</color>" : $"</color><color=red>{(AddTarget.Health == 0 ? Generator.List.Count() : Math.Ceiling(AddTarget.MaxHealth))}</color>")}</color></size><br>";
+                            Hint += $"<size=75%><pos=65%><color=red>{(AddTarget.IsScp ? AddTarget.Role.Name : "SCP-035")} - {(AddTarget.HumeShieldStat.CurValue > 0 ? $"</color><color=#3A3679>{Math.Ceiling(AddTarget.Health + AddTarget.HumeShieldStat.CurValue)}</color>" : $"</color><color=red>{(AddTarget.Health == 0 ? Generator.List.Where(x => x.IsEngaged).Count() : Math.Ceiling(AddTarget.Health))}</color>")}/{(AddTarget.HumeShieldStat.CurValue > 0 ? $"</color><color=#3A3679>{Math.Ceiling(AddTarget.MaxHealth + AddTarget.HumeShieldStat.MaxValue)}</color>" : $"</color><color=red>{(AddTarget.Health == 0 ? Generator.List.Count() : Math.Ceiling(AddTarget.MaxHealth))}</color>")}</color></size><br>";
                         }
 
                         if (HasXP)

@@ -28,6 +28,8 @@
     using RemoteAdmin;
     using System.Net;
     using UnityEngine.Rendering;
+    using Exiled.API.Extensions;
+    using InventorySystem.Configs;
 
     internal sealed class ServerHandler
     {
@@ -46,6 +48,14 @@
             RoleTypeId.ClassD,
             RoleTypeId.Scientist,
             RoleTypeId.FacilityGuard,
+        };
+        public static List<AmmoType> AmmoTypes = new List<AmmoType>()
+        {
+            AmmoType.Nato9,
+            AmmoType.Ammo44Cal,
+            AmmoType.Nato762,
+            AmmoType.Ammo12Gauge,
+            AmmoType.Nato556,
         };
         public static List<SpawnableTeamType> RandomSpawnableTeamType = new List<SpawnableTeamType>()
         {
