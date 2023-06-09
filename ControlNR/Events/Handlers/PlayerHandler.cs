@@ -45,10 +45,6 @@
         }
         private void OnEscaping(EscapingEventArgs ev)
         {
-            Log.Info(ev.Player.Role);
-
-            if (ev.IsAllowed) return;
-
             if (!ev.Player.IsCuffed) return;
 
             if (ev.Player.Role.Team == Team.ChaosInsurgency) { ev.IsAllowed = true; ev.EscapeScenario = EscapeScenario.CuffedClassD; } // МОГ
