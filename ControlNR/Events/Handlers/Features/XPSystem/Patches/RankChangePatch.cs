@@ -12,10 +12,14 @@
         {
             if (i != null && !i.Contains("\n"))
             {
-                Log.Info(i);
                 Timing.CallDelayed(0.5f, () =>
                 {
-                    API.UpdateBadge(Player.Get(__instance._hub), i);
+                    Player pl = Player.Get(__instance._hub);
+                    if(__instance.GlobalHidden == true) API.UpdateBadge(Player.Get(__instance._hub), i, true);
+                    else
+                    {
+                        API.UpdateBadge(Player.Get(__instance._hub), i, false);
+                    }
                 });
             }
         }

@@ -22,6 +22,11 @@
     using InventorySystem.Items.Firearms;
     using RelativePositioning;
     using UnityEngine;
+    using Control.CustomItems;
+    using System.Linq;
+    using static Mono.Security.X509.X520;
+    using MapEditorReborn.Commands.UtilityCommands;
+    using Exiled.CustomRoles.API.Features;
 
     internal sealed class PlayerHandler
     {
@@ -52,16 +57,21 @@
         }
         private void OnVerified(VerifiedEventArgs ev)
         {
-            Timing.CallDelayed(0.1f, () =>
+            Timing.CallDelayed(0.2f, () =>
             {
                 if (ev.Player.GroupName.StartsWith("d1") || ev.Player.GroupName.StartsWith("d2"))
                 {
-                    ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers").Insert(new VIPLog());
+                    ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers").Insert(new VIPLog()
+                    {
+                        ID = ev.Player.UserId,
+                    });
                 }
             });
         }
         private void OnTriggeringTesla(TriggeringTeslaEventArgs ev)
         {
+            if ((ev.Player.Role.Side == Side.ChaosInsurgency || ev.Player.Role.Side == Side.Scp) && !CustomRole.Get((uint)2).Check(ev.Player)) return;
+
             ev.IsAllowed = false;
             ev.IsInIdleRange = false;
         }
@@ -77,16 +87,24 @@
             {
                 ev.Items.Remove(ItemType.KeycardGuard);
                 ev.Items.Add(ItemType.KeycardNTFOfficer);
-
             }
             if (ev.NewRole == RoleTypeId.ClassD)
             {
-                ev.Items.Add(ItemType.KeycardJanitor);
-            } 
+                ev.Items.Add(ServerHandler.ItemTypeToDclass.RandomItem());
+            }
         }
         private void OnLeft(LeftEventArgs ev)
         {
             ev.Player.IsOverwatchEnabled = false;
+
+            if (Res.DiedWithSCP500R.Count == 0) return;
+
+            if(ev.Player == Res.DiedWithSCP500R.First())
+            {
+                Res.DiedWithSCP500R.Clear();
+                Res.StatusEffectBase.Clear();
+                Res.RoleDiedWithSCP500R.Clear();
+            }
         }
     }
 }

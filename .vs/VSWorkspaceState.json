@@ -10,6 +10,6 @@
     "\\ControlNR\\Extensions\\Player",
     "\\ControlNR\\Patches"
   ],
-  "SelectedNode": "\\ControlNR\\Patches\\RemoteAdmin.cs",
+  "SelectedNode": "\\ControlNR\\Extensions\\Player\\HintExtensions.cs",
   "PreviewInSolutionExplorer": false
 }

@@ -81,7 +81,7 @@ namespace Control.Handlers.Events
         {
             if (!ev.IsAllowed) return;
 
-            if (CustomRole.Get((uint)1).Check(ev.Player) || CustomRole.Get((uint)2).Check(ev.Player)) return;
+            if (/*CustomRole.Get((uint)1).Check(ev.Player ||*/ CustomRole.Get((uint)2).Check(ev.Player)) return;
 
             if (!ControlNR.Singleton.Config.XPSystem.EscapeXP.TryGetValue(ev.Player.Role, out int xp))
             {

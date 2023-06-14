@@ -5,6 +5,8 @@
         private Control.Handlers.Events.PlayerHandler PlayerHandler;
         private Control.Handlers.Events.ServerHandler ServerHandler;
         private Control.Handlers.Events.Scp330Handler Scp330Handler;
+        private Control.Handlers.Events.Scp096Handler Scp096Handler;
+
         private Control.Handlers.Events.MapHandler MapHandler;
         private Control.Handlers.Events.WarheadMusic WarheadMusic;
         private Control.Handlers.Events.Scp914Handler Scp914Handler;
@@ -21,6 +23,7 @@
             Scp330Handler = new Control.Handlers.Events.Scp330Handler();
             WarheadMusic = new Control.Handlers.Events.WarheadMusic();
             Scp914Handler = new Control.Handlers.Events.Scp914Handler();
+            Scp096Handler = new Control.Handlers.Events.Scp096Handler();
             // Features
             UnlimitedAmmoHandler = new Control.Handlers.Events.UnlimitedAmmoHandler();
             RemoteKeycardHandler = new Control.Handlers.Events.RemoteKeycardHandler();
@@ -39,7 +42,9 @@
             UnlimitedAmmoHandler.OnDisabled();
             XPHandler.OnDisabled();
             WarheadDecontamition.OnDisabled();
+            Scp096Handler.OnDisabled();
 
+            Scp096Handler = null;
             RemoteKeycardHandler = null;
             XPHandler = null;
             UnlimitedAmmoHandler = null;

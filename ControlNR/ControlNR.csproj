@@ -127,6 +127,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Users\swd\Desktop\d\PluginAPI.dll</HintPath>
     </Reference>
+    <Reference Include="Pooling, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Users\swd\Desktop\d\Pooling.dll</HintPath>
+    </Reference>
     <Reference Include="SCPSLAudioApi, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Users\swd\Desktop\d\SCPSLAudioApi.dll</HintPath>
@@ -165,12 +169,13 @@
     <Compile Include="ControlNR.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="CustomItems\Coin.cs" />
-    <Compile Include="CustomItems\SCP035Mask.cs" />
+    <Compile Include="Archive\SCP035Mask.cs" />
     <Compile Include="CustomItems\SCP500R.cs" />
     <Compile Include="CustomRoles\Baby.cs" />
-    <Compile Include="CustomRoles\SCP035.cs" />
+    <Compile Include="Archive\SCP035.cs" />
     <Compile Include="CustomRoles\SCP343.cs" />
     <Compile Include="Events\Handler.cs" />
+    <Compile Include="Events\Handlers\Scp096Handler.cs" />
     <Compile Include="Events\Handlers\Features\WarheadDecontamition.cs" />
     <Compile Include="Events\Handlers\Features\WarheadMusic.cs" />
     <Compile Include="Events\Handlers\Features\RemoteKeycardHandler.cs" />
@@ -195,6 +200,7 @@
     <Compile Include="Extensions\Player\HintExtensions.cs" />
     <Compile Include="Extensions\Player\PlayerExtensions.cs" />
     <Compile Include="Extensions\Webhook\WebhookExtensions.cs" />
+    <Compile Include="Patches\TagPatches.cs" />
     <Compile Include="Patches\RemoteAdmin.cs" />
   </ItemGroup>
   <ItemGroup>

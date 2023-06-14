@@ -25,7 +25,7 @@
         public static List<RoleTypeId> RoleDiedWithSCP500R = new List<RoleTypeId>();
         public static List<StatusEffectBase> StatusEffectBase = new List<StatusEffectBase>();
         public string[] Aliases { get; } = new string[] { "respawn" };
-        public string Description { get; } = "Команда для возвраждения, если вы имели на тот момент SCP-500-R..";
+        public string Description { get; } = "<b>Команда для возвраждения, если вы имели на тот момент SCP-500-R..</b>";
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
             Player player = Player.Get(sender);

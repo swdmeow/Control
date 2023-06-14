@@ -16,7 +16,6 @@ namespace AdminTools
 
 		public EventHandlers EventHandlers;
 		public static System.Random NumGen = new();
-		public static List<Jailed> JailedPlayers = new();
 		public static Dictionary<Player, InstantKillComponent> IkHubs = new();
 		public static Dictionary<Player, RegenerationComponent> RgnHubs = new();
 		public static HashSet<Player> PryGateHubs = new();

@@ -1,4 +1,5 @@
 ﻿using Exiled.API.Enums;
+using Exiled.API.Extensions;
 using Exiled.API.Features;
 using Exiled.API.Features.Attributes;
 using Exiled.API.Features.Items;
@@ -19,6 +20,7 @@ using PlayerRoles.PlayableScps.Scp173;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.ExceptionServices;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -69,7 +71,7 @@ namespace Control.CustomItems
             CandyKindID.Blue,
             CandyKindID.Red
         };
-        private string[] Events { get; } = new string[] { "teleport", "boom", "ToZombie", "betrayTeam", "speed", "candy", "flash", "size", "slow", "poop", "kick" };
+        private string[] Events { get; } = new string[] { "teleport", "boom", "ToZombie", "betrayTeam", "speed", "candy", "flash", "size", "slow", "poop", "kick", "scpEscape", "defaultInventory" };
         public override SpawnProperties SpawnProperties { get; set; } = null;
         private void OnFlippingCoin(FlippingCoinEventArgs ev)
         {
@@ -93,6 +95,34 @@ namespace Control.CustomItems
 
                     ev.Player.CurrentItem.Destroy();
                 }
+                if (needTo == "scpEscape")
+                {
+                    ev.Player.CurrentItem.Destroy();
+
+                    Player player = Player.List.Where(x => x.Role.Type == RoleTypeId.Spectator).First();
+
+                    if(player == null)
+                    {
+                        needTo = "poop";
+                    }
+
+                    if (Player.List.Where(x => x.Role == RoleTypeId.Scp173).FirstOrDefault() == null && Map.IsLczDecontaminated) player.Role.Set(RoleTypeId.Scp173, Exiled.API.Enums.SpawnReason.ForceClass);
+                    else if (Player.List.Where(x => x.Role == RoleTypeId.Scp049).FirstOrDefault() == null) player.Role.Set(RoleTypeId.Scp049, Exiled.API.Enums.SpawnReason.ForceClass);
+                    else if (Player.List.Where(x => x.Role == RoleTypeId.Scp939).FirstOrDefault() == null) player.Role.Set(RoleTypeId.Scp939, Exiled.API.Enums.SpawnReason.ForceClass);
+                    else if (Player.List.Where(x => x.Role == RoleTypeId.Scp106).FirstOrDefault() == null) player.Role.Set(RoleTypeId.Scp106, Exiled.API.Enums.SpawnReason.ForceClass);
+                    else if (Player.List.Where(x => x.Role == RoleTypeId.Scp096).FirstOrDefault() == null) player.Role.Set(RoleTypeId.Scp096, Exiled.API.Enums.SpawnReason.ForceClass);
+                    else
+                    {
+                        needTo = "speed";
+                    }
+
+                    Timing.CallDelayed(0.1f, () =>
+                    {
+                        if (!player.IsScp) return;
+
+                        Cassie.GlitchyMessage($"Внимание! Обнаружено нарушение условий содержаний {player.Role.Name}<b></b>.  <color=#ffffff00>h Attention all PERSONNEL jam_080_4 detected . CONTAINMENT breach of SCP {Regex.Replace(player.Role.Name.Replace("SCP-", ""), "(.)", "$1 ")}", 5f, 5f);
+                    });
+                }
                 if (needTo == "speed")
                 {
                     ev.Player.CurrentItem.Destroy();
@@ -107,7 +137,12 @@ namespace Control.CustomItems
 
                     Map.PlaceTantrum(ev.Player.Position);
                 }
+                if (needTo == "spawn")
+                {
+                    ev.Player.CurrentItem.Destroy();
 
+                    Respawn.ForceWave(Respawn.NextKnownTeam);
+                }
                 if (needTo == "slow")
                 {
                     ev.Player.CurrentItem.Destroy();
@@ -120,12 +155,12 @@ namespace Control.CustomItems
                 {
                     ev.Player.CurrentItem.Destroy();
 
-                    if(CustomRole.Get((uint)1).Check(ev.Player))
+                    /*if(CustomRole.Get((uint)1).Check(ev.Player))
                     {
                         ev.Player.EnableEffect(EffectType.SeveredHands, 1f);
 
                         return;
-                    }
+                    }*/
 
                     ev.Player.Role.Set(PlayerRoles.RoleTypeId.Scp0492);
                 }
@@ -198,6 +233,12 @@ namespace Control.CustomItems
                     ev.Player.Kick("Испепелён с сервера с помощью волшебной монетки.");
                     Map.Broadcast(5, $"{ev.Player.Nickname} испепелён с сервера с помощью волшебной монетки");
                 }
+                if(needTo == "defaultInventory")
+                {
+                    ev.Player.CurrentItem.Destroy();
+
+                    ev.Player.ResetInventory(ev.Player.Role.Type.GetStartingInventory());
+                }
             }
         }
         private void OnRoundStarted()
@@ -208,18 +249,28 @@ namespace Control.CustomItems
             {
                 if(_pickup.Type == ItemType.Coin)
                 {
-                    CustomItem.Get((uint)7).Spawn(_pickup.Position + Vector3.up);
+                    CustomItem.Get((uint)7).Spawn(_pickup.Position);
 
                     _pickup.Destroy();
-
                     return;
                 }
             }
+        }
+        private void OnDroppingItem(DroppingItemEventArgs ev)
+        {
+            if (!CustomItem.Get((uint)7).Check(ev.Item)) return;
+
+            ev.IsAllowed = false;
+            ev.Player.CurrentItem = null;
+
+            ev.Player.EnableEffect(EffectType.Bleeding, 1.5f);
         }
         protected override void SubscribeEvents()
         {
             Exiled.Events.Handlers.Player.FlippingCoin += OnFlippingCoin;
             Exiled.Events.Handlers.Server.RoundStarted += OnRoundStarted;
+            Exiled.Events.Handlers.Player.DroppingItem += OnDroppingItem;
+
 
             base.SubscribeEvents();
         }
@@ -227,6 +278,7 @@ namespace Control.CustomItems
         {
             Exiled.Events.Handlers.Player.FlippingCoin -= OnFlippingCoin;
             Exiled.Events.Handlers.Server.RoundStarted -= OnRoundStarted;
+            Exiled.Events.Handlers.Player.DroppingItem -= OnDroppingItem;
 
             base.UnsubscribeEvents();
         }

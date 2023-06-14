@@ -17,11 +17,17 @@
     {
         public string Command { get; } = "force";
         public string[] Aliases { get; } = new string[] { };
-        public string Description { get; } = "Команда для перевода в другой класс SCP..";
+        public string Description { get; } = "<b>Команда для перевода в другой класс SCP..</b>";
 
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
             Player player = Player.Get(sender);
+
+            if(arguments.Count < 1)
+            {
+                response = "Использование .force [номер SCP/human]";
+                return false;
+            }
 
             if (arguments.At(0) == null || !int.TryParse(arguments.At(0), out int _x) && arguments.At(0) != "human")
             {
@@ -67,10 +73,12 @@
                     role = RoleTypeId.Scp106;
                     break;
                 case "079":
-                    {
-                        response = "За данный SCP нельзя перевестись..";
-                        return false;
-                    }
+                    role = RoleTypeId.Scp079;
+                    break;
+                /*{
+                    response = "За данный SCP нельзя перевестись..";
+                    return false;
+                }*/
                 case "human":
                     role = RoleTypeId.None;
                     break;

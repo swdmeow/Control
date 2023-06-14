@@ -1,4 +1,4 @@
-﻿using Control.Handlers.Events;
+﻿/*using Control.Handlers.Events;
 using Exiled.API.Enums;
 using Exiled.API.Features;
 using Exiled.API.Features.Attributes;
@@ -96,4 +96,4 @@ namespace Control.CustomItems
             base.UnsubscribeEvents();
         }
     }
-}
+}*/

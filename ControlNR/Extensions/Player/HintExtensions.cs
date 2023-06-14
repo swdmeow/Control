@@ -57,7 +57,7 @@ namespace Control.Extensions
                         pl.ShowHint(Hint, 0.7f);
                     }
 
-                    if (!pl.IsScp && !CustomRole.Get((uint)1).Check(pl) && pl.IsAlive)
+                    if (!pl.IsScp /* && !CustomRole.Get((uint)1).Check(pl)*/ && pl.IsAlive)
                     {
                         try
                         {
@@ -86,7 +86,7 @@ namespace Control.Extensions
                         }
                     }
 
-                    if (pl.IsScp || CustomRole.Get((uint)1).Check(pl))
+                    if (pl.IsScp /*|| CustomRole.Get((uint)1).Check(pl)*/)
                     {
                         bool HasXP = false;
                         if (XPHintQueue.Where(x => x.Item1 == pl) != null) HasXP = true;
@@ -95,10 +95,10 @@ namespace Control.Extensions
 
                         Hint += $"{(HasXP ? XPHintQueue.Where(x => x.Item1 == pl).FirstOrDefault().Item2 : "")}<br><pos=65%>👥 {pl.CurrentSpectatingPlayers.Count()}<br><pos=65%><b><color=#fdf0d5>РУССКИЙ</color> <color=#003049>SCP:SL</color> <color=#780000>СЕРВЕР</color></b><br>";
 
-                        foreach (Player AddTarget in Player.List.Where(x => x.IsScp || CustomRole.Get((uint)1).Check(x)))
+                        foreach (Player AddTarget in Player.List.Where(x => x.IsScp /*|| CustomRole.Get((uint)1).Check(x)*/))
                         {
-                            Hint += $"<size=75%><pos=65%><color=red>{(AddTarget.IsScp ? AddTarget.Role.Name : "SCP-035")} - {(AddTarget.HumeShieldStat.CurValue > 0 ? $"</color><color=#3A3679>{Math.Ceiling(AddTarget.Health + AddTarget.HumeShieldStat.CurValue)}</color>" : $"</color><color=red>{(AddTarget.Health == 0 ? Generator.List.Where(x => x.IsEngaged).Count() : Math.Ceiling(AddTarget.Health))}</color>")}/{(AddTarget.HumeShieldStat.CurValue > 0 ? $"</color><color=#3A3679>{Math.Ceiling(AddTarget.MaxHealth + AddTarget.HumeShieldStat.MaxValue)}</color>" : $"</color><color=red>{(AddTarget.Health == 0 ? Generator.List.Count() : Math.Ceiling(AddTarget.MaxHealth))}</color>")}</color></size><br>";
-                        }
+                            Hint += $"<size=75%><pos=65%><color=red>{AddTarget.Role.Name} - {(AddTarget.HumeShieldStat.CurValue > 0 ? $"</color><color=#3A3679>{Math.Ceiling(AddTarget.Health + AddTarget.HumeShieldStat.CurValue)}</color>" : $"</color><color=red>{(AddTarget.Health == 0 ? Generator.List.Where(x => x.IsEngaged).Count() : Math.Ceiling(AddTarget.Health))}</color>")}/{(AddTarget.HumeShieldStat.CurValue > 0 ? $"</color><color=#3A3679>{Math.Ceiling(AddTarget.MaxHealth + AddTarget.HumeShieldStat.MaxValue)}</color>" : $"</color><color=red>{(AddTarget.Health == 0 ? Generator.List.Count() : Math.Ceiling(AddTarget.MaxHealth))}</color>")}</color></size><br>";
+                        } // {(AddTarget.IsScp ? AddTarget.Role.Name : "SCP-035")}*/
 
                         if (HasXP)
                         {

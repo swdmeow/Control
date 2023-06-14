@@ -35,22 +35,20 @@
             if (CustomRole.Get((uint)2).Check(ev.Player)) return;
             if (ev.Player.IsScp) return;
 
-            if (ev.Reason != SpawnReason.RoundStart && ev.Reason != SpawnReason.LateJoin && ev.Reason != SpawnReason.Respawn && ev.Reason == SpawnReason.ForceClass)
-            {
-                ev.Player.SetAmmo(AmmoType.Nato9, 0);
-                ev.Player.SetAmmo(AmmoType.Ammo44Cal, 0);
-                ev.Player.SetAmmo(AmmoType.Nato762, 0);
-                ev.Player.SetAmmo(AmmoType.Ammo12Gauge, 0);
-                ev.Player.SetAmmo(AmmoType.Nato556, 0);
-            }
+            ev.Player.SetAmmo(AmmoType.Nato9, 0);
+            ev.Player.SetAmmo(AmmoType.Ammo44Cal, 0);
+            ev.Player.SetAmmo(AmmoType.Nato762, 0);
+            ev.Player.SetAmmo(AmmoType.Ammo12Gauge, 0);
+            ev.Player.SetAmmo(AmmoType.Nato556, 0);
+
 
             Timing.CallDelayed(0.1f, () =>
             {
-                ev.Player.SetAmmo(AmmoType.Nato9, 101);
-                ev.Player.SetAmmo(AmmoType.Ammo44Cal, 101);
-                ev.Player.SetAmmo(AmmoType.Nato762, 101);
+                ev.Player.SetAmmo(AmmoType.Nato9, 999);
+                ev.Player.SetAmmo(AmmoType.Ammo44Cal, 999);
+                ev.Player.SetAmmo(AmmoType.Nato762, 999);
                 ev.Player.SetAmmo(AmmoType.Ammo12Gauge, 14);
-                ev.Player.SetAmmo(AmmoType.Nato556, 101);
+                ev.Player.SetAmmo(AmmoType.Nato556, 999);
             });
         }
         private void OnReloadWeapon(ReloadingWeaponEventArgs ev)
@@ -59,11 +57,11 @@
 
             Timing.CallDelayed(0.1f, () =>
             {
-                ev.Player.SetAmmo(AmmoType.Nato9, 101);
-                ev.Player.SetAmmo(AmmoType.Ammo44Cal, 101);
-                ev.Player.SetAmmo(AmmoType.Nato762, 101);
+                ev.Player.SetAmmo(AmmoType.Nato9, 999);
+                ev.Player.SetAmmo(AmmoType.Ammo44Cal, 999);
+                ev.Player.SetAmmo(AmmoType.Nato762, 999);
                 ev.Player.SetAmmo(AmmoType.Ammo12Gauge, 14);
-                ev.Player.SetAmmo(AmmoType.Nato556, 101);
+                ev.Player.SetAmmo(AmmoType.Nato556, 999);
             });
         }
         private void OnDroppingAmmo(DroppingAmmoEventArgs ev) => ev.IsAllowed = false;
@@ -90,11 +88,11 @@
         {
             Timing.CallDelayed(0.1f, () =>
             {
-                ev.Player.SetAmmo(AmmoType.Nato9, 101);
-                ev.Player.SetAmmo(AmmoType.Ammo44Cal, 101);
-                ev.Player.SetAmmo(AmmoType.Nato762, 101);
+                ev.Player.SetAmmo(AmmoType.Nato9, 999);
+                ev.Player.SetAmmo(AmmoType.Ammo44Cal, 999);
+                ev.Player.SetAmmo(AmmoType.Nato762, 999);
                 ev.Player.SetAmmo(AmmoType.Ammo12Gauge, 14);
-                ev.Player.SetAmmo(AmmoType.Nato556, 101);
+                ev.Player.SetAmmo(AmmoType.Nato556, 999);
             });
         }
     }

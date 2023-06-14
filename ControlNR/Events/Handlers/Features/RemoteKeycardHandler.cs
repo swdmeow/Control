@@ -45,6 +45,7 @@
         {
             if (!ev.IsAllowed && ev.Chamber != null && ev.Player.HasKeycardPermission(ev.Chamber.RequiredPermissions))
             {
+                ev.Chamber.GetType();
                 ev.IsAllowed = true;
             }
         }

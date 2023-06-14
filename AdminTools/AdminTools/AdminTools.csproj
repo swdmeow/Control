@@ -52,7 +52,6 @@
     <Compile Include="Commands\Grenade\Grenade.cs" />
     <Compile Include="Commands\HintBroadcast\HintBroadcast.cs" />
     <Compile Include="Commands\Hp\Hp.cs" />
-    <Compile Include="Commands\Jail\Jail.cs" />
     <Compile Include="Commands\Position\Position.cs" />
     <Compile Include="Commands\PryGates\PryGates.cs" />
     <Compile Include="Commands\RandomTeleport\RandomTeleport.cs" />
@@ -90,7 +89,6 @@
     <Compile Include="EventHandlers.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Components\InstantKillComponent.cs" />
-    <Compile Include="Jailed.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -106,10 +104,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Users\swd\Desktop\d\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
-    <Reference Include="Assembly-CSharp-Publicized">
+    <Reference Include="Assembly-CSharp-Publicized, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Users\swd\Desktop\d\Assembly-CSharp-Publicized.dll</HintPath>
     </Reference>
-    <Reference Include="BouncyCastle.Cryptography">
+    <Reference Include="BouncyCastle.Cryptography, Version=2.0.0.0, Culture=neutral, PublicKeyToken=072edcf4a5328938, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Users\swd\Desktop\d\BouncyCastle.Cryptography.dll</HintPath>
     </Reference>
     <Reference Include="Caress, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -120,49 +120,62 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Users\swd\Desktop\d\CommandSystem.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.API, Version=6.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+    <Reference Include="Exiled.API, Version=7.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Users\swd\Desktop\d\Exiled.API.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.CreditTags, Version=6.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+    <Reference Include="Exiled.CreditTags, Version=7.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Users\swd\Desktop\d\Exiled.CreditTags.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.CustomItems, Version=6.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+    <Reference Include="Exiled.CustomItems, Version=7.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Users\swd\Desktop\d\Exiled.CustomItems.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.CustomRoles, Version=6.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+    <Reference Include="Exiled.CustomRoles, Version=7.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Users\swd\Desktop\d\Exiled.CustomRoles.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.Events, Version=6.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+    <Reference Include="Exiled.Events, Version=7.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Users\swd\Desktop\d\Exiled.Events.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.Permissions, Version=6.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+    <Reference Include="Exiled.Loader, Version=7.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Users\swd\Desktop\d\Exiled.Loader.dll</HintPath>
+    </Reference>
+    <Reference Include="Exiled.Permissions, Version=7.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Users\swd\Desktop\d\Exiled.Permissions.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.Updater, Version=3.1.1.0, Culture=neutral, processorArchitecture=AMD64">
+    <Reference Include="Exiled.Updater, Version=3.1.2.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Users\swd\Desktop\d\Exiled.Updater.dll</HintPath>
     </Reference>
-    <Reference Include="Facepunch.Steamworks.Posix">
+    <Reference Include="Facepunch.Steamworks.Posix, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Users\swd\Desktop\d\Facepunch.Steamworks.Posix.dll</HintPath>
+    </Reference>
+    <Reference Include="LiteDB">
+      <HintPath>C:\Users\swd\Desktop\d\LiteDB.dll</HintPath>
+    </Reference>
+    <Reference Include="MapEditorReborn">
+      <HintPath>C:\Users\swd\Desktop\d\MapEditorReborn.dll</HintPath>
     </Reference>
     <Reference Include="Mirror, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Users\swd\Desktop\d\Mirror.dll</HintPath>
     </Reference>
-    <Reference Include="Mirror.Components">
+    <Reference Include="Mirror.Components, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Users\swd\Desktop\d\Mirror.Components.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Posix, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Users\swd\Desktop\d\Mono.Posix.dll</HintPath>
     </Reference>
-    <Reference Include="Mono.Security">
+    <Reference Include="Mono.Security, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Users\swd\Desktop\d\Mono.Security.dll</HintPath>
     </Reference>
     <Reference Include="NorthwoodLib, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
@@ -174,6 +187,9 @@
       <HintPath>C:\Users\swd\Desktop\d\PluginAPI.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="UnityEngine">
+      <HintPath>C:\Users\swd\Desktop\d\UnityEngine.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Users\swd\Desktop\d\UnityEngine.CoreModule.dll</HintPath>

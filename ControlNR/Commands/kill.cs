@@ -18,7 +18,7 @@
     {
         public string Command { get; } = "kill";
         public string[] Aliases { get; } = new string[] { };
-        public string Description { get; } = "Команда для самоубийства..";
+        public string Description { get; } = "<b>Команда для самоубийства..</b>";
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
             Player player = Player.Get(sender);

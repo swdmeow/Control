@@ -192,71 +192,10 @@ namespace AdminTools
 				yield return Timing.WaitForOneFrame;
 			}
 		}
-
-		public static IEnumerator<float> DoJail(Player player, bool skipadd = false)
-		{
-			List<Item> items = new();
-			Dictionary<AmmoType, ushort> ammo = new();
-			foreach (KeyValuePair<ItemType, ushort> kvp in player.Ammo)
-				ammo.Add(kvp.Key.GetAmmoType(), kvp.Value);
-			foreach (Item item in player.Items)
-				items.Add(item);
-			if (!skipadd)
-			{
-				Plugin.JailedPlayers.Add(new Jailed
-				{
-					Health = player.Health,
-					Items = items,
-					Name = player.Nickname,
-					Role = player.Role,
-					Userid = player.UserId,
-					CurrentRound = true,
-					Ammo = ammo
-				});
-			}
-
-			if (player.IsOverwatchEnabled)
-				player.IsOverwatchEnabled = false;
-			yield return Timing.WaitForSeconds(1f);
-			player.ClearInventory(false);
-			player.Role.Set(RoleTypeId.Tutorial, SpawnReason.ForceClass, RoleSpawnFlags.None);
-			player.Position = new Vector3(53f, 1020f, -44f);
-		}
-
-		public static IEnumerator<float> DoUnJail(Player player)
-		{
-			Jailed jail = Plugin.JailedPlayers.Find(j => j.Userid == player.UserId);
-			if (jail.CurrentRound)
-			{
-				player.Role.Set(jail.Role, SpawnReason.ForceClass, RoleSpawnFlags.None);
-				yield return Timing.WaitForSeconds(0.5f);
-				try
-				{
-					player.ResetInventory(jail.Items);
-					player.Health = jail.Health;
-					player.Position = jail.RelativePosition.Position;
-					foreach (KeyValuePair<AmmoType, ushort> kvp in jail.Ammo)
-						player.Ammo[kvp.Key.GetItemType()] = kvp.Value;
-				}
-				catch (Exception e)
-				{
-					Log.Error($"{nameof(DoUnJail)}: {e}");
-				}
-			}
-			else
-			{
-				player.Role.Set(RoleTypeId.Spectator);
-			}
-			Plugin.JailedPlayers.Remove(jail);
-		}
-
 		public void OnPlayerVerified(VerifiedEventArgs ev)
 		{
 			try
 			{
-				if (Plugin.JailedPlayers.Any(j => j.Userid == ev.Player.UserId))
-					Timing.RunCoroutine(DoJail(ev.Player, true));
-
 				if (File.ReadAllText(_plugin.OverwatchFilePath).Contains(ev.Player.UserId))
 				{
 					Log.Debug($"Putting {ev.Player.UserId} into overwatch.");
@@ -322,13 +261,6 @@ namespace AdminTools
 					Log.Debug($"{s} has their tag hidden.");
 				File.WriteAllLines(_plugin.OverwatchFilePath, overwatchRead);
 				File.WriteAllLines(_plugin.HiddenTagsFilePath, tagsRead);
-
-				// Update all the jails that it is no longer the current round, so when they are unjailed they don't teleport into the void.
-				foreach (Jailed jail in Plugin.JailedPlayers)
-				{
-					if(jail.CurrentRound)
-						jail.CurrentRound = false;
-				}
 			}
 			catch (Exception e)
 			{

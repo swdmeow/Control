@@ -25,6 +25,7 @@ using Control.API.Serialization;
 using Control.Handlers.Events.API.Serialization;
 using Microsoft.SqlServer.Server;
 using Control;
+using Exiled.CustomRoles.API.Features;
 
 namespace Control.Patches
 {
@@ -62,6 +63,14 @@ namespace Control.Patches
                 bool Success = true;
                 bool Allowed = true;
 
+                if(CustomRole.Get((uint)2).Check(player))
+                {
+                    Log.Info("Player is SCP-343. Returning.");
+                    Success = false;
+                    sender.RaReply($"ControlNR#Вы играете за SCP-343. Отклонено.", Success, true, string.Empty);
+                    return Allowed;
+                }
+
                 try
                 {
                     string[] args = q.Trim().Split(QueryProcessor.SpaceArray, 512);
@@ -72,7 +81,10 @@ namespace Control.Patches
 
                     if (log == null)
                     {
-                        ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers").Insert(new VIPLog());
+                        ControlNR.Singleton.db.GetCollection<VIPLog>("VIPPlayers").Insert(new VIPLog()
+                        {
+                            ID = UserID,
+                        });
 
                         sender.RaReply($"ControlNR#Вы занесены в базу данных, повторите попытку..", false, true, string.Empty);
                         return Allowed;

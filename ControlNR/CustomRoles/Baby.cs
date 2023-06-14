@@ -182,7 +182,7 @@ namespace Control.CustomRoles
             {
                 player.Position = spawnPosition;
             }
-            player.InfoArea &= ~(PlayerInfoArea.Nickname | PlayerInfoArea.Role);
+            //player.InfoArea &= ~(PlayerInfoArea.Nickname | PlayerInfoArea.Role);
             if (CustomAbilities != null)
             {
                 foreach (CustomAbility item2 in CustomAbilities!)

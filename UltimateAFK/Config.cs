@@ -20,7 +20,7 @@ namespace UltimateAFK
         public float ReplaceDelay { get; set; } = 1.4f;
 
         [Description("If the number of players is less than this the plugin will not work.")]
-        public int MinPlayers { get; set; } = 2;
+        public int MinPlayers { get; set; } = 2; // 1
 
         [Description("Tutorials should be ignored ?")]
         public bool IgnoreTut { get; set; } = true;

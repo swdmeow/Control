@@ -11,6 +11,7 @@ using Exiled.API.Features.Pickups.Projectiles;
 using Exiled.CustomRoles.API.Features;
 using Exiled.Events.EventArgs.Map;
 using Interactables.Interobjects.DoorUtils;
+using InventorySystem.Items.Firearms.Ammo;
 using MapEditorReborn.Commands.UtilityCommands;
 using MEC;
 
@@ -32,6 +33,14 @@ namespace Control.Extensions
                     foreach (Ragdoll ragdoll in Ragdoll.List)
                     {
                         ragdoll.Destroy();
+                    }
+                }
+
+                foreach (Pickup pickup in Pickup.List)
+                {
+                    if (pickup.Base is InventorySystem.Items.Firearms.Ammo.AmmoPickup)
+                    {
+                        pickup.Destroy();
                     }
                 }
 

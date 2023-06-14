@@ -16,7 +16,7 @@
             return log != null;
         }
 
-        public static void UpdateBadge(Player ply, string i = null)
+        public static void UpdateBadge(Player ply, string i = null, bool hidden = false)
         {
             try
             {
@@ -46,12 +46,9 @@
                     break;
                 }
 
-                if (!ply.IsNorthwoodStaff && ply.Group == null)
-                {
-                    ply.BadgeHidden = false;
-                }
+                Log.Info(hidden);
 
-                string text = ply.Group == null || ply.Group != null && ply.BadgeHidden == true
+                string text = ply.Group == null || hidden
                     ? $"{log.LVL} уровень"
                     : $"{log.LVL} уровень | {ply.Group.BadgeText}";
 

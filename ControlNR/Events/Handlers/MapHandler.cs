@@ -30,35 +30,26 @@
         }
         private void OnAnnouncingScpTermination(AnnouncingScpTerminationEventArgs ev)
         {
-            if (ServerHandler.CassieDestroyedLVL == 0) return;
-
-            if(ServerHandler.CassieDestroyedLVL >= 3)
+            switch (ServerHandler.CassieDestroyedLVL)
             {
-                //if(ev.TerminationCause == Term)
-                Cassie.Message("SCP-███<b></b> успе█нjjjj у̸н̸и̴ч̸т████. При█ин█ с̸͓̍м̶̟͛е̵̰̰̽̈р̵͍͑ти - н̸е̸известна.. <color=#ffffff00>h pitch_0.8 SCP . pitch_0.6 .G6 .g1 . .g1 . .g1 . has . been .g3 . SUCCESSFULLY . .g4 terminated . .g4 . termination cause is pitch_0.5 unspecified . .g5 . pitch_0.3 .g5 pitch_0.1 .g5", false, false, true);
-
-                ev.IsAllowed = false;
+                case 3:
+                    ev.IsAllowed = false;
+                    Cassie.Message("SCP-███<b></b> успе█нjjjj у̸н̸и̴ч̸т████. При█ин█ с̸͓̍м̶̟͛е̵̰̰̽̈р̵͍͑ти - н̸е̸известна.. <color=#ffffff00>h pitch_0.8 SCP . pitch_0.6 .G6 .g1 . .g1 . .g1 . has . been .g3 . SUCCESSFULLY . .g4 terminated . .g4 . termination cause is pitch_0.5 unspecified . .g5 . pitch_0.3 .g5 pitch_0.1 .g5", false, false, true);
+                    break;
             }
-
         }
         private void OnAnnouncingNtfEntrance(AnnouncingNtfEntranceEventArgs ev)
         {
-            if (ServerHandler.CassieDestroyedLVL == 0) return;
-
-            if (ServerHandler.CassieDestroyedLVL >= 3)
+            switch (ServerHandler.CassieDestroyedLVL)
             {
-                ev.IsAllowed = false;
-                Cassie.Message("pitch_1 .g6 pitch_0.4 . .g5", true, false, false);
-
-                return;
-            }
-
-            if (ServerHandler.CassieDestroyedLVL >= 1)
-            {
-                Cassie.Message("pitch_1 .g6 pitch_0.4 . .g5 . . .g4 . . .g4 . . pitch_0.96  pitch_0.5 .g1 .g2 pitch_0.3 .g2 .g3 pitch_1. . pitch_0.9 pitch_0.2 .g5 .g4 pitch_1", true, false, false); ;
-                ev.IsAllowed = false;
-
-                return;
+                case 1:
+                    Cassie.Message("pitch_1 .g6 pitch_0.4 . .g5 . . .g4 . . .g4 . . pitch_0.96  pitch_0.5 .g1 .g2 pitch_0.3 .g2 .g3 pitch_1. . pitch_0.9 pitch_0.2 .g5 .g4 pitch_1", true, false, false); ;
+                    ev.IsAllowed = false;
+                    break;
+                case 3:
+                    ev.IsAllowed = false;
+                    Cassie.Message("pitch_1 .g6 pitch_0.4 . .g5", true, false, false);
+                    break;
             }
         }
     }

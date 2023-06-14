@@ -1,4 +1,4 @@
-﻿using Exiled.API.Features.Attributes;
+﻿/*using Exiled.API.Features.Attributes;
 using Exiled.API.Features.Items;
 using Exiled.API.Features.Pickups;
 using Exiled.API.Features.Spawn;
@@ -263,4 +263,4 @@ namespace Control.CustomRoles
             // Delete stringBuilder to not cause console message
         }
     }
-}
+}*/

@@ -21,7 +21,7 @@ namespace Ñontrol
 
         private Harmony harmony;
 
-        private Control.Handlers.Handler Handler;
+        private Control.Handlers.Handler EventsHandler;
 
         public LiteDatabase db;
         public LiteDatabase XPdb;
@@ -36,13 +36,10 @@ namespace Ñontrol
 
             harmony = new Harmony($"ControlNR - {DateTime.Now.Ticks}");
 
-            Handler = new Control.Handlers.Handler();
+            EventsHandler = new Control.Handlers.Handler();
 
             CustomItem.RegisterItems();
             CustomRole.RegisterRoles(false, null, true, Assembly);
-
-            if (Control.Extensions.PlayerExtensions.HintCoroutineHandle == null || !Control.Extensions.PlayerExtensions.HintCoroutineHandle.Value.IsValid || !Control.Extensions.PlayerExtensions.HintCoroutineHandle.Value.IsRunning)
-                Control.Extensions.PlayerExtensions.HintCoroutineHandle = Timing.RunCoroutine(Control.Extensions.PlayerExtensions.HintCoroutine());
 
             if (Control.CustomRoles.SCP343.HintCooldownCoroutineHandle == null || !Control.CustomRoles.SCP343.HintCooldownCoroutineHandle.Value.IsValid || !Control.CustomRoles.SCP343.HintCooldownCoroutineHandle.Value.IsRunning)
                 Control.CustomRoles.SCP343.HintCooldownCoroutineHandle = Timing.RunCoroutine(Control.CustomRoles.SCP343.HintCoroutine());
@@ -68,8 +65,8 @@ namespace Ñontrol
             XPdb.Dispose();
             XPdb = null;
 
-            Handler.Dispose();
-            Handler = null;
+            EventsHandler.Dispose();
+            EventsHandler = null;
 
             CustomItem.UnregisterItems();
             CustomRole.UnregisterRoles();
