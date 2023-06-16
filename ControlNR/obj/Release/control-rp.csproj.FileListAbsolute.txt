@@ -1,7 +1,0 @@
-C:\Users\swd\AppData\Roaming\EXILED\Plugins\control_rp.dll
-C:\Users\swd\AppData\Roaming\EXILED\Plugins\control_rp.pdb
-D:\github\Control-rp\obj\Release\control-rp.csproj.AssemblyReference.cache
-D:\github\Control-rp\obj\Release\control-rp.csproj.CoreCompileInputs.cache
-D:\github\Control-rp\obj\Release\control-rp.csproj.CopyComplete
-D:\github\Control-rp\obj\Release\control_rp.dll
-D:\github\Control-rp\obj\Release\control_rp.pdb
