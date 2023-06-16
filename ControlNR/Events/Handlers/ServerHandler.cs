@@ -158,7 +158,7 @@
                         Cassie.Message("jam_040_9 pitch_0.43 .G1 . jam_020_9 .G3 . .G5 . pitch_0.3 .g3 . . . pitch_0.2 .g1", false, false, false);
                         break;
                     case 3:
-                        Map.TurnOffAllLights(55);
+                        Map.TurnOffAllLights(15f);
                         Cassie.Message("pitch_0.03 .g7", false, false, false);
                         break;
                 }

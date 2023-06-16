@@ -38,6 +38,7 @@
             PlayerEvent.UsingRadioBattery += OnUsingRadioBatteryEventArgs;
             PlayerEvent.TriggeringTesla += OnTriggeringTesla;
             PlayerEvent.Escaping += OnEscaping;
+            PlayerEvent.Dying += OnDying;
         }
         public void OnDisabled()
         {
@@ -47,6 +48,7 @@
             PlayerEvent.UsingRadioBattery -= OnUsingRadioBatteryEventArgs;
             PlayerEvent.TriggeringTesla -= OnTriggeringTesla;
             PlayerEvent.Escaping -= OnEscaping;
+            PlayerEvent.Dying -= OnDying;
         }
         private void OnEscaping(EscapingEventArgs ev)
         {
@@ -54,6 +56,13 @@
 
             if (ev.Player.Role.Team == Team.ChaosInsurgency) { ev.IsAllowed = true; ev.EscapeScenario = EscapeScenario.CuffedClassD; } // МОГ
             if (ev.Player.Role.Team == Team.FoundationForces) { ev.IsAllowed = true; ev.EscapeScenario = EscapeScenario.CuffedScientist; } // ПХ
+        }
+        private void OnDying(DyingEventArgs ev)
+        {
+            if(ev.DamageHandler.Type == DamageType.Scp0492)
+            {
+                ev.Player.Role.Set(RoleTypeId.Scp0492);
+            }
         }
         private void OnVerified(VerifiedEventArgs ev)
         {

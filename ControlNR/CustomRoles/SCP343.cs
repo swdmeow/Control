@@ -55,7 +55,7 @@ namespace Control.CustomRoles
         {
             if (Exiled.API.Features.Player.List.Count() >= 15)
             {
-                CustomRole.Get((uint)2).AddRole(Exiled.API.Features.Player.List.Where(x => x.Role.Type == RoleTypeId.ClassD)?.First());
+                CustomRole.Get((uint)2).AddRole(Exiled.API.Features.Player.List.Where(x => x.Role.Type == RoleTypeId.ClassD)?.ToList().RandomItem());
             }
         }
         private void OnWaitingForPlayers()

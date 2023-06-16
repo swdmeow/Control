@@ -8,7 +8,7 @@ namespace Control.Handlers.Events.API.Serialization
     {
         public int LVL { get; set; }
         public string Nickname { get; set; }
-
+        public bool DNT { get; set; }
         public int XP { get; set; }
         [BsonId]
         public string ID { get; set; }

@@ -25,12 +25,24 @@ namespace Control.Handlers.Events.API
                     LVL = 0,
                     XP = 0,
                     Nickname = ply.Nickname,
+                    DNT = ply.DoNotTrack,
                 };
                 ControlNR.Singleton.XPdb.GetCollection<PlayerLog>("Players").Insert(toInsert);
             }
 
             if (log is null)
                 return toInsert;
+
+            PlayerLog updateData = new PlayerLog()
+            {
+                ID = ply.UserId,
+                LVL = log.LVL,
+                XP = log.XP,
+                Nickname = ply.Nickname,
+                DNT = ply.DoNotTrack,
+            };
+            ControlNR.Singleton.XPdb.GetCollection<PlayerLog>("Players").Update(updateData);
+
             return log;
         }
 

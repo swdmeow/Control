@@ -37,6 +37,8 @@
     using Control.CustomRoles;
     using System.IO;
     using System.Threading.Tasks;
+    using Exiled.API.Features.DamageHandlers;
+    using Exiled.API.Extensions;
 
     internal sealed class WarheadDecontamition
     {
@@ -67,36 +69,35 @@
                 }
             }
 
-            Cassie.Message("Attention . DECONTAMINATION process of surface zone will be started in TMINUS . 1 minute", true, false, false); ;
-            foreach (Player pl in Player.List)
-            {
-                pl.Broadcast(new Broadcast("<size=75%><color=green>Обеззараживание</color> уличной зоны начнется через <color=red>1 минуту..</color></size>", 15), true);
-            }
+            Cassie.Message("jam_007_2 Attention . . pitch_0.3 jam_080_8 .g3 . pitch_1.1 jam_090_9 RADIATION of jam_010_1 Alpha warhead pitch_0.4 .g1 pitch_1 will be pitch_2.6 .g2 pitch_0.9 to pitch_1 surface jam_090_1 zone in . . pitch_7 1 1 1 1 1 1 1 1 1 pitch_1 TMINUS . . . jam_191_5 1 pitch_0.7 minute pitch_7 .g1 .g1 .g1 .g1 .g1 .g1", true, false, false); ;
+
+            Map.Broadcast(15, "<size=75%><color=red>Радиация</color> вызванная взрывом альфа-боеголовки прибудет на уличную часть комплекса через <color=red>1 минуту..</color></size>");
 
             await Task.Delay(60000);
 
             if (!Warhead.IsDetonated) return;
 
-            Cassie.Message("Attention . DECONTAMINATION process of surface zone has been started", true, false, false);
-
-            foreach (Player pl in Player.List)
-            {
-                pl.Broadcast(new Broadcast("<size=75%><color=green>Обеззараживание</color> уличной зоны <color=red>начато..</color></size>", 15), true);
-            }
+            Cassie.Message(" pitch_3 .G6 .G6 .G6 .G6 .g6 .g6 .g6 .g6 .g6", true, false, false);
 
             DecontamitionSequnse = Timing.RunCoroutine(DecontaminationProcess());
         }
         public static IEnumerator<float> DecontaminationProcess()
         {
+
             for (; ; )
             {
-                if (!Warhead.IsDetonated) break;
+                yield return Timing.WaitForSeconds(2.5f);
+
+                if (!Warhead.IsDetonated) Timing.KillCoroutines(DecontamitionSequnse);
+
                 foreach (Player pl in Player.List.Where(x => x.IsAlive))
                 {
-                    pl.EnableEffect(EffectType.Decontaminating, 1f);
-                }
+                    float HPToHurt = pl.MaxHealth / (pl.IsScp ? 15 : 10);
 
-                yield return Timing.WaitForSeconds(5.1f);
+                    pl.EnableEffect(EffectType.Burned);
+
+                    pl.Hurt(HPToHurt, DamageType.Warhead);
+                }
             }
         }
     }

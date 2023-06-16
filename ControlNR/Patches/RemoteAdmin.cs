@@ -67,6 +67,7 @@ namespace Control.Patches
                 {
                     Log.Info("Player is SCP-343. Returning.");
                     Success = false;
+                    Allowed = false;
                     sender.RaReply($"ControlNR#Вы играете за SCP-343. Отклонено.", Success, true, string.Empty);
                     return Allowed;
                 }

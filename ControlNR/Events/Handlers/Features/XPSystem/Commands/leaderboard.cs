@@ -36,7 +36,7 @@
             int index = 1;
             foreach (var log in players)
             {
-                str += $"{index}. {log.Nickname} ({log.ID}): {log.LVL} уровень, {log.XP}/{ControlNR.Singleton.Config.XPSystem.XPPerLevel + (ControlNR.Singleton.Config.XPSystem.XPPerNewLevel * log.LVL)} опыта..\n";
+                str += $"{index}. {log.Nickname} {(log.DNT ? "[УДАЛЕНО]" : $"({log.ID})")}: {log.LVL} уровень, {log.XP}/{ControlNR.Singleton.Config.XPSystem.XPPerLevel + (ControlNR.Singleton.Config.XPSystem.XPPerNewLevel * log.LVL)} опыта..\n";
                 index++;
             }
             return str;

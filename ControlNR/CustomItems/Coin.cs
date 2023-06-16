@@ -120,7 +120,7 @@ namespace Control.CustomItems
                     {
                         if (!player.IsScp) return;
 
-                        Cassie.GlitchyMessage($"Внимание! Обнаружено нарушение условий содержаний {player.Role.Name}<b></b>.  <color=#ffffff00>h Attention all PERSONNEL jam_080_4 detected . CONTAINMENT breach of SCP {Regex.Replace(player.Role.Name.Replace("SCP-", ""), "(.)", "$1 ")}", 5f, 5f);
+                        Cassie.GlitchyMessage($"Внимание! Обнаружено нарушение условий содержаний {player.Role.Name}<b></b>.  <color=#ffffff00>h Attention all PERSONNEL jam_080_4 detected . CONTAINMENT breach of SCP {Regex.Replace(player.Role.Name.Replace("SCP-", ""), "(.)", "$1 ")}", 0.5f, 0.5f);
                     });
                 }
                 if (needTo == "speed")
@@ -169,7 +169,7 @@ namespace Control.CustomItems
                 {
                     ev.Player.CurrentItem.Destroy();
 
-                    if (ev.Player.Role.Team == PlayerRoles.Team.FoundationForces || ev.Player.Role == RoleTypeId.Scientist)
+                    if (ev.Player.Role.Side == Side.Mtf)
                     {
                         ev.Player.Role.Set(PlayerRoles.RoleTypeId.ChaosConscript, PlayerRoles.RoleSpawnFlags.None);
                     }
@@ -237,7 +237,8 @@ namespace Control.CustomItems
                 {
                     ev.Player.CurrentItem.Destroy();
 
-                    ev.Player.ResetInventory(ev.Player.Role.Type.GetStartingInventory());
+                    ev.Player.ClearInventory(true);
+                    ev.Player.AddItem(ev.Player.Role.Type.GetStartingInventory());
                 }
             }
         }

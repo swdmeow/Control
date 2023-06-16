@@ -57,6 +57,8 @@
         {
             Control.API.Extensions.StopAudio();
 
+            Room.Get(RoomType.Surface).ResetColor();
+
             Timing.KillCoroutines(ChangeColorsCoroutineHandle);
         }
         private void OnStopping(StoppingEventArgs ev)
